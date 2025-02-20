@@ -12,6 +12,9 @@ $(function () {
                 
                 if(response.data.status != false){
                     window.location.href = '/';
+                }else{
+                    $('#recheck').html('Username or password is incorrect');
+                
                 }
                 // handle success, e.g., redirect to another page
             })

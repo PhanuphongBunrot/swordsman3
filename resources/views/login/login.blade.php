@@ -21,6 +21,7 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
         }
         .login-container h2 {
             margin-bottom: 20px;
@@ -32,7 +33,7 @@
 
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" style="display: block; margin: 0 auto 20px;" />
         <form id="login" action="{{ route('login_check') }}"  method="POST">
             @csrf
             <div class="form-group">
@@ -43,7 +44,7 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <div id="recheck"></div>
+            <div id="recheck" style="color: red; margin-bottom: 15px;"></div>
             <button type="submit" class="btn btn-primary btn-block ">Login</button>
         </form>
     </div>
