@@ -106,33 +106,108 @@ class ApisdkController extends Controller
 
 
 
-    
+    public function  queryOrderList (){
 
-    public function getMd5Sign($params_in, $openKey)
-    {
-        $params = $params_in;
       
-        ksort($params);
-        $signKey = '';
-        foreach($params as $key => $val){
-        $signKey .= $key.'='.$val.'&';
-        }
-        $signKey .= $openKey;
-        return md5($signKey);
+
+        $openId = env('openID');
+        $productCode = env('productCode');
+       
+        $openKey = env('openKey');
+
+        // กำหนดค่าพารามิเตอร์ (ไม่รวม sign)
+        $params = [
+            'openId' => $openId,
+            'productCode' => $productCode,
+           
+        ];
+
+        // คำนวณค่า MD5 sign
+        $sign = $this->getMd5Sign($params, $openKey);
+        $params['sign'] = $sign;
+
+      
+
+        // API URL
+        $url = env('URL_SDK')."open/queryOrderList";
+
+        // ส่ง API
+        $response = $this->sendPostRequest($url, $params);
+        echo   $response;
+    }
+    
+    public function  sendCodeByEmail (){
+
+        $openId = env('openID');
+        $productCode = env('productCode');
+        $Email = "SenNesTest@gmail.com";
+        $sendType  = 4;
+        $openKey = env('openKey');
+
+
+
+
+        $params = [
+            'openId' => $openId,
+            'productCode' => $productCode,
+            'Email' => $Email,
+            'sendType' => $sendType
+           
+        ];
+
+        // คำนวณค่า MD5 sign
+        $sign = $this->getMd5Sign($params, $openKey);
+        $params['sign'] = $sign;
+
+      
+        print_r($params);   
+        // API URL
+        $url = env('URL_SDK')."open/sendCodeByEmail";
+
+        // ส่ง API
+        $response = $this->sendPostRequest($url, $params);
+        echo   $response;
+
+
     }
 
-    private function sendPostRequest($url, $params)
+
+    public function payToUser()
     {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params, '', '&', PHP_QUERY_RFC3986));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/x-www-form-urlencoded'
-        ]);
+        $openId = env('openID');
+        $productCode = env('productCode');
+        $userId  = "16588783";
+        $amount   = 100.00;
+        $openKey = env('openKey');
 
-        $response = curl_exec($ch);
-        curl_close($ch);
-        return $response;
+
+
+
+        $params = [
+            'openId' => $openId,
+            'productCode' => $productCode,
+            'userId' => $userId ,
+            'amount' => $amount
+           
+        ];
+
+        // คำนวณค่า MD5 sign
+        $sign = $this->getMd5Sign($params, $openKey);
+        $params['sign'] = $sign;
+
+      
+        print_r($params);   
+        // API URL
+        $url = env('URL_SDK')."open/payToUser";
+
+        // ส่ง API
+        $response = $this->sendPostRequest($url, $params);
+        echo   $response;
     }
+
+    public  function walletInfo ()
+    {
+        // 
+    }
+   
 }

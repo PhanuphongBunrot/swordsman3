@@ -15,20 +15,69 @@ class LoginedController extends Controller
             'password' => 'required',
         ]);
 
-        
-        $hardcodedEmail = 'user@g.com';
-        $hardcodedPassword = '123456789';
+        $openId = env('openID');
+        $productCode = env('productCode');
+        $username = $request->email;
+        $password = $request->password;
+        $openKey = env('openKey');
 
-       
-        if ($request->email === $hardcodedEmail && $request->password === $hardcodedPassword) {
-          
+        $params = [
+            'openId' => $openId,
+            'productCode' => $productCode,
+            'username' => $username,
+            'password' => $password
+        ];
+
+        // คำนวณค่า MD5 sign
+        $sign = $this->getMd5Sign($params, $openKey);
+        $params['sign'] = $sign;
+
+
+
+        // API URL
+        $url = env('URL_SDK') . "open/userLogin";
+
+        // ส่ง API
+        $response = $this->sendPostRequest($url, $params);
+
+        $data = json_decode($response, true);
+
+        if ($data['status'] != 1) {
+            return response()->json(['status' => false], 200);
+            exit();
+        }
+
+        $uid = $data['data']['uid'];
+        $token = $data['data']['token'];
+
+        // กำหนดค่าพารามิเตอร์ (ไม่รวม sign)
+        $params = [
+            'token' => $token,
+            'uid' => $uid,
+
+        ];
+
+
+
+        // API URL
+        $url = env('URL_SDK') . "webapi/checkUserInfo";
+
+        // ส่ง API
+        $res = $this->sendPostRequest($url, $params);
+        $res = json_decode($res, true);
+
+
+
+
+        if ($res['status'] == 1) {
+
             Session::put('authenticated', true);
 
-           
+
             return redirect()->route('home');
         }
 
-        return response()->json(['status' => false], 200);
+       
     }
 
     public function logout()

@@ -9,12 +9,12 @@ $(function () {
             password: $('#password').val()
         })
             .then(function (response) {
-                
                 if(response.data.status != false){
                     window.location.href = '/';
                 }else{
                     $('#recheck').html('Username or password is incorrect');
-                
+                    $('#email').val('');
+                    $('#password').val('');
                 }
                 // handle success, e.g., redirect to another page
             })
@@ -22,7 +22,6 @@ $(function () {
                 console.log(error);
                 // handle error, e.g., show error message
             });
-
     });
 
 
