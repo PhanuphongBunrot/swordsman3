@@ -29,6 +29,8 @@
         .login-container h2 {
             margin-bottom: 20px;
         }
+
+        
     </style>
 </head>
 
@@ -48,12 +50,17 @@
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
             <div id="recheck" style="color: red; margin-bottom: 15px;"></div>
-            <a href="{{ url('/auth/google') }}" class="btn btn-danger">
-                Login with Google
-            </a>
-            <a href="{{ url('/auth/facebook') }}" class="btn btn-success">
-                Login with facebook
-            </a>
+            <div class="btn-group d-flex justify-content-center mb-3" role="group">
+                <a href="{{ url('/auth/google') }}" class="btn btn-light border">
+                    <img src="{{ asset('images/google.png') }}" alt="Google" style="width: 30px;">
+                </a>
+                <a href="{{ url('/auth/facebook') }}" class="btn btn-light border">
+                    <img src="{{ asset('images/facebook.png') }}" alt="Facebook" style="width: 30px;">
+                </a>
+                <!-- <a href="{{ url('/auth/apple') }}" class="btn btn-light border">
+                    <img src="{{ asset('images/apple.png') }}" alt="Apple" style="width: 30px;">
+                </a> -->
+            </div>
 
 
             <button type="submit" class="btn btn-primary btn-block ">Login</button>

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 class FacebookController extends Controller
 {
     // Redirect to Facebook for authentication
@@ -62,6 +64,20 @@ class FacebookController extends Controller
             // ส่ง API
             $response = $this->sendPostRequest($url, $params);
             print_r($response);
+
+          
+        $res = json_decode($response, true);
+
+
+
+
+        if ($res['status'] == 1) {
+
+            Session::put('authenticated', true);
+
+
+            return redirect()->route('home');
+        }
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

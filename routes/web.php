@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginedController;
 use App\Http\Controllers\GoogleAuthController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\FacebookController;
+use App\Http\Controllers\AppleAuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,9 +30,12 @@ Route::get('/auth/facebook/callback', [FacebookController::class, 'handleFaceboo
 Route::post('/login_check', [LoginedController::class, 'login'])->name('login_check');
 Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
 
-
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+Route::get('/auth/apple', [AppleAuthController::class, 'redirectToApple']);
+Route::get('/auth/apple/callback', [AppleAuthController::class, 'handleAppleCallback']);
+
 Route::controller(ApisdkController::class)->group(function () {
     Route::get('/userregister', 'user_register');
     Route::get('/userlogin', 'user_login');
@@ -46,6 +50,4 @@ Route::middleware('checkuser')->group(function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('home');
-
-    
 });

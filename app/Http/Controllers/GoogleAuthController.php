@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 
 class GoogleAuthController extends Controller
 {
@@ -12,10 +13,10 @@ class GoogleAuthController extends Controller
     public function redirect()
     {
         return Socialite::driver('google')
-            ->scopes(['email', 'profile']) 
+            ->scopes(['email', 'profile'])
+            ->with(['prompt' => 'consent']) // บังคับให้ขอสิทธิ์ใหม่
             ->redirect();
     }
-
     // 2. รับ Callback จาก Google
     public function callback()
     {
@@ -52,15 +53,19 @@ class GoogleAuthController extends Controller
         $sign = $this->getMd5Sign($params, $openKey);
         $params['sign'] = $sign;
 
-        print_r($params);
+       
 
         // API URL
         $url = env('URL_SDK') . "open/snsLogin";
 
         // ส่ง API
-        $response = $this->sendPostRequest($url, $params);
-        print_r($response);
+    //     $response = $this->sendPostRequest($url, $params);
+    //    print_r($response);
         
+        Session::put('authenticated', true);
+
+
+        return redirect()->route('home');
         // $data = json_decode($response, true);
         // echo "<pre>";
        
