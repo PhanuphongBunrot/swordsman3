@@ -22,8 +22,8 @@ class GoogleAuthController extends Controller
     {
 
         $googleUser = Socialite::driver('google')->user();
-        
-        
+        echo "<pre>";
+        print_r($googleUser);
         $googleUserArray = [
             'id' => $googleUser->getId(),
             'name' => $googleUser->getName(),
@@ -59,13 +59,13 @@ class GoogleAuthController extends Controller
         $url = env('URL_SDK') . "open/snsLogin";
 
         // ส่ง API
-    //     $response = $this->sendPostRequest($url, $params);
-    //    print_r($response);
+        $response = $this->sendPostRequest($url, $params);
+      // print_r($response);
         
-        Session::put('authenticated', true);
+        // Session::put('authenticated', true);
 
 
-        return redirect()->route('home');
+        // return redirect()->route('home');
         // $data = json_decode($response, true);
         // echo "<pre>";
        

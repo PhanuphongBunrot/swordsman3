@@ -207,7 +207,33 @@ class ApisdkController extends Controller
 
     public  function walletInfo ()
     {
-        // 
+        $openId = env('openID');
+        $productCode = env('productCode');
+        $userId  = "16588783";
+        $openKey = env('openKey');
+
+
+
+
+        $params = [
+            'openId' => $openId,
+            'productCode' => $productCode,
+            'userId' => $userId ,
+            
+        ];
+
+        // คำนวณค่า MD5 sign
+        $sign = $this->getMd5Sign($params, $openKey);
+        $params['sign'] = $sign;
+
+      
+        print_r($params);   
+        // API URL
+        $url = env('URL_SDK')."open/walletInfo";
+
+        // ส่ง API
+        $response = $this->sendPostRequest($url, $params);
+        echo   $response;
     }
    
 }

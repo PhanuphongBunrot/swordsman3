@@ -42,12 +42,15 @@ Route::controller(ApisdkController::class)->group(function () {
     Route::get('/checkuserinfo', 'check_user_info');
     Route::get('/queryOrderList', 'queryOrderList');
     Route::get('/sendCodeByEmail', 'sendCodeByEmail');
+    Route::get('/payToUser', 'payToUser');
+    Route::get('/walletInfo', 'walletInfo');
+
 });
 
-
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
 Route::middleware('checkuser')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('home');
+    
 });
