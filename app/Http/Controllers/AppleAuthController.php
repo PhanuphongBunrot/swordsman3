@@ -13,18 +13,15 @@ class AppleAuthController extends Controller
     // Redirect ไปที่ Apple OAuth
     public function redirectToApple()
     {
+        
         return Socialite::driver('apple')->redirect();
     }
-
-    // Callback จาก Apple
+    
     public function handleAppleCallback()
     {
-        try {
-            $appleUser = Socialite::driver('apple')->user();
-
-            print_r($appleUser);
-        } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'ไม่สามารถเข้าสู่ระบบด้วย Apple ได้');
-        }
+        $user = Socialite::driver('apple')->user();
+    
+        dd($user); // ตรวจสอบข้อมูลที่ได้รับจาก Apple
     }
 }
+

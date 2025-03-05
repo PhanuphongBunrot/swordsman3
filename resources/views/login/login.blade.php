@@ -57,9 +57,9 @@
                 <a href="{{ url('/auth/facebook') }}" class="btn btn-light border">
                     <img src="{{ asset('images/facebook.png') }}" alt="Facebook" style="width: 30px;">
                 </a>
-                <!-- <a href="{{ url('/auth/apple') }}" class="btn btn-light border">
+                <a href="{{ url('/auth/apple') }}" class="btn btn-light border">
                     <img src="{{ asset('images/apple.png') }}" alt="Apple" style="width: 30px;">
-                </a> -->
+                </a>
             </div>
 
 

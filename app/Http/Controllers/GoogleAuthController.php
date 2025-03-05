@@ -22,8 +22,7 @@ class GoogleAuthController extends Controller
     {
 
         $googleUser = Socialite::driver('google')->user();
-        echo "<pre>";
-        print_r($googleUser);
+      
         $googleUserArray = [
             'id' => $googleUser->getId(),
             'name' => $googleUser->getName(),
@@ -61,7 +60,8 @@ class GoogleAuthController extends Controller
         // ส่ง API
         $response = $this->sendPostRequest($url, $params);
       // print_r($response);
-        
+      echo "<pre>";
+      print_r($response);
         // Session::put('authenticated', true);
 
 
