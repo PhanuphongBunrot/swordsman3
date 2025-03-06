@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ApisdkController;
 use App\Http\Controllers\LoginedController;
 use App\Http\Controllers\GoogleAuthController;
@@ -44,13 +45,18 @@ Route::controller(ApisdkController::class)->group(function () {
     Route::get('/sendCodeByEmail', 'sendCodeByEmail');
     Route::get('/payToUser', 'payToUser');
     Route::get('/walletInfo', 'walletInfo');
-
 });
+
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('home');
+
+
+
 
 Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-Route::middleware('checkuser')->group(function () {
-    
+    return view('home');
 });
+
+
+Route::middleware('checkuser')->group(function () {});
