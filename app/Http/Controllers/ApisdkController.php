@@ -240,5 +240,39 @@ class ApisdkController extends Controller
         $clientSecret = AppleSignInHelper::generateClientSecret();
         echo $clientSecret;
     }
+
+    public  function recheck_email ()
+    {
+        // $openId = env('openID');
+        // $productCode = env('productCode');
+        // $userId  = "16588783";
+        // $openKey = env('openKey');
+
+
+
+
+        // $params = [
+        //     'openId' => $openId,
+        //     'productCode' => $productCode,
+        //     'userId' => $userId ,
+            
+        // ];
+
+        // // คำนวณค่า MD5 sign
+        // $sign = $this->getMd5Sign($params, $openKey);
+        // $params['sign'] = $sign;
+
+      
+        // print_r($params);   
+        // // API URL
+        // $url = env('URL_SDK')."open/walletInfo";
+
+        // // ส่ง API
+        // $response = $this->sendPostRequest($url, $params);
+        // echo   $response;
+
+        $clientSecret = AppleSignInHelper::generateClientSecret();
+        echo $clientSecret;
+    }
    
 }

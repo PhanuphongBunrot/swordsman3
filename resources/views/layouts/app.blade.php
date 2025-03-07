@@ -82,12 +82,12 @@
                             <a href="{{ url('/auth/facebook') }}" class="btn btn-light border">
                                 <img src="{{ asset('images/facebook.png') }}" alt="Facebook" style="width: 30px;">
                             </a>
-                            <a href="{{ url('/auth/apple') }}" class="btn btn-light border">
-                                <img src="{{ asset('images/apple.png') }}" alt="Apple" style="width: 30px;">
+                            <a class="btn btn-light border" id="appleid-signin" data-mode="center-align">
+                                <img src="{{ asset('images/apple.png') }}" alt="Apple" style="width: 20px;">
                             </a>
                         </div>
-
-
+                        
+                            <p>ยังไม่มีบัญชี?<a href="{{ asset('/register') }}">สร้างบัญชี</a></p>
                         <button type="submit" class="btn btn-primary btn-block ">Login</button>
                     </form>
                 </div>
@@ -110,6 +110,17 @@
             });
             myModal.show();
         }
+
+        const randomState = Math.random().toString(36).substring(2); // สร้างค่า state แบบสุ่ม
+        sessionStorage.setItem("oauth_state", randomState); // 
+
+        AppleID.auth.init({
+            clientId: "com.expup.swordsman3.login", // App ID
+            scope: "name email",
+            redirectURI: "https://exptopupdev.stationidea.com/auth/apple/callback",
+            state: randomState,
+            usePopup: false
+        });
     </script>
 </body>
 

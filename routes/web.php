@@ -22,7 +22,9 @@ use App\Http\Controllers\AppleAuthController;
 Route::get('/login', function () {
     return view('login.login');
 });
-
+Route::get('/register', function () {
+    return view('login.register');
+});
 
 
 Route::get('/auth/facebook', [FacebookController::class, 'redirectToFacebook'])->name('login.facebook');
@@ -30,6 +32,7 @@ Route::get('/auth/facebook/callback', [FacebookController::class, 'handleFaceboo
 
 Route::post('/login_check', [LoginedController::class, 'login'])->name('login_check');
 Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
+
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);

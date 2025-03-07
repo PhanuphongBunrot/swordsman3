@@ -86,4 +86,9 @@ class LoginedController extends Controller
 
         return redirect('/login');
     }
+
+    public function save_register (){
+
+        
+    }
 }
