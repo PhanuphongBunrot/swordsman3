@@ -11,6 +11,8 @@
     <!-- ตัวอย่างการเพิ่มฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
+    <!-- เรียกใช้ไอคอนจาก Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 </head>
 

@@ -99,6 +99,32 @@
         color: white;
         /* เปลี่ยนเป็นสีม่วงเข้มเมื่อคลิก */
     }
+
+    h4 {
+        color: #41e0cf;
+    }
+
+    .btn-icon {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        border: 2px solid transparent;
+        border-radius: 5px;
+        color: white;
+        background-color: black;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-icon i {
+        margin-right: 8px;
+    }
+
+    .btn-icon:hover {
+        border-color: lightgreen;
+        box-shadow: 0 0 10px rgba(144, 238, 144, 0.7);
+        color: #41e0cf;
+    }
 </style>
 
 <div class="container">
@@ -144,8 +170,8 @@
 </div>
 
 <div class="container mt-4">
-    <div class=" section-header">
-        <h4 style="color: #41e0cf;">เลือกเกม</h4>
+    <div class=" section-header p-2" style="background-color:rgb(0, 0, 0);">
+        <h4>เลือกเกม</h4>
         <div class="pagination-buttons">
             <div class="pagination-buttons">
                 <button id="prevBtn" onclick="navigateCards('prev')">
@@ -164,10 +190,23 @@
 </div>
 
 <div class="container mt-4">
-    <div class="row section-header">
-        <h4>2.เลือกแพ็คเกจ</h4>
+    <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
+        <button class="btn btn-icon">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> หยก</p>
+        </button>
+        <button class="btn btn-icon">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ทอง</p>
+        </button>
+        <button class="btn btn-icon">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ตำลึง</p>
+        </button>
+        <button class="btn btn-icon">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gift"></i> โปรโมชั่น</p>
+        </button>
     </div>
+
 </div>
+
 
 
 <script>
