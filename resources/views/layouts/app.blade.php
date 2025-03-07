@@ -19,6 +19,32 @@
 
 <body style="background-color:rgb(15, 37, 35);  font-family: 'Roboto', sans-serif;">
 
+    <style>
+        @media (max-width: 767px) {
+            .navbar-brand h1 {
+           
+        }
+
+       
+        .navbar-brand img {
+            width: 40px;
+            height: 40px;
+        }
+
+        
+        .btn-login {
+            width: 30%;
+            text-align: center;
+            margin-left: auto;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding:2px;
+        }
+       
+       
+          }
+    </style>
+
     <!-- {{-- Navbar สวย ๆ จาก Bootstrap --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -35,26 +61,30 @@
         </div>
     </nav> -->
 
-    <nav class="navbar navbar-expand-lg " style="background-color:#000;border-bottom: 1px solid #41e0cf; ">
-        <div class="container">
-            <img src="{{ asset('images/logo.png') }}" width="50" height="50" class="d-inline-block align-top" alt="" loading="lazy">
-            <a class="navbar-brand mx-2" href="#">
-                <h1 style="color: #41e0cf;"> EXP TOPUP </h1>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link btn" style="background-color:#41e0cf; color:#0F2523; font-weight: 500;" href="javascript:void(0)" onclick="openModal()">เข้าสู่ระบบ </a>
+  <nav class="navbar navbar-expand-lg" style="background-color:#000;border-bottom: 1px solid #41e0cf;padding:1px;">
+    <div class="container">
+        <!-- โลโก้ -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{{ asset('images/logo.png') }}" width="45" height="45" class="d-inline-block align-top" alt="" loading="lazy">
+            <h1 class="ms-2 mb-0 d-md-block" style="color: #41e0cf; font-size: 22px;">EXP TOPUP</h1>
+        </a>
 
-                    </li>
-                </ul>
-            </div>
+        <!-- ปุ่ม Toggle สำหรับมือถือ -->
+        <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="bi bi-list" style="font-size: 24px; color: #41e0cf;"></i> 
+        </button>
 
+        <!-- เมนู -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-login" style="color: #000;background-color:#41e0cf;" href="javascript:void(0)" onclick="openModal()">เข้าสู่ระบบ</a>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
     <!-- โมเดล -->
     <div class="modal" tabindex="-1" id="loginModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -123,6 +153,9 @@
             usePopup: false
         });
     </script>
+
+
+
 </body>
 
 </html>

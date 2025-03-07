@@ -244,6 +244,14 @@
         object-fit: cover;
     
         }
+        .carousel-caption{
+            margin:0px;
+            padding: 5px;
+            font-size:10px;
+        }
+        .carousel-caption h5{
+            font-size:12px;
+        }
 
         
         .selectgame-container h4{
@@ -357,21 +365,21 @@
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <img src="{{ asset('images/01.jpg') }}" class="carousel-image" alt="...">
-                <div class="carousel-caption d-none d-md-block">
+                <div class="carousel-caption  d-md-block">
                     <h5>First Slide</h5>
                     <p>รายละเอียดเกี่ยวกับสไลด์แรก</p>
                 </div>
             </div>
             <div class="carousel-item">
                 <img src="{{ asset('images/02.jpg') }}" class="carousel-image" alt="...">
-                <div class="carousel-caption d-none d-md-block">
+                <div class="carousel-caption  d-md-block">
                     <h5>Second Slide</h5>
                     <p>รายละเอียดเกี่ยวกับสไลด์ที่สอง</p>
                 </div>
             </div>
             <div class="carousel-item">
                 <img src="{{ asset('images/03.jpg') }}" class="carousel-image" alt="...">
-                <div class="carousel-caption d-none d-md-block">
+                <div class="carousel-caption  d-md-block">
                     <h5>Third Slide</h5>
                     <p>รายละเอียดเกี่ยวกับสไลด์ที่สาม</p>
                 </div>
