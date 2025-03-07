@@ -3,23 +3,31 @@
 
 @section('content')
 <style>
+    .carousel-inner img {
+        width: 100%;
+        height: 40vh;
+        /* ใช้ความสูงเป็น 60% ของหน้าจอ */
+        object-fit: contain;
+    }
+
+
     .game-card {
         cursor: pointer;
         transition: box-shadow 0.3s ease;
     }
 
     .game-card.border-c {
-        border: 5px solid #6439FF;
+        border: 5px solid #41e0cf;
     }
 
     .game-card.selected .card-title {
-        color: #6439FF;
+        color: #41e0cf;
     }
 
     #game-cards .card {
-        width: 220px;
+        /* width: 200px;
         /* กำหนดความกว้าง */
-        height: 160px;
+        /* height: 160px; */
         /* กำหนดความสูง */
         margin: 10px;
         /* ระยะห่างระหว่างการ์ด */
@@ -59,8 +67,8 @@
     }
 
     .pagination-buttons button {
-        color: #6439FF;
-        border: 2px solid #6439FF;
+        color: #41e0cf;
+        border: 2px solid #41e0cf;
         /* กรอบสีน้ำเงิน */
         border-radius: 50%;
         /* ทำให้ปุ่มเป็นวงกลม */
@@ -80,30 +88,72 @@
     }
 
     .pagination-buttons button:hover {
-        background-color: #6439FF;
+        background-color: #41e0cf;
         /* เปลี่ยนพื้นหลังเป็นสีม่วงเมื่อเม้าชี้ */
         color: white;
         /* เปลี่ยนสีตัวอักษรเป็นขาว */
     }
 
     .pagination-buttons button:active {
-        background-color: #4b28cc;
+        background-color: #41e0cf;
         color: white;
         /* เปลี่ยนเป็นสีม่วงเข้มเมื่อคลิก */
     }
 </style>
 
 <div class="container">
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{{ asset('images/01.jpg') }}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>First slide label</h5>
+                    <p>Some representative placeholder content for the first slide.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{{ asset('images/02.jpg') }}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Second slide label</h5>
+                    <p>Some representative placeholder content for the second slide.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{{ asset('images/03.jpg') }}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Third slide label</h5>
+                    <p>Some representative placeholder content for the third slide.</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+</div>
+
+<div class="container mt-4">
     <div class=" section-header">
-        <h4>1.เลือกเกม</h4>
+        <h4 style="color: #41e0cf;">เลือกเกม</h4>
         <div class="pagination-buttons">
             <div class="pagination-buttons">
                 <button id="prevBtn" onclick="navigateCards('prev')">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button id="nextBtn" onclick="navigateCards('next')">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                    <<
+                        </button>
+                        <button id="nextBtn" onclick="navigateCards('next')">
+                            >>
+                        </button>
             </div>
 
         </div>
@@ -127,58 +177,58 @@
         },
         {
             name: "เกม B",
-            img: "https://via.placeholder.com/350x200"
+            img: "{{ asset('images/Logo Sword Man 3 Final.jpg') }}"
         },
         {
             name: "เกม C",
-            img: "https://via.placeholder.com/350x200"
+            img: "{{ asset('images/Logo Sword Man 3 Final.jpg') }}"
         },
         {
             name: "เกม D",
-            img: "https://via.placeholder.com/350x200"
+            img: "{{ asset('images/Logo Sword Man 3 Final.jpg') }}"
         },
         {
             name: "เกม E",
-            img: "https://via.placeholder.com/350x200"
+            img: "{{ asset('images/Logo Sword Man 3 Final.jpg') }}"
         },
         {
             name: "เกม F",
-            img: "https://via.placeholder.com/350x200"
+            img: "{{ asset('images/Logo Sword Man 3 Final.jpg') }}"
         },
         {
             name: "เกม G",
-            img: "https://via.placeholder.com/350x200"
+            img: "{{ asset('images/Logo Sword Man 3 Final.jpg') }}"
         },
         {
             name: "เกม H",
-            img: "https://via.placeholder.com/350x200"
+            img: "{{ asset('images/Logo Sword Man 3 Final.jpg') }}"
         },
     ];
 
     const cardsPerPage = 4;
     let currentPage = 0;
 
-    function renderCards() {
-        const startIdx = currentPage * cardsPerPage;
-        const endIdx = startIdx + cardsPerPage;
-        const pageGames = games.slice(startIdx, endIdx);
+    // function renderCards() {
+    //     const startIdx = currentPage * cardsPerPage;
+    //     const endIdx = startIdx + cardsPerPage;
+    //     const pageGames = games.slice(startIdx, endIdx);
 
-        const gameCardsContainer = document.getElementById('game-cards');
-        gameCardsContainer.innerHTML = '';
-        pageGames.forEach(game => {
-            const card = document.createElement('div');
-            card.classList.add('col-md-3');
-            card.innerHTML = `
-                <div class="card game-card" data-game-name="${game.name}">
-                    <img src="${game.img}" class="card-img-top" alt="${game.name}" >
-                    <div class="card-body text-center">
-                        <h5 class="card-title">${game.name}</h5>
-                    </div>
-                </div>
-            `;
-            gameCardsContainer.appendChild(card);
-        });
-    }
+    //     const gameCardsContainer = document.getElementById('game-cards');
+    //     gameCardsContainer.innerHTML = '';
+    //     pageGames.forEach(game => {
+    //         const card = document.createElement('div');
+    //         card.classList.add('col-md-3');
+    //         card.innerHTML = `
+    //         <div class="card game-card" data-game-name="${game.name}">
+    //             <img src="${game.img}" class="card-img-top" alt="${game.name}" onerror="this.onerror=null; this.src='path/to/default-image.jpg';">
+    //             <div class="card-body text-center">
+    //                 <h5 class="card-title">${game.name}</h5>
+    //             </div>
+    //         </div>
+    //     `;
+    //         gameCardsContainer.appendChild(card);
+    //     });
+    // }
 
     function navigateCards(direction) {
         if (direction === 'next') {

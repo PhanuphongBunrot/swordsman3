@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
-    {{-- เรียกใช้ Vite (ถ้าใช้ Laravel 10 ขึ้นไป) --}}
-    @vite(['resources/js/app.js'])
+    <title>EXP UP เติมเงิน</title>
     <!-- เพิ่ม Bootstrap CDN ใน <head> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ตัวอย่างการเพิ่มฟอนต์จาก Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
 
 </head>
 
-<body>
+<body style="background-color:rgb(15, 37, 35);  font-family: 'Roboto', sans-serif;">
 
     <!-- {{-- Navbar สวย ๆ จาก Bootstrap --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -31,11 +32,11 @@
         </div>
     </nav> -->
 
-    <nav class="navbar navbar-expand-lg " style="background-color: #6439FF;">
+    <nav class="navbar navbar-expand-lg " style="background-color:#000;border-bottom: 1px solid #41e0cf; ">
         <div class="container">
-            <img src="{{ asset('images/logo.png') }}" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
+            <img src="{{ asset('images/logo.png') }}" width="50" height="50" class="d-inline-block align-top" alt="" loading="lazy">
             <a class="navbar-brand mx-2" href="#">
-                <h1 style="color: white;"> Exp</h1>
+                <h1 style="color: #41e0cf;"> EXP TOPUP </h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -43,7 +44,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link btn" style="background-color:#4F75FF; color:white; font-weight: bold;" href="javascript:void(0)" onclick="openModal()">เข้าสู่ระบบ หรือ ลงทะเบียน</a>
+                        <a class="nav-link btn" style="background-color:#41e0cf; color:#0F2523; font-weight: 500;" href="javascript:void(0)" onclick="openModal()">เข้าสู่ระบบ </a>
 
                     </li>
                 </ul>
@@ -98,8 +99,7 @@
         @yield('content')
     </div>
 
-    {{-- โหลด JavaScript --}}
-    <script src="{{ asset('js/app.js') }}"></script>
+
     <!-- JavaScript สำหรับเปิดและปิดโมเดล -->
     <script>
         function openModal() {
