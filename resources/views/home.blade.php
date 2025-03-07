@@ -2,6 +2,10 @@
 @section('title', 'หน้าแรก')
 
 @section('content')
+<!-- เลื่อนsmooth -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+
 <style>
     .carousel-inner img {
         width: 100%;
@@ -11,41 +15,105 @@
     }
 
 
+    /*game card*/
     .game-card {
+        position: relative;
         cursor: pointer;
-        transition: box-shadow 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transform-style: preserve-3d;
+        will-change: transform;
+        perspective: 1000px;
     }
 
-    .game-card.border-c {
+    
+    .game-card:hover {
+        transform: scale(1.05) rotateX(5deg) rotateY(-5deg);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+ 
+    /* .game-card.border-c {
         border: 5px solid #41e0cf;
     }
 
+  
     .game-card.selected .card-title {
         color: #41e0cf;
+    } */
+    @keyframes borderAnimation {
+        0% { border-image-source: linear-gradient(45deg, #41e0cf, #ffcc00, #ff5e62); }
+        25% { border-image-source: linear-gradient(90deg, #ffcc00, #ff5e62, #41e0cf); }
+        50% { border-image-source: linear-gradient(135deg, #ff5e62, #41e0cf, #ffcc00); }
+        75% { border-image-source: linear-gradient(180deg, #41e0cf, #ff5e62, #ffcc00); }
+        100% { border-image-source: linear-gradient(225deg, #ffcc00, #41e0cf, #ff5e62); }
     }
+
+    @keyframes textGlow {
+        0% { text-shadow: 0 0 5px #41e0cf, 0 0 10px #41e0cf; }
+        25% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
+        50% { text-shadow: 0 0 5px #ff5e62, 0 0 10px #ff5e62; }
+        75% { text-shadow: 0 0 5px #41e0cf, 0 0 10px #41e0cf; }
+        100% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
+    }
+
+    .game-card.border-c {
+        border: 2px solid transparent;
+        
+        border-image-slice: 1;
+         animation: borderAnimation 4s infinite alternate linear;
+    }
+
+    .game-card.selected .card-title {
+        color: black; 
+        /* animation: textGlow 2s infinite alternate; */
+    }
+
+  
+
 
     #game-cards .card {
-        /* width: 200px;
-        /* กำหนดความกว้าง */
-        /* height: 160px; */
-        /* กำหนดความสูง */
         margin: 10px;
-        /* ระยะห่างระหว่างการ์ด */
         display: flex;
         flex-direction: column;
-        /* ทำให้เนื้อหาภายในการ์ดวางในแนวตั้ง */
         justify-content: space-between;
-        /* จัดวางเนื้อหาภายในการ์ด */
         overflow: hidden;
-        /* ป้องกันการหลุดของเนื้อหาภายในการ์ด */
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
     }
 
+ 
     #game-cards .card img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        /* ปรับขนาดภาพให้เต็มการ์ดโดยไม่ทำให้ภาพเบี้ยว */
+        transition: transform 0.3s ease-in-out;
     }
+
+
+    #game-cards .card:hover img {
+        transform: scale(1.05);
+    }
+
+ 
+    .game-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 10%, transparent 70%);
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    
+    .game-card:hover::before {
+        opacity: 1;
+    }
+    
+
+
 
 
     .section-header {
@@ -244,35 +312,37 @@
         },
     ];
 
+    
+    // function renderCards() {
+        //     const startIdx = currentPage * cardsPerPage;
+        //     const endIdx = startIdx + cardsPerPage;
+        //     const pageGames = games.slice(startIdx, endIdx);
+        
+        //     const gameCardsContainer = document.getElementById('game-cards');
+        //     gameCardsContainer.innerHTML = '';
+        //     pageGames.forEach(game => {
+            //         const card = document.createElement('div');
+            //         card.classList.add('col-md-3');
+            //         card.innerHTML = `
+            //         <div class="card game-card" data-game-name="${game.name}">
+            //             <img src="${game.img}" class="card-img-top" alt="${game.name}" onerror="this.onerror=null; this.src='path/to/default-image.jpg';">
+            //             <div class="card-body text-center">
+            //                 <h5 class="card-title">${game.name}</h5>
+            //             </div>
+            //         </div>
+            //     `;
+            //         gameCardsContainer.appendChild(card);
+            //     });
+            // }
+            
     const cardsPerPage = 4;
     let currentPage = 0;
-
-    // function renderCards() {
-    //     const startIdx = currentPage * cardsPerPage;
-    //     const endIdx = startIdx + cardsPerPage;
-    //     const pageGames = games.slice(startIdx, endIdx);
-
-    //     const gameCardsContainer = document.getElementById('game-cards');
-    //     gameCardsContainer.innerHTML = '';
-    //     pageGames.forEach(game => {
-    //         const card = document.createElement('div');
-    //         card.classList.add('col-md-3');
-    //         card.innerHTML = `
-    //         <div class="card game-card" data-game-name="${game.name}">
-    //             <img src="${game.img}" class="card-img-top" alt="${game.name}" onerror="this.onerror=null; this.src='path/to/default-image.jpg';">
-    //             <div class="card-body text-center">
-    //                 <h5 class="card-title">${game.name}</h5>
-    //             </div>
-    //         </div>
-    //     `;
-    //         gameCardsContainer.appendChild(card);
-    //     });
-    // }
 
     function navigateCards(direction) {
         if (direction === 'next') {
             // เลื่อนไปข้างหน้า ถ้าถึงหน้าสุดท้ายจะวนกลับไปที่หน้าแรก
             currentPage = (currentPage + 1) % Math.ceil(games.length / cardsPerPage);
+            
         } else if (direction === 'prev') {
             // เลื่อนไปข้างหลัง ถ้าถึงหน้าแรกจะวนกลับไปที่หน้าสุดท้าย
             currentPage = (currentPage - 1 + Math.ceil(games.length / cardsPerPage)) % Math.ceil(games.length / cardsPerPage);
@@ -286,6 +356,7 @@
         renderCards();
     });
 
+    
 
     function renderCards() {
         const startIdx = currentPage * cardsPerPage;
@@ -308,21 +379,43 @@
             gameCardsContainer.appendChild(card);
         });
 
-        // เพิ่มการตั้งค่า listener สำหรับการคลิกการ์ดใหม่ทุกครั้ง
-        document.querySelectorAll('.game-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.game-card').forEach(item => {
-                    item.classList.remove('border-c');
-                    item.classList.remove('selected');
-                });
+        
+        // 3D  Effect
+    function handleMouseMove(e, card) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
 
-                this.classList.add('border-c');
-                this.classList.add('selected');
+        const rotateX = ((centerY - y) / centerY) * 15; // แนวตั้ง
+        const rotateY = ((centerX - x) / centerX) * -15; // แนวนอน
 
-                const gameName = this.getAttribute('data-game-name');
-                console.log('คุณเลือก: ' + gameName);
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    }
+
+   
+    function handleMouseLeave(card) {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+    }
+
+    
+    document.querySelectorAll('.game-card').forEach((card) => {
+        card.addEventListener('mousemove', (e) => handleMouseMove(e, card));
+        card.addEventListener('mouseleave', () => handleMouseLeave(card));
+
+       
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.game-card').forEach(item => {
+                item.classList.remove('border-c', 'selected');
             });
+
+            this.classList.add('border-c', 'selected');
+            const gameName = this.getAttribute('data-game-name');
+            console.log('คุณเลือก:', gameName);
         });
+    });
+
     }
 </script>
 
