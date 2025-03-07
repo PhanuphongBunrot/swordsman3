@@ -3,16 +3,44 @@
 
 @section('content')
 <!-- เลื่อนsmooth -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script> -->
 
 
 <style>
-    .carousel-inner img {
-        width: 100%;
-        height: 40vh;
-        /* ใช้ความสูงเป็น 60% ของหน้าจอ */
-        object-fit: contain;
-    }
+.carousel-container{
+    padding:0px;
+}
+.carousel-inner {
+    display: flex;
+    align-items: center;
+    background-color: black;
+}
+
+
+.carousel-item {
+    text-align: center;
+    height: 50vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:transparent;
+}
+
+
+.carousel-image {
+    max-height: 100vh; 
+    width: 100%;
+    object-fit: contain;
+   
+}
+
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    border-radius: 10px;
+    transition: opacity 0.5s ease-in-out;
+}
 
 
     /*game card*/
@@ -40,6 +68,7 @@
     .game-card.selected .card-title {
         color: #41e0cf;
     } */
+
     @keyframes borderAnimation {
         0% { border-image-source: linear-gradient(45deg, #41e0cf, #ffcc00, #ff5e62); }
         25% { border-image-source: linear-gradient(90deg, #ffcc00, #ff5e62, #41e0cf); }
@@ -48,16 +77,16 @@
         100% { border-image-source: linear-gradient(225deg, #ffcc00, #41e0cf, #ff5e62); }
     }
 
-    @keyframes textGlow {
+    /* @keyframes textGlow {
         0% { text-shadow: 0 0 5px #41e0cf, 0 0 10px #41e0cf; }
         25% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
         50% { text-shadow: 0 0 5px #ff5e62, 0 0 10px #ff5e62; }
         75% { text-shadow: 0 0 5px #41e0cf, 0 0 10px #41e0cf; }
         100% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
-    }
+    } */
 
     .game-card.border-c {
-        border: 2px solid transparent;
+        border: 2.5px solid transparent;
         
         border-image-slice: 1;
          animation: borderAnimation 4s infinite alternate linear;
@@ -66,6 +95,9 @@
     .game-card.selected .card-title {
         color: black; 
         /* animation: textGlow 2s infinite alternate; */
+    }
+    .game-card.selected{
+        scale:1.05;
     }
 
   
@@ -118,10 +150,11 @@
 
     .section-header {
         /* background-color: #40E0D0; */
-        padding: 5px;
+        /* padding: 5px; */
         border-radius: 5px;
         color: #000000;
-        margin-bottom: 5px;
+      
+        /* margin-bottom: 5px; */
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -193,52 +226,170 @@
         box-shadow: 0 0 10px rgba(144, 238, 144, 0.7);
         color: #41e0cf;
     }
+
+
+    
+    @media (max-width: 767px) {
+        
+      .carousel-item {
+        text-align: center;
+        height: 100%; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+        .carousel-image {
+        max-height: 100vh; 
+        width: 100%;
+        object-fit: cover;
+    
+        }
+
+        
+        .selectgame-container h4{
+            display:flex;
+            font-size:12px;
+            text-align:center;
+            align-items:center;
+        }
+
+        .pagination-buttons button {
+       
+        color: #41e0cf;
+        border: 2px solid #41e0cf;
+        /* กรอบสีน้ำเงิน */
+        border-radius: 50%;
+        /* ทำให้ปุ่มเป็นวงกลม */
+        width: 30px;
+        /* กำหนดความกว้าง */
+        height: 30px;
+        /* กำหนดความสูง */
+        padding: 0;
+        margin:0;
+        /* ลบการ padding ในปุ่ม */
+        cursor: pointer;
+        background-color: transparent;
+        /* พื้นหลังใส */
+  
+        }
+
+
+
+    /*game card */
+         #game-cards .col-md-3 {
+         flex: 0 0 50%; 
+         max-width: 50%;
+            
+        }
+        .card h5{
+           font-size:10px;
+        }
+        .card-body{
+           padding-top:10px;
+           padding-left: 2px;
+           padding-right: 2px;
+           padding-bottom: 2px;
+        }
+
+        /*แถบแพ็คเกจ */
+        .package-container {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 15px; 
+            padding:0px 5px ;
+            height:auto;
+        }
+
+       .btn-icon p {
+            white-space: nowrap; 
+            font-size: 12px; 
+            text-align: center;
+            margin: 0;
+        }
+
+        .btn-icon {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        width: 80px; 
+        height: 50px;
+        padding: 0px 5px;
+        text-align: center;
+        margin: 0;
+         }
+
+      
+
+        
+
+
+    }
+    
+    @media only screen and (min-width: 768px) and (max-width: 1400px)  {
+        .carousel-item {
+        text-align: center;
+        background:transparent;
+         height: 100%; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      
+        }
+
+        .card h5{
+           font-size:13px;
+        }
+      
+    } 
+
 </style>
 
-<div class="container">
-    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover">
+<div class="carousel-container">
+    <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"></button>
         </div>
+
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{{ asset('images/01.jpg') }}" class="d-block w-100" alt="...">
+                <img src="{{ asset('images/01.jpg') }}" class="carousel-image" alt="...">
                 <div class="carousel-caption d-none d-md-block">
-                    <h5>First slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
+                    <h5>First Slide</h5>
+                    <p>รายละเอียดเกี่ยวกับสไลด์แรก</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/02.jpg') }}" class="d-block w-100" alt="...">
+                <img src="{{ asset('images/02.jpg') }}" class="carousel-image" alt="...">
                 <div class="carousel-caption d-none d-md-block">
-                    <h5>Second slide label</h5>
-                    <p>Some representative placeholder content for the second slide.</p>
+                    <h5>Second Slide</h5>
+                    <p>รายละเอียดเกี่ยวกับสไลด์ที่สอง</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/03.jpg') }}" class="d-block w-100" alt="...">
+                <img src="{{ asset('images/03.jpg') }}" class="carousel-image" alt="...">
                 <div class="carousel-caption d-none d-md-block">
-                    <h5>Third slide label</h5>
-                    <p>Some representative placeholder content for the third slide.</p>
+                    <h5>Third Slide</h5>
+                    <p>รายละเอียดเกี่ยวกับสไลด์ที่สาม</p>
                 </div>
             </div>
         </div>
+
+        <!-- ปุ่มเลื่อนซ้ายขวา -->
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
         </button>
     </div>
-
 </div>
 
-<div class="container mt-4">
-    <div class=" section-header p-2" style="background-color:rgb(0, 0, 0);">
+<div class="selectgame-container mt-4">
+    <div class="section-header p-1" style="background-color:rgb(0, 0, 0);">
         <h4>เลือกเกม</h4>
         <div class="pagination-buttons">
             <div class="pagination-buttons">
@@ -257,7 +408,9 @@
     </div>
 </div>
 
-<div class="container mt-4">
+
+
+<div class="package-container mt-4 mb-4">
     <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
         <button class="btn btn-icon">
             <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> หยก</p>
