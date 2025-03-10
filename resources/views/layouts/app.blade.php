@@ -22,6 +22,7 @@
 <body style="background-color:rgb(15, 37, 35);  font-family: 'Roboto', sans-serif;">
 
     <style>
+      
         @media (max-width: 767px) {
 
             .navbar-brand img {
@@ -87,7 +88,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">เข้าสู่ระบบ หรือ ลงทะเบียน</h5>
+                    <h5 class="modal-title text-center w-100">เข้าสู่ระบบ หรือ ลงทะเบียน</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
