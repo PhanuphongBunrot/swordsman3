@@ -9,9 +9,9 @@ $(function () {
             password: $('#password').val()
         })
             .then(function (response) {
-                if(response.data.status != false){
+                if (response.data.status != false) {
                     window.location.href = '/';
-                }else{
+                } else {
                     $('#recheck').html('Username or password is incorrect');
                     $('#email').val('');
                     $('#password').val('');
@@ -23,6 +23,9 @@ $(function () {
                 // handle error, e.g., show error message
             });
     });
+
+
+  
 
 
 });

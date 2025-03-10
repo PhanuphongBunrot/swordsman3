@@ -30,7 +30,8 @@ class GoogleAuthController extends Controller
             'avatar' => $googleUser->getAvatar(),
             'token' => $googleUser->token,
         ];
-
+        echo "<pre>";
+        print_r($googleUser);
 
 
         $openId = env('openID');
@@ -40,28 +41,27 @@ class GoogleAuthController extends Controller
         $access_token = $googleUserArray['token'];
         $openKey = env('openKey');
 
-        $params = [
-            'openId' => $openId,
-            'productCode' => $productCode,
-            'openType' => $openType,
-            'userOpenId' => $userOpenId,
-            'access_token' => $access_token
-        ];
+        // $params = [
+        //     'openId' => $openId,
+        //     'productCode' => $productCode,
+        //     'openType' => $openType,
+        //     'userOpenId' => $userOpenId,
+        //     'access_token' => $access_token
+        // ];
 
-        // คำนวณค่า MD5 sign
-        $sign = $this->getMd5Sign($params, $openKey);
-        $params['sign'] = $sign;
+        // // คำนวณค่า MD5 sign
+        // $sign = $this->getMd5Sign($params, $openKey);
+        // $params['sign'] = $sign;
 
        
 
-        // API URL
-        $url = env('URL_SDK') . "open/snsLogin";
+        // // API URL
+        // $url = env('URL_SDK') . "open/snsLogin";
 
-        // ส่ง API
-        $response = $this->sendPostRequest($url, $params);
+        // // ส่ง API
+        // $response = $this->sendPostRequest($url, $params);
       // print_r($response);
-      echo "<pre>";
-      print_r($response);
+      
         // Session::put('authenticated', true);
 
 
