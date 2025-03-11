@@ -23,113 +23,123 @@
 
     <style>
         
-        /* ปรับสไตล์สำหรับปุ่มเข้าสู่ระบบ */
-        .btn:hover {
-            background-color: #48C9B0;
-            /* สีเมื่อเมาส์วางบนปุ่ม */
-        }
+            /* ปรับสไตล์สำหรับปุ่มเข้าสู่ระบบ */
+            .btn:hover {
+                background-color: #48C9B0;
+                /* สีเมื่อเมาส์วางบนปุ่ม */
+            }
 
-        .btn-group-vertical {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            /* ให้ปุ่มทั้งหมดอยู่กลาง */
-            justify-content: center;
-        }
+            .btn-group-vertical {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                /* ให้ปุ่มทั้งหมดอยู่กลาง */
+                justify-content: center;
+            }
 
                 /* ปุ่ม Social Login ทั่วไป */
-            .social-login-btn {
-                display: flex;
-                width: 230px;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                border-radius: 8px;
-                text-decoration: none;
-                margin: 5px 0;
-                transition: all 0.2s ease-in-out;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* เงาให้ปุ่มดูนูน */
-            }
-        /* เอฟเฟกต์นูนเมื่อ Hover */
-        .social-login-btn:hover {
-            transform: translateY(-3px); /* เลื่อนขึ้นเล็กน้อยให้ดูนูน */
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* เพิ่มเงาให้ดูมีมิติ */
-            color: inherit !important; /* คงสีตัวอักษรเดิม */
-            
-        }
-        .google-btn {
-            border: 1px solid rgb(0, 51, 133);
-            color: #000;
-            background-color: #fff;
-        }
-
-        .facebook-btn {
-            background-color: #0866FF;
-            color: white;
-        }
-
-        .social-btn-content {
+       .social-login-btn {
             display: flex;
-            align-items: center;
-        }
-
-        .social-icon {
-            width: 30px;
-            margin-right: 10px;
-        }
-
-        /* ปรับขนาดของปุ่ม Apple Sign In */
-        .apple-sign-in-button {
-            width: 250px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            border-radius: 8px;
+            width: 100%; 
+            max-width: 230px;
+            justify-content: flex-start; 
+            align-items: center; 
             padding: 10px;
+            border-radius: 8px;
+            margin-bottom:10px;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+            font-size: 17px;
+            text-align: left; 
         }
 
-        /* ปุ่มล็อกอินด้วยอีเมล */
-        .email-login-btn {
-            background-color: rgb(0, 193, 174);
-            color: white;
-            font-size: 16px;
-            margin-top: 15px;
-        }
+            /* เอฟเฟกต์นูนเมื่อ Hover */
+            .social-login-btn:hover {
+                transform: translateY(-3px); /* เลื่อนขึ้นเล็กน้อยให้ดูนูน */
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* เพิ่มเงาให้ดูมีมิติ */
+                color: inherit !important; /* คงสีตัวอักษรเดิม */
+                
+            }
+            .google-btn {
+                border: 1px solid rgb(0, 51, 133);
+                color: #000;
+                background-color: #fff;
+            }
 
-        .email-login-btn:hover {
-            background-color: #48C9B0;
-        }
+            .facebook-btn {
+                background-color: #0866FF;
+                color: white;
+            }
 
-        /* เพิ่มการจัดแนวของข้อความ */
-        .text-center {
-            text-align: center;
-        }
+            .social-btn-content {
+                display: flex;
+                align-items: center;
+            }
 
-        /* ปรับการจัดตำแหน่งและขนาดในรูปแบบ flex */
-        .d-flex {
-            display: flex;
-        }
+            .social-icon {
+                width: 30px;
+                margin-right: 10px;
+            }
 
-        /* แบ่งเป็นซ้ายและขวา */
-        .form-left,
-        .form-right {
-            flex: 1;
-        }
+            /* ปรับขนาดของปุ่ม Apple Sign In */
+            .apple-sign-in-button {
+                width: 250px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                border-radius: 8px;
+                padding: 0px 10px;
+            }
+              /* เอฟเฟกต์นูนเมื่อ Hover */
+            .apple-sign-in-button:hover {
+                transform: translateY(-3px); /* เลื่อนขึ้นเล็กน้อยให้ดูนูน */
+                box-shadow: 0 6px 10px transparent; /* เพิ่มเงาให้ดูมีมิติ */
+                
+            }
 
-        /* ปรับช่องว่างระหว่างสองฝั่ง */
-        .pr-3 {
-            padding-right: 15px;
-        }
+            /* ปุ่มล็อกอินด้วยอีเมล */
+            .email-login-btn {
+                background-color: rgb(0, 193, 174);
+                color: white;
+                font-size: 16px;
+                margin-top: 15px;
+            }
 
-        .pl-3 {
-            padding-left: 15px;
-        }
+            .email-login-btn:hover {
+                background-color: #48C9B0;
+            }
 
-        .w-50 {
-            width: 50%;
-        }
+            /* เพิ่มการจัดแนวของข้อความ */
+            .text-center {
+                text-align: center;
+            }
+
+            /* ปรับการจัดตำแหน่งและขนาดในรูปแบบ flex */
+            .d-flex {
+                display: flex;
+            }
+
+            /* แบ่งเป็นซ้ายและขวา */
+            .form-left,
+            .form-right {
+                flex: 1;
+            }
+
+            /* ปรับช่องว่างระหว่างสองฝั่ง */
+            .pr-3 {
+                padding-right: 15px;
+            }
+
+            .pl-3 {
+                padding-left: 15px;
+            }
+
+            .w-50 {
+                width: 50%;
+            }
         
         @media (max-width: 767px) {
 
@@ -186,11 +196,10 @@
 
             .apple-sign-in-button {
                 width: 170px;
-                height: 50px;
+                height: 30px;
             }
 
           
-
             .form-left, .form-right {
                 width: 100%;
                 padding: 0;
