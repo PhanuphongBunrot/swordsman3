@@ -13,7 +13,7 @@ class CheckUser
         // Check if the user is authenticated
         if (!Session::get('authenticated')) {
             // If not authenticated, redirect to login page
-            return redirect('/login');
+            return redirect('/');
         }
 
         return $next($request);

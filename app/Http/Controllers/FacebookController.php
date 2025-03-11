@@ -63,20 +63,20 @@ class FacebookController extends Controller
     
             // ส่ง API
             $response = $this->sendPostRequest($url, $params);
-            print_r($response);
+          
 
           
         $res = json_decode($response, true);
 
-
-
+            // echo "<pre>";
+            // print_r( $res['data']['otherAccountName'] );
 
         if ($res['status'] == 1) {
 
             Session::put('authenticated', true);
+            Session::put('username',$res['data']['otherAccountName'] );
 
-
-            return redirect()->route('home');
+            return redirect()->route('user');
         }
         } catch (\Exception $e) {
             dd($e->getMessage());

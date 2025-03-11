@@ -215,7 +215,54 @@
 
     </style>
 
+    <!-- {{-- Navbar สวย ๆ จาก Bootstrap --}}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <img src="{{ asset('images/logo.png') }}" width="60" height="50" class="d-inline-block align-top" alt="" loading="lazy">
+            <a class="navbar-brand" href="#"> Exp Topup</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link btn btn-primary text-white" href="#">เข้าสู่ระบบ หรือ ลงทะเบียน</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav> -->
+    @if(session('username'))
+    <nav class="navbar navbar-expand-lg" style="background-color:#000;border-bottom: 1px solid #41e0cf;padding:1px;">
+        <div class="container">
+            <!-- โลโก้ -->
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{{ asset('images/logo.png') }}" width="45" height="45" class="d-inline-block align-top" alt="" loading="lazy">
+                <h1 class="ms-2 mb-0 d-md-block" style="color: #41e0cf; font-size: 22px;">EXP TOPUP</h1>
+            </a>
 
+            <!-- ปุ่ม Toggle สำหรับมือถือ -->
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list" style="font-size: 24px; color: #41e0cf;"></i>
+            </button>
+
+            <!-- เมนู -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <span style="color: #fff;">{{session('username')}}</span>
+                        <span style="color: #fff;">{{session('amount')}}</span>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="nav-link btn btn-login" style="color: #000; background-color:#41e0cf;">
+                            <i class="bi bi-box-arrow-right"></i>  ออกจากระบบ
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    @else
     <nav class="navbar navbar-expand-lg" style="background-color:#000;border-bottom: 1px solid #41e0cf;padding:1px;">
         <div class="container">
             <!-- โลโก้ -->
@@ -239,6 +286,13 @@
             </div>
         </div>
     </nav>
+
+    @endif
+
+
+
+
+
 
     <!-- โมเดล -->
     <div class="modal" tabindex="-1" id="loginModal" aria-hidden="true">

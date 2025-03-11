@@ -19,9 +19,7 @@ use App\Http\Controllers\AppleAuthController;
 |
 */
 
-Route::get('/login', function () {
-    return view('login.login');
-});
+
 Route::get('/register', function () {
     return view('login.register');
 });
@@ -62,4 +60,10 @@ Route::get('/', function () {
 });
 
 
-Route::middleware('checkuser')->group(function () {});
+Route::middleware('checkuser')->group(function () {
+
+Route::get('/user', function () {
+    return view('user.index');
+})->name('user');;
+
+});

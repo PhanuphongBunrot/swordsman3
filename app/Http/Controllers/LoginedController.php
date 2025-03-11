@@ -65,16 +65,18 @@ class LoginedController extends Controller
         // ส่ง API
         $res = $this->sendPostRequest($url, $params);
         $res = json_decode($res, true);
-
+       
+        $amount =  $this->get_poin_sdk($uid);
+      
 
 
 
         if ($res['status'] == 1) {
 
             Session::put('authenticated', true);
-
-
-            return redirect()->route('home');
+            Session::put('username', $data['data']['username']);
+            Session::put('amount', $amount);
+            return redirect()->route('user');
         }
 
        
@@ -82,9 +84,9 @@ class LoginedController extends Controller
 
     public function logout()
     {
-        Session::forget('authenticated');
+        session()->flush();
 
-        return redirect('/login');
+        return redirect('/');
     }
 
     public function save_register (){

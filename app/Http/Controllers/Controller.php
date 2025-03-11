@@ -39,4 +39,37 @@ class Controller extends BaseController
         curl_close($ch);
         return $response;
     }
+
+    public function  get_poin_sdk ($uid){
+
+        $openId = env('openID');
+        $productCode = env('productCode');
+        $userId = $uid;
+        $openKey = env('openKey');
+
+
+
+        $params = [
+            'openId' => $openId,
+            'productCode' => $productCode,
+            'userId' => $userId,
+            
+        ];
+
+        // คำนวณค่า MD5 sign
+        $sign = $this->getMd5Sign($params, $openKey);
+        $params['sign'] = $sign;
+
+
+
+        // API URL
+        $url = env('URL_SDK') . "open/walletInfo";
+
+        // ส่ง API
+        $response = $this->sendPostRequest($url, $params);
+        $res = json_decode($response, true);
+
+        
+        return $res['data']['amount'];
+    }
 }
