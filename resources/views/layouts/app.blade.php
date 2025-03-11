@@ -140,6 +140,53 @@
             .w-50 {
                 width: 50%;
             }
+
+            
+        /* ส่วนที่ล็อกอินแล้ว */
+        /* สไตล์สำหรับส่วนข้อมูลผู้ใช้ */
+        .navbar-user-info {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .user-info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .user-info-item {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .user-balance {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffc107; /* สีเหลือง */
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .logout-btn img {
+            width: 100px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .logout-btn img:hover {
+            transform: scale(1.05);
+        }
+
         
         @media (max-width: 767px) {
 
@@ -149,7 +196,7 @@
             }
 
             .btn-login {
-                width: 30%;
+                width: 100%;
                 text-align: center;
                 margin-left: auto;
                 margin-top: 5px;
@@ -216,6 +263,19 @@
                 font-size:10px;
             }
 
+            /*หลังจากล้อกอิน*/ 
+            .user-name {
+            font-size: 12px; 
+            }
+
+            .user-balance {
+                font-size: 14px; /* ลดขนาดยอดเงิน */
+            }
+
+            .logout-btn img {
+                width: 60px; /* ลดขนาดปุ่มออกจากระบบ */
+            }
+
 
         }
         
@@ -240,36 +300,40 @@
         </div>
     </nav> -->
     @if(session('username'))
-    <nav class="navbar navbar-expand-lg" style="background-color:#000;border-bottom: 1px solid #41e0cf;padding:1px;">
-        <div class="container">
-            <!-- โลโก้ -->
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="{{ asset('images/logo.png') }}" width="45" height="45" class="d-inline-block align-top" alt="" loading="lazy">
-                <h1 class="ms-2 mb-0 d-md-block" style="color: #41e0cf; font-size: 22px;">EXP TOPUP</h1>
-            </a>
+    <nav class="navbar navbar-expand-lg" style="background-color:#000; border-bottom: 1px solid #41e0cf; padding: 1px;">
+    <div class="container">
+        <!-- โลโก้ -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{{ asset('images/logo.png') }}" width="45" height="45" class="d-inline-block align-top" alt="" loading="lazy">
+            <h1 class="ms-2 mb-0 d-md-block" style="color: #41e0cf; font-size: 22px;">EXP TOPUP</h1>
+        </a>
 
-            <!-- ปุ่ม Toggle สำหรับมือถือ -->
-            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <i class="bi bi-list" style="font-size: 24px; color: #41e0cf;"></i>
-            </button>
+        <!-- ปุ่ม Toggle HamBurgerBar สำหรับมือถือ -->
+        <!-- <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="bi bi-list" style="font-size: 24px; color: #41e0cf;"></i>
+        </button> -->
 
-            <!-- เมนู -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <span style="color: #fff;">{{session('username')}}</span>
-                        <span style="color: #fff;">{{session('amount')}}</span>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="nav-link btn btn-login" style="color: #000; background-color:#41e0cf;">
-                            <i class="bi bi-box-arrow-right"></i>  ออกจากระบบ
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        <!-- เมนู -->
+       <div class="navbar-user-info justify-content-end">
+    <ul class="user-info-list text-end d-flex flex-column align-items-end">
+        <li class="user-info-item">
+            <span class="user-name">{{ session('username') }}</span>
+        </li>
+        <li class="user-info-item">
+            <span class="user-balance">฿{{ number_format(session('amount'), 2) }}</span>
+        </li>
+        <li class="user-info-item ">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    <img src="{{ asset('images/button-logout.gif') }}" alt="Logout">
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
+
+</nav>
 
     @else
     <nav class="navbar navbar-expand-lg" style="background-color:#000;border-bottom: 1px solid #41e0cf;padding:1px;">
@@ -281,12 +345,12 @@
             </a>
 
             <!-- ปุ่ม Toggle สำหรับมือถือ -->
-            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <!-- <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list" style="font-size: 24px; color: #41e0cf;"></i>
-            </button>
+            </button> -->
 
             <!-- เมนู -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <div class=" justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link btn btn-login" style="color: #000;background-color:#41e0cf;" href="javascript:void(0)" onclick="openModal()">เข้าสู่ระบบ</a>
