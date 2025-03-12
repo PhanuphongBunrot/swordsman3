@@ -377,7 +377,7 @@
                     <a class="nav-link btn btn-login"
                         href="javascript:void(0)"
                         onclick="openModal()"
-                        style="color: #000; background-color:#41e0cf; filter: drop-shadow(4px 4px 8px rgba(0, 255, 255, 0.4));">
+                        style="color: #000; background-color:#41e0cf; filter: drop-shadow(4px 4px 8px rgba(0, 255, 255, 0.2));">
                         เข้าสู่ระบบ
                     </a>
                 </li>
