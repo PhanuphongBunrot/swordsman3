@@ -922,8 +922,8 @@ function handleMouseMove(e, card) {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
-        const rotateX = ((centerY - y) / centerY) * 15;
-        const rotateY = ((centerX - x) / centerX) * -15;
+        const rotateX = ((centerY - y) / centerY) * 10;
+        const rotateY = ((centerX - x) / centerX) * -10;
 
         card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
     });
