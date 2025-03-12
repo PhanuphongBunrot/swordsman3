@@ -171,23 +171,40 @@
             color: #ffc107; /* สีเหลือง */
         }
 
+     
+
         .logout-btn {
-            background: transparent;
+            background: none;
             border: none;
-            padding: 0;
             cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            padding:0px;
+            margin-bottom:1px;
         }
 
         .logout-btn img {
-            width: 100px;
-            transition: transform 0.2s ease-in-out;
+            width: 100px; /* ปรับขนาดปุ่ม */
+            /* filter: drop-shadow(0px 0px 10px #41e0cf);  */
         }
 
-        .logout-btn img:hover {
-            transform: scale(1.05);
+        .logout-btn:hover img {
+            transform: scale(1.1); /* ขยายปุ่มเมื่อ hover */
+            filter: drop-shadow(0px 0px 15px #41e0cf); /* เงาเข้มขึ้น */
         }
 
-        
+        .modal-content {
+        background: linear-gradient(135deg, #ffffff 0%, #f7f7f7 100%); /* สีขาวไฮโซแบบไล่เฉด */
+        border-radius: 16px; /* ขอบโค้งมน */
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); /* เงาหรู */
+        border: none;
+        width: auto;
+        margin:0 auto;
+        }
+
+        .modal-body{
+            padding-left:30px;
+        }
+            
         @media (max-width: 767px) {
 
             .navbar-brand img {
@@ -201,7 +218,11 @@
                 margin-left: auto;
                 margin-top: 5px;
                 margin-bottom: 5px;
-                padding: 2px;
+                padding: 2px 5px !important;
+                font-size:13px;
+            }
+              .modal-body{
+                padding-left:10px;
             }
 
             .modal-dialog {
@@ -249,7 +270,7 @@
           
             .form-left, .form-right {
                 width: 100%;
-                padding: 0;
+                padding-left: 10px;
             }
 
             .pr-3, .pl-3 {
@@ -326,7 +347,7 @@
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">
-                    <img src="{{ asset('images/button-logout.gif') }}" alt="Logout">
+                    <img src="{{ asset('images/logout-button-image.png') }}" alt="Logout">
                 </button>
             </form>
         </li>
@@ -350,13 +371,19 @@
             </button> -->
 
             <!-- เมนู -->
-            <div class=" justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-login" style="color: #000;background-color:#41e0cf;" href="javascript:void(0)" onclick="openModal()">เข้าสู่ระบบ</a>
-                    </li>
-                </ul>
-            </div>
+           <div class="justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-login"
+                        href="javascript:void(0)"
+                        onclick="openModal()"
+                        style="color: #000; background-color:#41e0cf; filter: drop-shadow(4px 4px 8px rgba(0, 255, 255, 0.4));">
+                        เข้าสู่ระบบ
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         </div>
     </nav>
 
@@ -390,7 +417,7 @@
 
                             </div>
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-block email-login-btn mb-3">
+                                <button type="submit" class="btn btn-block email-login-btn mb-3" style="color: #000; background-color:#41e0cf; filter: drop-shadow(4px 4px 8px rgba(0, 255, 255, 0.4));">
                                     Login with Email
                                 </button>
                             </div>
@@ -398,7 +425,7 @@
                         </div>
 
                         <!-- ขวา: ปุ่มล็อกอินด้วยโซเชียล -->
-                        <div class="form-right w-50 pl-3">
+                        <div class="form-right w-50 ">
 
                             <!-- ปุ่มเข้าสู่ระบบทางสังคม (Google, Facebook, Apple) -->
                             <div class="btn-group-vertical d-flex justify-content-center mb-3" role="group">
