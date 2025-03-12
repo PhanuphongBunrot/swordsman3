@@ -418,24 +418,227 @@
 
 
 
+<!-- Package Section -->
 <div class="package-container mt-4 mb-4">
     <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
-        <button class="btn btn-icon">
+        <button class="btn btn-icon" onclick="displayCards('หยก')">
             <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> หยก</p>
         </button>
-        <button class="btn btn-icon">
+        <button class="btn btn-icon" onclick="displayCards('ทอง')">
             <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ทอง</p>
         </button>
-        <button class="btn btn-icon">
+        <button class="btn btn-icon" onclick="displayCards('ตำลึง')">
             <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ตำลึง</p>
         </button>
-        <button class="btn btn-icon">
+        <button class="btn btn-icon" onclick="displayCards('โปรโมชั่น')">
             <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gift"></i> โปรโมชั่น</p>
         </button>
     </div>
-
 </div>
 
+<!-- ส่วนแสดงการ์ด -->
+<div class="container">
+    <div class="row" id="package-cards">
+        <!-- การ์ดจะถูกเพิ่มที่นี่โดย JavaScript -->
+    </div>
+</div>
+
+<script>
+    const cardData = {
+
+        'หยก': [
+                { title: "หยก 1", img: "{{ asset('images/gold1-60.png') }}" },
+                { title: "หยก 2", img: "{{ asset('images/gold2-120.png') }}" },
+                { title: "หยก 3", img: "{{ asset('images/gold3-300.png') }}" },
+                { title: "หยก 4", img: "{{ asset('images/gold4-680.png') }}" },
+                { title: "หยก 5", img: "{{ asset('images/gold5-1280.png') }}" },
+                { title: "หยก 6", img: "{{ asset('images/gold6-2480.png') }}" },
+                { title: "หยก 7", img: "{{ asset('images/gold7-3280.png') }}" },
+                { title: "หยก 8", img: "{{ asset('images/gold8-6480.png') }}" }
+        ],
+        
+
+        'ทอง': [
+           { title: "ทอง 1", img: "{{ asset('images/gold1-60.png') }}" },
+                { title: "ทอง 2", img: "{{ asset('images/gold2-120.png') }}" },
+                { title: "ทอง 3", img: "{{ asset('images/gold3-300.png') }}" },
+                { title: "ทอง 4", img: "{{ asset('images/gold4-680.png') }}" },
+                { title: "ทอง 5", img: "{{ asset('images/gold5-1280.png') }}" },
+                { title: "ทอง 6", img: "{{ asset('images/gold6-2480.png') }}" },
+                { title: "ทอง 7", img: "{{ asset('images/gold7-3280.png') }}" },
+                { title: "ทอง 8", img: "{{ asset('images/gold8-6480.png') }}" }
+        ],
+        'ตำลึง': [
+            { title: "ตำลึง 1", img: "" },
+            { title: "ตำลึง 2", img: "" },
+            { title: "ตำลึง 3", img: "" },
+            { title: "ตำลึง 4", img: "" },
+            { title: "ตำลึง 5", img: "" },
+            { title: "ตำลึง 6", img: "" },
+            { title: "ตำลึง 7", img: "" },
+            { title: "ตำลึง 8", img: "" }
+        ],
+        'โปรโมชั่น': [
+            { title: "โปร 1", img: "" },
+            { title: "โปร 2", img: "" },
+            { title: "โปร 3", img: "" },
+            { title: "โปร 4", img: "" },
+            { title: "โปร 5", img: "" },
+            { title: "โปร 6", img: "" },
+            { title: "โปร 7", img: "" },
+            { title: "โปร 8", img: "" }
+        ]
+    };
+
+function displayCards(category) {
+    console.log("เลือกหมวดหมู่: " + category);
+
+    if (!cardData[category]) {
+        console.error("ไม่มีข้อมูลหมวดหมู่นี้:", category);
+        return;
+    }
+
+    const packageCardsContainer = document.getElementById('package-cards');
+    packageCardsContainer.innerHTML = ''; // ล้างการ์ดก่อนเพิ่มใหม่
+
+    const fragment = document.createDocumentFragment(); // ลดการ reflow
+
+    cardData[category].forEach((card) => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('package-card-wrapper', 'mb-4'); // ✅ ใช้คลาสที่รองรับ Responsive
+
+        cardElement.innerHTML = `
+            <div class="card package-card" data-package-name="${card.title}">
+                <img src="${card.img}" class="card-img-top" alt="${card.title}" onerror="this.src='https://via.placeholder.com/150'">
+                <div class="package-card-body text-center">
+                    <h5 class="package-card-title">${card.title}</h5>
+                </div>
+            </div>
+        `;
+
+        fragment.appendChild(cardElement);
+    });
+
+    packageCardsContainer.appendChild(fragment); // เพิ่มการ์ดทั้งหมดพร้อมกัน
+    apply3DEffectToPackageCards(); // เพิ่มเอฟเฟกต์ 3D hover
+}
+
+// ปรับให้ apply3DEffectToPackageCards() ใช้งานได้ดีขึ้น
+function apply3DEffectToPackageCards() {
+    document.querySelectorAll('.package-card').forEach((card) => {
+        if (!card.dataset.listenerAdded) {
+            card.addEventListener('mousemove', (e) => handleMouseMove(e, card));
+            card.addEventListener('mouseleave', () => handleMouseLeave(card));
+            card.addEventListener('click', function () {
+                selectPackageCard(this);
+                console.log('คุณเลือกแพ็กเกจ:', this.getAttribute('data-package-name'));
+            });
+            card.dataset.listenerAdded = "true"; // ป้องกันการเพิ่ม Event Listener ซ้ำซ้อน
+        }
+    });
+}
+
+// ใช้ requestAnimationFrame เพื่อให้แอนิเมชันลื่นขึ้น
+function handleMouseMove(e, card) {
+    requestAnimationFrame(() => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((centerY - y) / centerY) * 10;
+        const rotateY = ((centerX - x) / centerX) * -10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    });
+}
+
+// รีเซ็ตการ์ดเมื่อเมาส์ออก
+function handleMouseLeave(card) {
+    requestAnimationFrame(() => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+    });
+}
+
+// ฟังก์ชันเมื่อคลิกเลือกการ์ด
+function selectPackageCard(card) {
+    document.querySelectorAll('.package-card').forEach(item => {
+        item.classList.remove('border-c', 'selected');
+    });
+
+    card.classList.add('border-c', 'selected');
+}
+
+// โหลดการ์ดหมวดหมู่แรกเมื่อหน้าเว็บโหลดเสร็จ
+document.addEventListener("DOMContentLoaded", () => {
+    displayCards('หยก');
+});
+
+
+</script>
+
+<style>
+.package-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    transform-style: preserve-3d;
+    border: 2px solid transparent;
+    will-change: transform;
+    backface-visibility: hidden;
+    
+}
+
+/*  Layout  */
+.package-card-wrapper {
+    flex: 0 0 25%; /* ค่าเริ่มต้น: แถวละ 4 คอลัมน์ */
+    max-width: 25%;
+}
+/* เอฟเฟกต์ขอบเรืองแสงเฉพาะการ์ดที่ถูกเลือก */
+.package-card.selected {
+    border: 4px solid transparent;
+    border-image-slice: 1;
+    animation: borderAnimation 4s infinite alternate linear;
+    scale:1.08;
+}
+
+/* คีย์เฟรมสำหรับขอบเรืองแสง */
+@keyframes borderAnimation {
+    0% { border-image-source: linear-gradient(45deg, #41e0cf, #ffcc00, #ff5e62); }
+    50% { border-image-source: linear-gradient(135deg, #ff5e62, #41e0cf, #ffcc00); }
+    100% { border-image-source: linear-gradient(225deg, #ffcc00, #41e0cf, #ff5e62); }
+}
+
+/* เอฟเฟกต์ Hover */
+.package-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+@media only screen and (max-width: 767px) {
+    .package-card-wrapper {
+        flex: 0 0 50%;  /* แถวละ 2 คอลัมน์ */
+        max-width: 50%;
+        padding: 5px;  /* ลดระยะห่าง */
+    }
+
+    .package-card {
+        transform: scale(0.85) !important;  /* ล็อกขนาดการ์ดไว้ที่ 85% */
+        transition: box-shadow 0.3s ease-out; /*  ลบ transition ของ transform ออก */
+    }
+
+    /* Hover เปลี่ยนเฉพาะเงา ไม่ขยาย */
+    .package-card:hover {
+        transform: scale(0.85) !important; 
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+
+</style>
+
+<!-- End Package Section -->
 
 
 <script>
