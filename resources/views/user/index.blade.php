@@ -2,9 +2,11 @@
 @section('title', 'หน้าแรก')
 
 @section('content')
-<!-- เลื่อนsmooth -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script> -->
 
+<!-- Sweet Alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
 .carousel-container{
@@ -416,39 +418,6 @@
     </div>
 </div>
 
-
-
-<div class="package-container mt-4 mb-4">
-    <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
-        <button class="btn btn-icon">
-            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> หยก</p>
-        </button>
-        <button class="btn btn-icon">
-            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ทอง</p>
-        </button>
-        <button class="btn btn-icon">
-            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ตำลึง</p>
-        </button>
-        <button class="btn btn-icon">
-            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gift"></i> โปรโมชั่น</p>
-        </button>
-    </div>
-
-</div>
-
-
-<div class="selectgame-container mt-4">
-    <div class="section-header p-1" style="background-color:rgb(0, 0, 0);">
-        <h4>ช่องทางการชำระเงิน</h4>
-        
-    </div>
-    <div class="row" id="game-cards">
-        <!-- การ์ดจะถูกเพิ่มที่นี่โดย JavaScript -->
-    </div>
-</div>
-
-
-
 <script>
     const games = [{
             name: "Swordsman3",
@@ -592,5 +561,613 @@
 </script>
 
 
+<!-- Package Section -->
+<div class="package-container mt-4 mb-4">
+    <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
+        <button class="btn btn-icon" onclick="displayCards('หยก')">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> หยก</p>
+        </button>
+        <button class="btn btn-icon" onclick="displayCards('ทอง')">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ทอง</p>
+        </button>
+        <button class="btn btn-icon" onclick="displayCards('ตำลึง')">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> ตำลึง</p>
+        </button>
+        <button class="btn btn-icon" onclick="displayCards('โปรโมชั่น')">
+            <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gift"></i> โปรโมชั่น</p>
+        </button>
+    </div>
+</div>
+
+<!-- ส่วนแสดงการ์ด -->
+<div class="container">
+    <div class="row" id="package-cards">
+        <!-- การ์ดจะถูกเพิ่มที่นี่โดย JavaScript -->
+    </div>
+</div>
+
+<script>
+    const cardData = {
+
+        'หยก': [
+                { title: "หยก 1", img: "{{ asset('images/gold1-60.png') }}" },
+                { title: "หยก 2", img: "{{ asset('images/gold2-120.png') }}" },
+                { title: "หยก 3", img: "{{ asset('images/gold3-300.png') }}" },
+                { title: "หยก 4", img: "{{ asset('images/gold4-680.png') }}" },
+                { title: "หยก 5", img: "{{ asset('images/gold5-1280.png') }}" },
+                { title: "หยก 6", img: "{{ asset('images/gold6-2480.png') }}" },
+                { title: "หยก 7", img: "{{ asset('images/gold7-3280.png') }}" },
+                { title: "หยก 8", img: "{{ asset('images/gold8-6480.png') }}" }
+        ],
+        
+
+        'ทอง': [
+           { title: "ทอง 1", img: "{{ asset('images/gold1-60.png') }}" },
+                { title: "ทอง 2", img: "{{ asset('images/gold2-120.png') }}" },
+                { title: "ทอง 3", img: "{{ asset('images/gold3-300.png') }}" },
+                { title: "ทอง 4", img: "{{ asset('images/gold4-680.png') }}" },
+                { title: "ทอง 5", img: "{{ asset('images/gold5-1280.png') }}" },
+                { title: "ทอง 6", img: "{{ asset('images/gold6-2480.png') }}" },
+                { title: "ทอง 7", img: "{{ asset('images/gold7-3280.png') }}" },
+                { title: "ทอง 8", img: "{{ asset('images/gold8-6480.png') }}" }
+        ],
+        'ตำลึง': [
+            { title: "ตำลึง 1", img: "" },
+            { title: "ตำลึง 2", img: "" },
+            { title: "ตำลึง 3", img: "" },
+            { title: "ตำลึง 4", img: "" },
+            { title: "ตำลึง 5", img: "" },
+            { title: "ตำลึง 6", img: "" },
+            { title: "ตำลึง 7", img: "" },
+            { title: "ตำลึง 8", img: "" }
+        ],
+        'โปรโมชั่น': [
+            { title: "โปร 1", img: "" },
+            { title: "โปร 2", img: "" },
+            { title: "โปร 3", img: "" },
+            { title: "โปร 4", img: "" },
+            { title: "โปร 5", img: "" },
+            { title: "โปร 6", img: "" },
+            { title: "โปร 7", img: "" },
+            { title: "โปร 8", img: "" }
+        ]
+    };
+
+function displayCards(category) {
+    console.log("เลือกหมวดหมู่: " + category);
+
+    if (!cardData[category]) {
+        console.error("ไม่มีข้อมูลหมวดหมู่นี้:", category);
+        return;
+    }
+
+    const packageCardsContainer = document.getElementById('package-cards');
+    packageCardsContainer.innerHTML = ''; // ล้างการ์ดก่อนเพิ่มใหม่
+
+    const fragment = document.createDocumentFragment(); // ลดการ reflow
+
+    cardData[category].forEach((card) => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('package-card-wrapper', 'mb-4'); // ✅ ใช้คลาสที่รองรับ Responsive
+
+        cardElement.innerHTML = `
+            <div class="card package-card" data-package-name="${card.title}">
+                <img src="${card.img}" class="card-img-top" alt="${card.title}" onerror="this.src='https://via.placeholder.com/150'">
+                <div class="package-card-body text-center">
+                    <h5 class="package-card-title">${card.title}</h5>
+                </div>
+            </div>
+        `;
+
+        fragment.appendChild(cardElement);
+    });
+
+    packageCardsContainer.appendChild(fragment); // เพิ่มการ์ดทั้งหมดพร้อมกัน
+    apply3DEffectToPackageCards(); // เพิ่มเอฟเฟกต์ 3D hover
+}
+
+// ปรับให้ apply3DEffectToPackageCards() ใช้งานได้ดีขึ้น
+function apply3DEffectToPackageCards() {
+    document.querySelectorAll('.package-card').forEach((card) => {
+        if (!card.dataset.listenerAdded) {
+            card.addEventListener('mousemove', (e) => handleMouseMove(e, card));
+            card.addEventListener('mouseleave', () => handleMouseLeave(card));
+            card.addEventListener('click', function () {
+                selectPackageCard(this);
+                console.log('คุณเลือกแพ็กเกจ:', this.getAttribute('data-package-name'));
+            });
+            card.dataset.listenerAdded = "true"; // ป้องกันการเพิ่ม Event Listener ซ้ำซ้อน
+        }
+    });
+}
+
+// ใช้ requestAnimationFrame เพื่อให้แอนิเมชันลื่นขึ้น
+function handleMouseMove(e, card) {
+    requestAnimationFrame(() => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((centerY - y) / centerY) * 10;
+        const rotateY = ((centerX - x) / centerX) * -10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    });
+}
+
+// รีเซ็ตการ์ดเมื่อเมาส์ออก
+function handleMouseLeave(card) {
+    requestAnimationFrame(() => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+    });
+}
+
+// ฟังก์ชันเมื่อคลิกเลือกการ์ด
+function selectPackageCard(card) {
+    document.querySelectorAll('.package-card').forEach(item => {
+        item.classList.remove('border-c', 'selected');
+    });
+
+    card.classList.add('border-c', 'selected');
+}
+
+// โหลดการ์ดหมวดหมู่แรกเมื่อหน้าเว็บโหลดเสร็จ
+document.addEventListener("DOMContentLoaded", () => {
+    displayCards('หยก');
+});
+
+
+</script>
+
+<style>
+.package-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    transform-style: preserve-3d;
+    border: 2px solid transparent;
+    will-change: transform;
+    backface-visibility: hidden;
+    
+}
+
+/*  Layout  */
+.package-card-wrapper {
+    flex: 0 0 25%; /* ค่าเริ่มต้น: แถวละ 4 คอลัมน์ */
+    max-width: 25%;
+}
+/* เอฟเฟกต์ขอบเรืองแสงเฉพาะการ์ดที่ถูกเลือก */
+.package-card.selected {
+    border: 4px solid transparent;
+    border-image-slice: 1;
+    animation: borderAnimation 4s infinite alternate linear;
+    scale:1.08;
+}
+
+/* คีย์เฟรมสำหรับขอบเรืองแสง */
+@keyframes borderAnimation {
+    0% { border-image-source: linear-gradient(45deg, #41e0cf, #ffcc00, #ff5e62); }
+    50% { border-image-source: linear-gradient(135deg, #ff5e62, #41e0cf, #ffcc00); }
+    100% { border-image-source: linear-gradient(225deg, #ffcc00, #41e0cf, #ff5e62); }
+}
+
+/* เอฟเฟกต์ Hover */
+.package-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+@media only screen and (max-width: 767px) {
+    .package-card-wrapper {
+        flex: 0 0 50%;  /* แถวละ 2 คอลัมน์ */
+        max-width: 50%;
+        padding: 5px;  /* ลดระยะห่าง */
+    }
+
+    .package-card {
+        transform: scale(0.85) !important;  /* ล็อกขนาดการ์ดไว้ที่ 85% */
+        transition: box-shadow 0.3s ease-out; /*  ลบ transition ของ transform ออก */
+    }
+
+    /* Hover เปลี่ยนเฉพาะเงา ไม่ขยาย */
+    .package-card:hover {
+        transform: scale(0.85) !important; 
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+
+</style>
+
+<!-- End Package Section -->
+
+
+<!-- Section: ช่องทางการชำระเงิน -->
+
+<div class="paymentmethod-container mt-4">
+    <div class="section-header p-1 bg-black ">
+        <h4 class="" style="color:#41e0cf;">ช่องทางการชำระเงิน</h4>
+    </div>
+
+    <div class="containers">
+        <div class="row mt-3">
+            <div class="col-md-4 mb-3">
+                <div class="card payment-card" data-payment-name="ธนาคารกสิกรไทย">
+                    <img src="{{ asset('images/kbank.png') }}" class="payment-icon" alt="ธนาคารกสิกรไทย">
+                    <span class="payment-text">ธนาคารกสิกรไทย</span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card payment-card" data-payment-name="ธนาคารกรุงไทย">
+                    <img src="{{ asset('images/ktb.png') }}" class="payment-icon" alt="ธนาคารกรุงไทย">
+                    <span class="payment-text">ธนาคารกรุงไทย</span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card payment-card" data-payment-name="ทรูมันนี่">
+                    <img src="{{ asset('images/truemoney.png') }}" class="payment-icon" alt="ทรูมันนี่">
+                    <span class="payment-text">ทรูมันนี่</span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card payment-card" data-payment-name="พรอมเพย์">
+                    <img src="{{ asset('images/promptpay.png') }}" class="payment-icon" alt="พรอมเพย์">
+                    <span class="payment-text">พรอมเพย์</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* สไตล์ของการ์ดชำระเงิน */
+.payment-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transform-style: preserve-3d;
+    will-change: transform;
+    perspective: 1000px;
+}
+
+/* ขนาดไอคอน */
+.payment-icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+/* ข้อความช่องทางชำระเงิน */
+.payment-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+
+/* เอฟเฟกต์ขอบเรืองแสงเมื่อเลือก */
+.payment-card.selected {
+    border: 3.5px solid transparent;
+    border-image-slice: 1;
+    animation: borderAnimation 4s infinite alternate linear;
+  scale:1.08;
+}
+
+/* เอฟเฟกต์ Hover */
+.payment-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 3D Hover Effect */
+.payment-card:hover {
+    transform: scale(1.05) rotateX(5deg) rotateY(-5deg);
+}
+
+/* คีย์เฟรมสำหรับขอบเรืองแสง */
+@keyframes borderAnimation {
+    0% { border-image-source: linear-gradient(45deg, #41e0cf, #ffcc00, #ff5e62); }
+    50% { border-image-source: linear-gradient(135deg, #ff5e62, #41e0cf, #ffcc00); }
+    100% { border-image-source: linear-gradient(225deg, #ffcc00, #41e0cf, #ff5e62); }
+}
+
+/* ✅ Responsive: จอเล็กให้เป็น 2 คอลัมน์ */
+@media only screen and (max-width: 767px) {
+    .col-md-4 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .payment-card {
+        padding: 10px;
+    }
+
+    .payment-icon {
+        width: 60px;
+
+        height: 60px;
+    }
+
+    .payment-text {
+        font-size: 16px;
+    }
+}
+</style>
+
+<script>
+function apply3DEffectToPaymentCards() {
+    document.querySelectorAll('.payment-card').forEach((card) => {
+        if (!card.dataset.listenerAdded) {
+            card.addEventListener('mousemove', (e) => handleMouseMove(e, card));
+            card.addEventListener('mouseleave', () => handleMouseLeave(card));
+            card.addEventListener('click', function () {
+                selectPaymentCard(this);
+                console.log('คุณเลือกช่องทางการชำระเงิน:', this.getAttribute('data-payment-name'));
+            });
+            card.dataset.listenerAdded = "true"; // ป้องกันการเพิ่ม Event Listener ซ้ำซ้อน
+        }
+    });
+}
+
+function handleMouseMove(e, card) {
+    requestAnimationFrame(() => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((centerY - y) / centerY) * 15;
+        const rotateY = ((centerX - x) / centerX) * -15;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    });
+}
+
+// รีเซ็ตการ์ดเมื่อเมาส์ออก
+function handleMouseLeave(card) {
+    requestAnimationFrame(() => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+    });
+}
+
+// ฟังก์ชันเมื่อคลิกเลือกการ์ด
+function selectPaymentCard(card) {
+    document.querySelectorAll('.payment-card').forEach(item => {
+        item.classList.remove('border-c', 'selected');
+    });
+
+    card.classList.add('border-c', 'selected');
+}
+
+// โหลดการ์ดหมวดหมู่แรกเมื่อหน้าเว็บโหลดเสร็จ
+document.addEventListener("DOMContentLoaded", () => {
+    apply3DEffectToPaymentCards();
+});
+</script>
+
+<!--END Section: ช่องทางการชำระเงิน -->
+
+
+
+
+
+<!-- Section: ปุ่มทำการชำระเงิน -->
+
+
+<div class="payment-button-container mt-4">
+    <div class="section-header p-1 bg-black">
+        <h4 class="" style="color:#41e0cf;">ทำการชำระเงิน</h4>
+    </div>
+
+    <div class="container text-center mt-3 mb-4">
+        <button id="pay-now-btn" class="btn payment-button" disabled>ชำระเงิน</button>
+    </div>
+</div>
+
+<style>
+
+/* Section ปุ่มทำการชำระเงิน */
+.payment-button-container {
+    margin-top: 20px;
+}
+
+/* ปุ่มชำระเงิน */
+.payment-button {
+    background: #b0b0b0;  
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: not-allowed;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background 0.3s ease-in-out;
+    will-change: transform;
+    perspective: 1000px;
+}
+
+
+.payment-button.enabled {
+    background: #41e0cf;
+    cursor: pointer;
+}
+
+.payment-button.enabled:hover {
+    transform: scale(1.05) rotateX(5deg) rotateY(-5deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    background: #34c9b0; /* เปลี่ยนสีเมื่อ Hover */
+}
+
+.payment-button.enabled:active {
+    background: #2db6a1; /* สีเข้มขึ้นเมื่อกด */
+    transform: scale(1);
+}
+
+
+@media only screen and (max-width: 767px) {
+    .payment-button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+</style>
+
+<script>
+// รีเซ็ต localStorage เมื่อหน้าเว็บโหลดใหม่
+document.addEventListener("DOMContentLoaded", function() {
+    localStorage.clear(); // ล้างค่าทั้งหมดเมื่อรีเฟรช
+    checkSelection(); // รีเซ็ตปุ่มชำระเงิน
+
+    document.querySelectorAll('.game-card').forEach((card) => {
+        card.addEventListener("click", function () {
+            selectGame(this.getAttribute("data-game-name"));
+        });
+    });
+
+    document.querySelectorAll('.package-card').forEach((card) => {
+        card.addEventListener("click", function () {
+            selectPackage(this.getAttribute("data-package-name"));
+        });
+    });
+
+    document.querySelectorAll('.payment-card').forEach((card) => {
+        card.addEventListener("click", function () {
+            selectPayment(this.getAttribute("data-payment-name"));
+        });
+    });
+
+    document.getElementById("pay-now-btn").addEventListener("click", function() {
+        if (!this.disabled) {
+            console.log("ดำเนินการชำระเงิน...");
+               Swal.fire({
+            title: "ชำระเงินสำเร็จ!",
+            html: '<i class="fas fa-check-circle custom-swal-success-icon"></i>', // ✅ ไอคอนเรืองแสง
+            showConfirmButton: false,
+            timer: 2000,
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-success-popup",
+                title: "custom-swal-success-title",
+                confirmButton: "custom-swal-success-button"
+            }
+        });
+        }
+    });
+});
+
+// ตรวจสอบว่าผู้ใช้เลือกครบทั้ง 3 
+function checkSelection() {
+    const selectedGame = localStorage.getItem("selectedGame");
+    const selectedPackage = localStorage.getItem("selectedPackage");
+    const selectedPayment = localStorage.getItem("selectedPayment");
+
+    const payButton = document.getElementById("pay-now-btn");
+
+    if (selectedGame && selectedPackage && selectedPayment) {
+        payButton.disabled = false;
+        payButton.classList.add("enabled");
+    } else {
+        payButton.disabled = true;
+        payButton.classList.remove("enabled");
+    }
+}
+
+// ฟังก์ชันบันทึกค่าเมื่อคลิกเลือกการ์ด
+function selectGame(gameName) {
+    localStorage.setItem("selectedGame", gameName);
+    console.log("เลือกเกม:", gameName);
+    checkSelection();
+}
+
+function selectPackage(packageName) {
+    localStorage.setItem("selectedPackage", packageName);
+    console.log("เลือกแพ็คเกจ:", packageName);
+    checkSelection();
+}
+
+function selectPayment(paymentMethod) {
+    localStorage.setItem("selectedPayment", paymentMethod);
+    console.log("เลือกวิธีชำระเงิน:", paymentMethod);
+    checkSelection();
+}
+</script>
+
+
+<!-- END Section: ปุ่มทำการชำระเงิน-->
+ 
+
+
+
+<!--Alert-->
+<!-- CSS ปรับแต่ง SweetAlert2 -->
+<style>
+    /* ✅ ซ่อนไอคอนเริ่มต้นทั้งหมด */
+    .swal2-icon {
+        display: none !important;
+    }
+
+    /* ✅ สไตล์ของ Popup */
+    .custom-swal-success-popup {
+        border-radius: 15px !important;
+        box-shadow: 0px 0px 15px rgba(0, 255, 100, 0.7) !important;
+        width: 60% !important;
+        max-width: 350px !important;
+        text-align: center !important;
+        background: #222 !important; /* พื้นหลังดำ */
+    }
+
+    /* ✅ ปรับขนาด Title */
+    .custom-swal-success-title {
+        font-size: 22px !important;
+        font-weight: bold !important;
+        color: #00ff99 !important;
+        text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+    }
+
+    /* ✅ ปรับไอคอน Success */
+    .custom-swal-success-icon {
+        font-size: 60px !important;  /* ✅ ปรับขนาดไอคอน */
+        color: #00ff99 !important;
+        margin-bottom: 10px !important;
+        text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7); /* ✅ เพิ่มเรืองแสง */
+    }
+
+    /* ✅ ปรับขนาดข้อความ */
+    .custom-swal-success-text {
+        font-size: 16px !important;
+        color: #d4ffd4 !important;
+        margin-top: 10px !important;
+    }
+
+    /* ✅ ปรับขนาดปุ่ม */
+    .custom-swal-success-button {
+        background-color: #00cc66 !important;
+        color: white !important;
+        font-size: 16px !important;
+        padding: 8px 16px !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* ✅ เอฟเฟค Hover ปุ่ม */
+    .custom-swal-success-button:hover {
+        background-color: #00994d !important;
+        box-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+    }
+</style>
+
+
+
+
+
+<!--EndAlert-->
 
 @endsection
