@@ -36,10 +36,8 @@ Route::post('/login_check', [LoginedController::class, 'login'])->name('login_ch
 Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
 
 Route::post('/register', [LoginedController::class, 'registerUser']);
-Route::get('/clear-session', function () {
-    Session::forget(['register-success', 'user-dup-error']);
-    return response()->json(['status' => 'cleared']);
-});
+
+
 
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);

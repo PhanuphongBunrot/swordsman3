@@ -356,6 +356,78 @@
 
 </style>
 
+<!-- 🔹 แถบแจ้งเตือน OTP -->
+
+    <div class="otp-warning-bar">
+        ⚠️ เพื่อความปลอดภัยของบัญชี กรุณา 
+        <a href="javascript:void(0);" onclick="openOtpModal()" class="otp-link">คลิกที่นี่</a> 
+        เพื่อยืนยัน OTP เบอร์โทรศัพท์ของท่านก่อนทำการชำระเงิน
+    </div>
+
+    <!-- 🔹 Modal สำหรับยืนยัน OTP -->
+    <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="otpModalLabel">ยืนยัน OTP</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="otpForm" action="" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">กรอกเบอร์โทรศัพท์</label>
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="otp" class="form-label">กรอกรหัส OTP</label>
+                            <input type="text" class="form-control" id="otp" name="otp" placeholder="กรอกรหัส OTP" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">ยืนยัน OTP</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+function openOtpModal() {
+    var myModal = new bootstrap.Modal(document.getElementById('otpModal'), {
+        keyboard: false
+    });
+    myModal.show();
+}
+</script>
+
+
+<style>
+.otp-warning-bar {
+    width: 100%;
+    background: rgba(255, 165, 0, 0.9); 
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1000;
+}
+
+.otp-link {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.3s ease-in-out;
+}
+
+.otp-link:hover {
+    color: white;
+}
+
+
+</style>
+
+
 <div class="carousel-container">
     <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">
         <div class="carousel-indicators">

@@ -230,10 +230,15 @@
                 padding-left:10px;
             }
 
+           @media (max-width: 767px) and (orientation: landscape) {
             .modal-dialog {
-                max-width: 90%;
-                margin: 0  auto;
+                max-width: 80% !important; /* ปรับให้กว้างขึ้นเพื่อให้ดูสมดุล */
+                margin: auto !important; /* จัดให้กลางจอ */
+                top: 50% !important; /* ดันขึ้นมาตรงกลาง */
+                transform: translateY(-50%) !important; /* ทำให้ Modal อยู่ตรงกลางจอ */
             }
+        }
+
 
             .modal-title {
                 font-size: 14px;
