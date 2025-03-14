@@ -349,7 +349,7 @@
         }
 
         .card h5{
-           font-size:13px;
+           font-size:12px;
         }
       
     } 
@@ -722,6 +722,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <style>
+    
 .package-card {
     position: relative;
     cursor: pointer;
@@ -774,6 +775,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .package-card:hover {
         transform: scale(0.85) !important; 
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .package-card-body h5{
+        font-size:12px;
     }
 }
 
@@ -846,8 +850,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ข้อความช่องทางชำระเงิน */
 .payment-text {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
+    /* font-weight: bold; */
     color: black;
 }
 
@@ -894,7 +898,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     .payment-text {
-        font-size: 16px;
+        font-size: 12px;
     }
 }
 </style>

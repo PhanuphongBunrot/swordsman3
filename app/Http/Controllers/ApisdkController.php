@@ -5,40 +5,11 @@ use App\Helpers\AppleSignInHelper;
 
 
 
+
 class ApisdkController extends Controller
 {
-    public function user_register()
-    {
 
-     
-        $openId = env('openID');
-        $productCode = env('productCode');
-        $username = "SenNesTest@gmail.com";
-        $password = "123456789";
-        $openKey = env('openKey');
-
-        // กำหนดค่าพารามิเตอร์ (ไม่รวม sign)
-        $params = [
-            'openId' => $openId,
-            'productCode' => $productCode,
-            'username' => $username,
-            'password' => $password
-        ];
-
-        // คำนวณค่า MD5 sign
-        $sign = $this->getMd5Sign($params, $openKey);
-        $params['sign'] = $sign;
-
-        // แสดงค่าที่ใช้ส่งไปยัง API
-        
-        // API URL
-        $url  = env('URL_SDK')."open/userRegister";
-
-        // ส่ง API
-        $response = $this->sendPostRequest($url, $params);
-        echo  $response;
-    }
-
+   
 
 
 

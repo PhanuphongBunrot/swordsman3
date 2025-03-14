@@ -8,6 +8,10 @@ use App\Http\Controllers\GoogleAuthController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\AppleAuthController;
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,6 +34,12 @@ Route::get('/auth/facebook/callback', [FacebookController::class, 'handleFaceboo
 
 Route::post('/login_check', [LoginedController::class, 'login'])->name('login_check');
 Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
+
+Route::post('/register', [LoginedController::class, 'registerUser']);
+Route::get('/clear-session', function () {
+    Session::forget(['register-success', 'user-dup-error']);
+    return response()->json(['status' => 'cleared']);
+});
 
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);

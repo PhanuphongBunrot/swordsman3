@@ -15,7 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
-   
+   <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 
@@ -148,7 +149,7 @@
     <!-- ฟอร์มลงทะเบียน -->
    <div class="register-container">
     <h4>ลงทะเบียน</h4>
-    <form action="/register" method="POST">
+    <form action="/register" method="POST" id="registerForm">
         @csrf
 
         <!-- Email -->
@@ -186,17 +187,17 @@
         </div>
 
         <!-- Phone -->
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label class="form-label">Phone Number</label>
             <div class="d-flex">
                 <input type="tel" id="phone" name="phone" class="form-control flex-grow-1" required>
                 <button type="button" class="btn btn-otp" id="phone-otp-button" onclick="requestOtp('phone')">ขอ OTP</button>
             </div>
             <span class="error-message"></span>
-        </div>
+        </div> -->
 
         <!-- OTP Phone -->
-        <div class="mb-3 otp-group" id="phone-otp-section">
+        <!-- <div class="mb-3 otp-group" id="phone-otp-section">
             <label class="form-label">OTP</label>
             <div class="d-flex align-items-center gap-2">
                 <input type="text" id="phone-otp" name="phoneOtp" class="form-control flex-grow-1" required>
@@ -204,7 +205,7 @@
                 <button type="button" class="btn btn-secondary" id="phone-resend-button" style="display: none;" onclick="requestOtp('phone')">ขอใหม่</button>
             </div>
             <span class="error-message"></span>
-        </div>
+        </div> -->
 
         <button type="submit" class="btn btn-otp mt-3 w-100">Register</button>
     </form>
@@ -290,31 +291,33 @@ document.addEventListener("DOMContentLoaded", function () {
         let otpButton = document.getElementById(`${type}-otp-button`);
         let otpSection = document.getElementById(`${type}-otp-section`);
 
-        // เช็คว่ามีการขอ OTP ก่อนหน้าหรือไม่
-        let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
-        let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
+        // เช็คก่อนว่า otpSection มีอยู่ใน DOM หรือไม่
+        if (otpSection) {
+            let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
+            let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
 
-        // ถ้าเคยขอ OTP และยังไม่นับถอยหลังเสร็จ ให้แสดงช่อง OTP
-        if (isOtpRequested && isOtpVisible) {
-            otpSection.style.display = "block";
-        } else {
-            otpSection.style.display = "none"; // ถ้าไม่มีการขอ OTP ให้ซ่อนช่อง OTP
+            if (isOtpRequested && isOtpVisible) {
+                otpSection.style.display = "block";
+            } else {
+                otpSection.style.display = "none";
+            }
         }
 
-        // ถ้ามีการบันทึกค่า resend_visible ให้แสดงปุ่มขอใหม่
-        if (localStorage.getItem(`${type}_resend_visible`) === "true") {
-            resendButton.style.display = "inline-block";
-            otpButton.style.display = "none";
-        } else {
-            resendButton.style.display = "none";
-            otpButton.style.display = "inline-block";
-        }
-
+        // ตรวจสอบว่าปุ่มมีอยู่ใน DOM ก่อนเปลี่ยนค่า style
         if (resendButton && otpButton) {
+            if (localStorage.getItem(`${type}_resend_visible`) === "true") {
+                resendButton.style.display = "inline-block";
+                otpButton.style.display = "none";
+            } else {
+                resendButton.style.display = "none";
+                otpButton.style.display = "inline-block";
+            }
+
             startCountdown(resendButton, otpButton, type);
         }
     });
 });
+
 
 
     </script>
@@ -357,11 +360,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // ตรวจสอบ Phone Number
-        if (name === "phone") {
-            if (!/^\d{10}$/.test(value)) {
-                errorMessage = "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก";
-            }
-        }
+        // if (name === "phone") {
+        //     if (!/^\d{10}$/.test(value)) {
+        //         errorMessage = "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก";
+        //     }
+        // }
 
         // ตรวจสอบ OTP
         if (name === "emailOtp" || name === "phoneOtp") {
@@ -412,8 +415,129 @@ document.addEventListener("DOMContentLoaded", function () {
 
     </script>
 
+<!-- ส่งมาจากอีเมลและuserมีอยู่แล้วในsdk -->
+@if(session()->pull('user-dup-error')) 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            title: "❌ อีเมลนี้เคยลงทะเบียนแล้ว!",
+            html: '<i class="fas fa-exclamation-circle custom-swal-error-icon"></i>',
+            showConfirmButton: true,
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
+    });
+</script>
+@endif
 
+<style>
+/* ==============================
+🎨 SweetAlert2 แจ้งเตือนแบบ Error
+============================== */
+.custom-swal-error-popup {
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.7) !important;
+    width: 60% !important;
+    max-width: 350px !important;
+    text-align: center !important;
+}
 
+/* ✅ ปรับขนาด Title */
+.custom-swal-error-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #ff4444 !important;
+    text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+/* ✅ ปรับขนาดไอคอน Error */
+.custom-swal-error-icon {
+    font-size: 60px !important;
+    color: #ff4444 !important;
+    display: block !important;
+    margin: 10px auto !important;
+    text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+/* ✅ ปรับขนาดปุ่ม */
+.custom-swal-error-button {
+    background-color: #ff4444 !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+}
+
+/* ✅ ปรับสไตล์ของข้อความแจ้งเตือน */
+.custom-swal-error-text {
+    font-size: 16px;
+    font-weight: normal;
+    color: #ff6666;
+    margin-top: 10px;
+}
+
+/* ==============================
+🎨 SweetAlert2 แจ้งเตือนแบบ Success
+============================== */
+.swal2-icon {
+    display: none !important; /* ✅ ซ่อนไอคอนเริ่มต้นทั้งหมด */
+}
+
+/* ✅ สไตล์ของ Popup */
+.custom-swal-success-popup {
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(0, 255, 100, 0.7) !important;
+    width: 60% !important;
+    max-width: 350px !important;
+    text-align: center !important;
+}
+
+/* ✅ ปรับขนาด Title */
+.custom-swal-success-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #00ff99 !important;
+    text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+/* ✅ ปรับไอคอน Success */
+.custom-swal-success-icon {
+    font-size: 60px !important;
+    color: #00ff99 !important;
+    margin-bottom: 10px !important;
+    text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+/* ✅ ปรับขนาดข้อความ */
+.custom-swal-success-text {
+    font-size: 16px !important;
+    color: #d4ffd4 !important;
+    margin-top: 10px !important;
+}
+
+/* ✅ ปรับขนาดปุ่ม */
+.custom-swal-success-button {
+    background-color: #00cc66 !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ เอฟเฟค Hover ปุ่ม */
+.custom-swal-success-button:hover {
+    background-color: #00994d !important;
+    box-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+</style>
 
 </body>
 

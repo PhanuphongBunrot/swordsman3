@@ -4,6 +4,8 @@
 @section('content')
 <!-- เลื่อนsmooth -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script> -->
+<!-- Sweet Alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <style>
@@ -783,6 +785,133 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 </script>
 
+<!-- CSS ปรับแต่ง SweetAlert2 -->
+<style>
+   /* ==============================
+🎨 SweetAlert2 แจ้งเตือนแบบ Error
+============================== */
+.custom-swal-error-popup {
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.7) !important;
+    width: 60% !important;
+    max-width: 350px !important;
+    text-align: center !important;
+}
+
+/* ✅ ปรับขนาด Title */
+.custom-swal-error-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #ff4444 !important;
+    text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+/* ✅ ปรับขนาดไอคอน Error */
+.custom-swal-error-icon {
+    font-size: 60px !important;
+    color: #ff4444 !important;
+    display: block !important;
+    margin: 10px auto !important;
+    text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+/* ✅ ปรับขนาดปุ่ม */
+.custom-swal-error-button {
+    background-color: #ff4444 !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+}
+
+/* ✅ ปรับสไตล์ของข้อความแจ้งเตือน */
+.custom-swal-error-text {
+    font-size: 16px;
+    font-weight: normal;
+    color: #ff6666;
+    margin-top: 10px;
+}
+
+/* ==============================
+🎨 SweetAlert2 แจ้งเตือนแบบ Success
+============================== */
+.swal2-icon {
+    display: none !important; /* ✅ ซ่อนไอคอนเริ่มต้นทั้งหมด */
+}
+
+/* ✅ สไตล์ของ Popup */
+.custom-swal-success-popup {
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(0, 255, 100, 0.7) !important;
+    width: 60% !important;
+    max-width: 350px !important;
+    text-align: center !important;
+}
+
+/* ✅ ปรับขนาด Title */
+.custom-swal-success-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #00ff99 !important;
+    text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+/* ✅ ปรับไอคอน Success */
+.custom-swal-success-icon {
+    font-size: 60px !important;
+    color: #00ff99 !important;
+    margin-bottom: 10px !important;
+    text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+/* ✅ ปรับขนาดข้อความ */
+.custom-swal-success-text {
+    font-size: 16px !important;
+    color: #d4ffd4 !important;
+    margin-top: 10px !important;
+}
+
+/* ✅ ปรับขนาดปุ่ม */
+.custom-swal-success-button {
+    background-color: #00cc66 !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ เอฟเฟค Hover ปุ่ม */
+.custom-swal-success-button:hover {
+    background-color: #00994d !important;
+    box-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+</style>
+
+
+@if(session()->pull('register-success'))
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            title: "🎉 ลงทะเบียนสำเร็จ!",
+            html: '<i class="fas fa-check-circle custom-swal-success-icon"></i>',
+            showConfirmButton: true,
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-success-popup",
+                title: "custom-swal-success-title",
+                confirmButton: "custom-swal-success-button"
+            }
+        });
+    });
+</script>
+@endif
+
+
+
 
 
 @endsection
+

@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+
+/*ส่วนของลงทะเบียน */
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class LoginedController extends Controller
 {
@@ -89,8 +93,62 @@ class LoginedController extends Controller
         return redirect('/');
     }
 
-    public function save_register (){
+ 
 
-        
+         /*ยิงลงทะเบียนสมัครสมาชิก */
+
+        public function registerUser(Request $request){
+        try {
+            // รับข้อมูลจากฟอร์ม
+            $email = $request->email;
+            $password = Hash::make($request->password); // เข้ารหัสรหัสผ่าน
+            $openId = env('openID');
+            $productCode = env('productCode');
+            $openKey = env('openKey');
+
+            // ส่งข้อมูลไปยัง SDK
+            $params = [
+                'openId' => $openId,
+                'productCode' => $productCode,
+                'username' => $email,
+                'password' => $request->password,
+            ];
+            $sign = $this->getMd5Sign($params, $openKey);
+            $params['sign'] = $sign;
+
+            $url = env('URL_SDK') . "open/userRegister";
+            $response = json_decode($this->sendPostRequest($url, $params), true);
+
+            // ถ้า SDK แจ้งว่า user มีอยู่แล้ว
+            if (isset($response['message']) && $response['message'] === "The user already exists.") {
+                session()->flash('user-dup-error', '❌ อีเมลนี้เคยลงทะเบียนแล้ว!');
+                return redirect('/register');
+            }
+
+            if (!$response || !isset($response['status']) || $response['status'] != 1) {
+                return response()->json(['status' => false, 'message' => 'SDK Registration Failed', 'error' => $response], 400);
+            }
+
+            $uid = $response['data']['uid']; // ดึง UID จาก SDK
+
+            // บันทึกลงฐานข้อมูล
+            DB::table('users')->insert([
+                'email' => $email,
+                'password' => $password,
+                'uid' => $uid,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            
+            session()->flash('register-success', '🎉 ลงทะเบียนสำเร็จ!');
+
+            return redirect('/');
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Internal Server Error', 'error' => $e->getMessage()], 500);
+        }
     }
-}
+
+
+    }
+
