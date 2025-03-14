@@ -764,6 +764,7 @@ document.addEventListener("DOMContentLoaded", () => {
         flex: 0 0 50%;  /* แถวละ 2 คอลัมน์ */
         max-width: 50%;
         padding: 5px;  /* ลดระยะห่าง */
+        margin-bottom: 0px !important;
     }
 
     .package-card {

@@ -349,7 +349,7 @@
         }
 
         .card h5{
-           font-size:13px;
+           font-size:12px;
         }
       
     } 
@@ -622,6 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
         flex: 0 0 50%;  /* แถวละ 2 คอลัมน์ */
         max-width: 50%;
         padding: 5px;  /* ลดระยะห่าง */
+        margin-bottom: 0px !important; 
     }
 
     .package-card {
@@ -633,6 +634,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .package-card:hover {
         transform: scale(0.85) !important; 
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+     .package-card-body h5{
+        font-size:12px;
     }
 }
 

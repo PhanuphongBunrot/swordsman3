@@ -107,24 +107,60 @@
         }
        
         .otp-group .form-control {
-            max-width: 150px; 
-          
+            max-width: auto; 
             text-align: center; 
         }
 
         /* ปุ่ม OTP */
         .otp-group .btn {
-            min-width: 50px; 
+            /* min-width: 50px;  */
             padding: 8px 12px;
             font-weight: bold;
             text-align: center;
             
         }
         .otp-group input {
-        width: 100%;
-        min-width: 230px; 
+        /* width: 100%; */
+        min-width: 230px;
         text-align: center;
     }
+        /* ปรับให้ปุ่ม OTP ไม่โดนบีบ */
+        .otp-group .d-flex {
+            flex-wrap: nowrap;  /* ป้องกัน Flexbox พับลงมา */
+            gap: 8px; /* เพิ่มช่องว่างระหว่าง input กับปุ่ม */
+        }
+
+  
+
+    /* ปุ่ม "ขอใหม่" */
+    .otp-group .btn-secondary {
+        flex-shrink: 0;  /* ป้องกันปุ่มถูกบีบ */
+        white-space: nowrap;  /* ป้องกันข้อความในปุ่มขึ้นบรรทัดใหม่ */
+        width: auto;  /* ให้ขนาดอัตโนมัติตามเนื้อหา */
+        padding: 6px 12px; /* ปรับขนาด padding ให้เหมาะสม */
+    }
+
+    /* Responsive ปรับ layout บนอุปกรณ์เล็ก */
+    @media (max-width: 768px) {
+   .otp-group .btn-otp{
+    text-align: center;
+    margin:0 auto;
+    text: center;
+   }
+    .otp-group input {
+        width: 100%;
+        min-width: 0;
+        text-align: center;
+    }
+    .otp-group .d-flex {
+            flex-wrap: nowrap;  
+            gap: 8px; /* เพิ่มช่องว่างระหว่าง input กับปุ่ม */
+        }
+
+    
+
+    }
+
 
  
     </style>
@@ -157,7 +193,8 @@
             <label class="form-label">Email</label>
             <div class="d-flex">
                 <input type="email" id="email" name="email" class="form-control flex-grow-1" required>
-                <button type="button" class="btn btn-otp" id="email-otp-button" onclick="requestOtp('email')">ขอ OTP</button>
+                <button type="button" class="btn btn-otp" id="email-otp-button" onclick="validateEmailBeforeOtp()">ขอ OTP</button>
+
             </div>
             <span class="error-message"></span>
         </div>
@@ -168,7 +205,8 @@
             <div class="d-flex align-items-center gap-2">
                 <input type="text" id="email-otp" name="emailOtp" class="form-control flex-grow-1" required>
                 <button type="button" class="btn btn-otp me-2" onclick="verifyOtp('email')">ยืนยัน</button>
-                <button type="button" class="btn btn-secondary" id="email-resend-button" style="display: none;" onclick="requestOtp('email')">ขอใหม่</button>
+                <button type="button" class="btn btn-secondary" id="email-resend-button" style="display: none;" onclick="validateEmailBeforeOtp()">ขอใหม่</button>
+
             </div>
             <span class="error-message"></span>
         </div>
@@ -213,7 +251,52 @@
 
     <!-- OTP section -->
     <script>
-   let otpTimers = {}; // เก็บตัวจับเวลาของแต่ละประเภท OTP
+
+/*ฟังก์ชัะ่นตรวจสอบการกรอกอีเมลก่อนกดขอOTP */
+function validateEmailBeforeOtp() {
+    let emailInput = document.getElementById("email");
+    let email = emailInput.value.trim();
+
+    if (!email) {
+        Swal.fire({
+            title: "❌ กรุณากรอกอีเมล!",
+            text: "คุณต้องกรอกอีเมลก่อนขอ OTP",
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
+        return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        Swal.fire({
+            title: "❌ อีเมลไม่ถูกต้อง!",
+            text: "กรุณากรอกรูปแบบที่ถูกต้อง",
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
+        return;
+    }
+
+    // ✅ ถ้าอีเมลถูกต้อง → เรียก requestOtp()
+    requestOtp("email");
+}
+
+
+let otpTimers = {}; // เก็บตัวจับเวลาของแต่ละประเภท OTP
 
 function requestOtp(type) {
     let otpSection = document.getElementById(`${type}-otp-section`);
@@ -317,6 +400,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 
 
 
