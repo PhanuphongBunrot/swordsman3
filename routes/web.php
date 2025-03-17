@@ -9,7 +9,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\AppleAuthController;
 
-
+use App\Http\Controllers\PhoneOtpController;
 
 
 /*
@@ -38,6 +38,10 @@ Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
 Route::post('/register', [LoginedController::class, 'registerUser']);
 
 
+
+
+Route::get('/check-user-phone', [PhoneOtpController::class, 'checkUserPhone']);
+Route::post('/save-user-phone', [PhoneOtpController::class, 'saveUserPhone']);
 
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);

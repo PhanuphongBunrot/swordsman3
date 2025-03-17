@@ -80,11 +80,14 @@ class LoginedController extends Controller
             Session::put('authenticated', true);
             Session::put('username', $data['data']['username']);
             Session::put('amount', $amount);
+            Session::put('uid', $uid);
             return redirect()->route('user');
         }
 
        
     }
+
+
 
     public function logout()
     {

@@ -356,39 +356,56 @@
 
 </style>
 
+
+
+
 <!-- 🔹 แถบแจ้งเตือน OTP -->
 
-    <div class="otp-warning-bar">
-        ⚠️ เพื่อความปลอดภัยของบัญชี กรุณา 
-        <a href="javascript:void(0);" onclick="openOtpModal()" class="otp-link">คลิกที่นี่</a> 
-        เพื่อยืนยัน OTP เบอร์โทรศัพท์ของท่านก่อนทำการชำระเงิน
-    </div>
+<div class="otp-warning-bar">
+    ⚠️ เพื่อความปลอดภัยของบัญชี กรุณา 
+    <a href="javascript:void(0);" onclick="openOtpModal()" class="otp-link">คลิกที่นี่</a> 
+    เพื่อยืนยัน OTP เบอร์โทรศัพท์ของท่านก่อนทำการชำระเงิน
+</div>
 
-    <!-- 🔹 Modal สำหรับยืนยัน OTP -->
-    <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="otpModalLabel">ยืนยัน OTP</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="otpForm" action="" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">กรอกเบอร์โทรศัพท์</label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required>
+<!-- 🔹 Modal สำหรับยืนยัน OTP -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content otp-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-lock"></i> ยืนยัน OTP
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <hr class="otp-divider">
+                <form id="otpForm" action="/save-user-phone" method="POST" onsubmit="return false;">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="phone" class="form-label text-white">
+                            <i class="fas fa-phone"></i> เบอร์โทรศัพท์
+                        </label>
+                        <div class="input-group">
+                            <input type="text" class="form-control otp-input" id="phone" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required>
+                            <button type="button" class="btn btn-otp" id="otp-request-btn" onclick="requestOtp()">ขอ OTP</button>
                         </div>
-                        <div class="mb-3">
-                            <label for="otp" class="form-label">กรอกรหัส OTP</label>
-                            <input type="text" class="form-control" id="otp" name="otp" placeholder="กรอกรหัส OTP" required>
+                    </div>
+                    <div class="mb-3 otp-group" id="otp-section" style="display: none;">
+                        <label for="otp" class="form-label text-white">
+                            <i class="fas fa-key"></i> รหัส OTP
+                        </label>
+                        <div class="input-group">
+                            <input type="text" class="form-control otp-input" id="otp" name="otp" placeholder="กรอกรหัส OTP" required>
+                            <button type="button" class="btn btn-otp" onclick="verifyOtp(event)">ยืนยัน</button>
+                            <button type="button" class="btn btn-secondary" id="otp-resend-btn" style="display: none;" onclick="requestOtp()">ขอใหม่</button>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">ยืนยัน OTP</button>
-                    </form>
-                </div>
+                    </div>
+                    <!-- <button type="submit" class="btn btn-confirm w-100">ยืนยัน</button> -->
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 <script>
 function openOtpModal() {
@@ -396,27 +413,256 @@ function openOtpModal() {
         keyboard: false
     });
     myModal.show();
+
+    let phone = document.getElementById("phone").value.trim();
+    if (phone && localStorage.getItem(`phone_${phone}_otp_requested`) === "true") {
+        checkOtpStatus(phone);
+    }
 }
+
+let otpTimer;
+
+function requestOtp() {
+    let phoneInput = document.getElementById("phone").value.trim();
+    let otpSection = document.getElementById("otp-section");
+    let otpButton = document.getElementById("otp-request-btn");
+    let resendButton = document.getElementById("otp-resend-btn");
+
+    if (!/^\d{10}$/.test(phoneInput)) {
+        Swal.fire({
+            title: "❌ เบอร์โทรศัพท์ไม่ถูกต้อง!",
+            text: "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (10 หลัก)",
+            icon: "error",
+            confirmButtonColor: "#ff5e62",
+            confirmButtonText: "ตกลง",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: "📲 OTP ถูกส่งแล้ว!",
+        text: "กรุณาตรวจสอบข้อความของคุณ",
+        icon: "success",
+        confirmButtonColor: "#41e0cf",
+        confirmButtonText: "ตกลง",
+        customClass: {
+            popup: "custom-swal-success-popup",
+            title: "custom-swal-success-title",
+            confirmButton: "custom-swal-success-button"
+        }
+    });
+
+    otpSection.style.display = "block";
+    otpButton.style.display = "none";
+    resendButton.style.display = "inline-block";
+
+    let countdown = 90;
+    let expireTime = Date.now() + countdown * 1000; // เวลาหมดอายุของ OTP
+    localStorage.setItem(`phone_${phoneInput}_otp_expire`, expireTime);
+    localStorage.setItem(`phone_${phoneInput}_otp_requested`, "true");
+
+    startCountdown(resendButton, otpButton, phoneInput);
+}
+
+function startCountdown(resendButton, otpButton, phone) {
+    let expireTime = localStorage.getItem(`phone_${phone}_otp_expire`);
+    if (!expireTime) return;
+
+    let countdown = Math.floor((expireTime - Date.now()) / 1000);
+
+    if (otpTimer) {
+        clearInterval(otpTimer);
+    }
+
+    if (countdown > 0) {
+        resendButton.innerText = `ขอใหม่ (${countdown})`;
+        resendButton.disabled = true;
+
+        otpTimer = setInterval(() => {
+            countdown--;
+            resendButton.innerText = `ขอใหม่ (${countdown})`;
+
+            if (countdown <= 0) {
+                clearInterval(otpTimer);
+                resendButton.innerText = "ขอใหม่";
+                resendButton.disabled = false;
+                resendButton.style.display = "none";
+                otpButton.style.display = "inline-block";
+                localStorage.removeItem(`phone_${phone}_otp_expire`);
+                localStorage.removeItem(`phone_${phone}_otp_requested`);
+            }
+        }, 1000);
+    } else {
+        resendButton.innerText = "ขอใหม่";
+        resendButton.disabled = false;
+        resendButton.style.display = "none";
+        otpButton.style.display = "inline-block";
+        localStorage.removeItem(`phone_${phone}_otp_expire`);
+        localStorage.removeItem(`phone_${phone}_otp_requested`);
+    }
+}
+
+function verifyOtp(event) {
+    event.preventDefault(); // ❌ ป้องกันฟอร์มถูก Submit
+
+    let otpInput = document.getElementById("otp").value.trim();
+    let phoneInput = document.getElementById("phone").value.trim();
+
+    if (!/^\d{6}$/.test(otpInput)) {
+        Swal.fire({
+            title: "❌ รหัส OTP ไม่ถูกต้อง!",
+            text: "กรุณากรอก OTP 6 หลักให้ถูกต้อง",
+            icon: "error",
+            confirmButtonColor: "#ff5e62",
+        });
+        return;
+    }
+
+    // ✅ แจ้งเตือน OTP สำเร็จ แล้วบันทึกเบอร์โทร
+    Swal.fire({
+        title: "✅ ยืนยัน OTP สำเร็จ!",
+        text: "บัญชีของคุณปลอดภัย",
+        icon: "success",
+        confirmButtonColor: "#2ecc71",
+    }).then(() => {
+        saveUserPhone(phoneInput); // 🔥 บันทึกเบอร์โทรลงฐานข้อมูล
+    });
+}
+
+
+// ✅ ฟังก์ชันบันทึกเบอร์โทรลงฐานข้อมูล
+function saveUserPhone(phone) {
+    fetch("/save-user-phone", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        },
+        body: JSON.stringify({ phone: phone })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: "✅ บันทึกเบอร์โทรสำเร็จ!",
+                text: "คุณสามารถดำเนินการชำระเงินได้แล้ว",
+                icon: "success",
+                confirmButtonColor: "#2ecc71",
+            }).then(() => {
+                // ✅ ปิด Modal OTP
+                var otpModal = bootstrap.Modal.getInstance(document.getElementById('otpModal'));
+                otpModal.hide();
+
+                // ✅ ซ่อนแถบแจ้งเตือน OTP
+                document.querySelector(".otp-warning-bar").style.display = "none"; 
+
+                // ✅ เคลียร์ LocalStorage OTP
+                localStorage.removeItem(`phone_${phone}_otp_expire`);
+                localStorage.removeItem(`phone_${phone}_otp_requested`);
+            });
+        } else {
+            Swal.fire({
+                title: "❌ บันทึกเบอร์โทรล้มเหลว!",
+                text: data.error || "เกิดข้อผิดพลาด กรุณาลองใหม่",
+                icon: "error",
+                confirmButtonColor: "#ff5e62",
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "❌ เกิดข้อผิดพลาด!",
+            text: "ไม่สามารถบันทึกเบอร์โทรได้ กรุณาลองใหม่",
+            icon: "error",
+            confirmButtonColor: "#ff5e62",
+        });
+    });
+}
+
+
+
+// ✅ ตรวจสอบสถานะ OTP
+function checkOtpStatus(phone) {
+    let resendButton = document.getElementById("otp-resend-btn");
+    let otpButton = document.getElementById("otp-request-btn");
+    let otpSection = document.getElementById("otp-section");
+
+    let expireTime = localStorage.getItem(`phone_${phone}_otp_expire`);
+
+    if (expireTime && Date.now() < expireTime) {
+        otpSection.style.display = "block";
+        resendButton.style.display = "inline-block";
+        otpButton.style.display = "none";
+        startCountdown(resendButton, otpButton, phone);
+    } else {
+        otpSection.style.display = "none";
+        resendButton.style.display = "none";
+        otpButton.style.display = "inline-block";
+        localStorage.removeItem(`phone_${phone}_otp_expire`);
+        localStorage.removeItem(`phone_${phone}_otp_requested`);
+    }
+}
+
+// ✅ ล้างค่า OTP เมื่อรีเฟรซหน้าเว็บ
+window.addEventListener("beforeunload", function () {
+    let phone = document.getElementById("phone").value.trim();
+    if (phone) {
+        localStorage.removeItem(`phone_${phone}_otp_expire`);
+        localStorage.removeItem(`phone_${phone}_otp_requested`);
+    }
+});
+
+
+// ✅ เช็คว่าuserมีเบอร์โทรหรือยังในดาต้าเบส 
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/check-user-phone")
+        .then(response => response.json())
+        .then(data => {
+            const otpWarningBar = document.querySelector(".otp-warning-bar");
+
+            if (data.has_phone) {
+                otpWarningBar.style.display = "none"; // ✅ ถ้ามีเบอร์แล้ว ซ่อนแจ้งเตือน
+            } else {
+                otpWarningBar.style.display = "block"; // ❌ ถ้ายังไม่มีเบอร์ แสดงแจ้งเตือน
+            }
+        })
+        .catch(error => console.error("เกิดข้อผิดพลาดในการเช็คเบอร์โทร:", error));
+});
+
+
 </script>
 
 
+
+
+
+
+
 <style>
+/* ✅ แถบแจ้งเตือน OTP */
 .otp-warning-bar {
     width: 100%;
-    background: rgba(255, 165, 0, 0.9); 
+    
     color: white;
-    padding: 10px 15px;
+    padding: 12px;
     text-align: center;
     font-size: 16px;
     font-weight: bold;
+    border-radius: 8px;
     position: relative;
     z-index: 1000;
 }
 
 .otp-link {
-    color: black;
+    color: #41e0cf;
     font-weight: bold;
     text-decoration: underline;
+    font-size: 18px;
     transition: color 0.3s ease-in-out;
 }
 
@@ -424,8 +670,113 @@ function openOtpModal() {
     color: white;
 }
 
+/* ✅ สไตล์ของ Modal */
+.otp-modal {
+    background: rgba(15, 37, 35, 0.95);
+    border-radius: 12px;
+    box-shadow: 0px 0px 15px rgba(65, 224, 207, 0.3);
+    padding: 20px;
+}
+
+/* ✅ เส้นแบ่ง */
+.otp-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #41e0cf, transparent);
+    margin-bottom: 15px;
+}
+
+/* ✅ ช่องกรอกเบอร์โทร & OTP */
+.otp-input {
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 2px solid transparent;
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.otp-input:focus {
+    border-color: #41e0cf;
+    box-shadow: 0 0 10px rgba(65, 224, 207, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+/* ✅ ปุ่ม OTP */
+.btn-otp {
+    background-color: #41e0cf;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    min-width: 90px;
+}
+
+.btn-otp:hover {
+    background-color: #37c1b1;
+    box-shadow: 0px 0px 10px rgba(65, 224, 207, 0.5);
+}
+
+/* ✅ ปุ่มยืนยัน */
+.btn-confirm {
+    background-color: #2ecc71;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-confirm:hover {
+    background-color: #27ae60;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+}
+
+/* ✅ ปรับทุกองค์ประกอบของหน้าให้เหมาะกับจอเล็ก (≤768px) */
+@media (max-width: 768px) {
+    /* 🔹 แถบแจ้งเตือน OTP */
+    .otp-warning-bar {
+        font-size: 11px;
+        padding: 3px;
+    }
+
+    .otp-link {
+        font-size: 12px;
+    }
+
+    
+    .modal-title {
+        font-size: 13px;
+    }
+
+    /* 🔹 ช่องกรอกข้อมูล */
+    .otp-input,
+    .form-control {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .form-label {
+        font-size: 12px;
+    }
+
+    /* 🔹 ปุ่ม */
+    .btn {
+        font-size: 12px;
+        padding: 10px;
+    }
+      
+    .otp-divider {
+        margin-bottom: 0px;
+    }
+}
 
 </style>
+
+
+<!-- End🔹 แถบแจ้งเตือน OTP -->
+
+
 
 
 <div class="carousel-container">
@@ -1096,11 +1447,23 @@ document.addEventListener("DOMContentLoaded", () => {
 </style>
 
 <script>
-// รีเซ็ต localStorage เมื่อหน้าเว็บโหลดใหม่
-document.addEventListener("DOMContentLoaded", function() {
-    localStorage.clear(); // ล้างค่าทั้งหมดเมื่อรีเฟรช
-    checkSelection(); // รีเซ็ตปุ่มชำระเงิน
+document.addEventListener("DOMContentLoaded", function () {
+    let userHasPhone = false; // ค่าเริ่มต้น
+    const payButton = document.getElementById("pay-now-btn");
 
+    // ✅ เช็คว่าผู้ใช้มีเบอร์โทรหรือยัง
+    fetch("/check-user-phone")
+        .then(response => response.json())
+        .then(data => {
+            userHasPhone = data.has_phone;
+        })
+        .catch(error => console.error("เกิดข้อผิดพลาดในการเช็คเบอร์โทร:", error));
+
+    // ✅ รีเซ็ตค่าเมื่อหน้าโหลดใหม่
+    localStorage.clear();
+    checkSelection();
+
+    // ✅ ตั้งค่า Event Listener ให้การ์ดแต่ละประเภท
     document.querySelectorAll('.game-card').forEach((card) => {
         card.addEventListener("click", function () {
             selectGame(this.getAttribute("data-game-name"));
@@ -1119,28 +1482,63 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    document.getElementById("pay-now-btn").addEventListener("click", function() {
+    // ✅ ตั้งค่า Event ให้ปุ่มชำระเงิน
+    payButton.addEventListener("click", function () {
         if (!this.disabled) {
-            console.log("ดำเนินการชำระเงิน...");
-               Swal.fire({
-            title: "ชำระเงินสำเร็จ!",
-            html: '<i class="fas fa-check-circle custom-swal-success-icon"></i>', // ✅ ไอคอนเรืองแสง
-            showConfirmButton: false,
-            timer: 2000,
-            background: "#222",
-            color: "#fff",
-            width: "400px",
-            customClass: {
-                popup: "custom-swal-success-popup",
-                title: "custom-swal-success-title",
-                confirmButton: "custom-swal-success-button"
+            if (!userHasPhone) {
+                // ❌ ถ้ายังไม่ได้ยืนยัน OTP แจ้งเตือนก่อน
+                Swal.fire({
+                    title: "⚠️ กรุณายืนยันเบอร์โทร",
+                    text: "คุณต้องยืนยันเบอร์โทรก่อนทำการชำระเงิน",
+                    icon: "warning",
+                    confirmButtonColor: "#ff5e62",
+                    confirmButtonText: "ตกลง",
+                    customClass: {
+                        popup: "custom-swal-error-popup",
+                        title: "custom-swal-error-title",
+                        confirmButton: "custom-swal-error-button"
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        openOtpModal(); // เปิด OTP Modal หลังจากกด OK
+                    }
+                });
+            } else {
+                // ✅ ถ้ามีเบอร์แล้ว ดำเนินการชำระเงิน
+                processPayment();
             }
-        });
         }
     });
 });
 
-// ตรวจสอบว่าผู้ใช้เลือกครบทั้ง 3 
+// ✅ เปิด Modal OTP
+function openOtpModal() {
+    var myModal = new bootstrap.Modal(document.getElementById('otpModal'), {
+        keyboard: false,
+        backdrop: 'static' // 📌 ป้องกันการปิด Modal จนกว่าจะกรอก OTP
+    });
+    myModal.show();
+}
+
+// ✅ ดำเนินการชำระเงินเมื่อผู้ใช้มีเบอร์โทร
+function processPayment() {
+    Swal.fire({
+        title: "ชำระเงินสำเร็จ!",
+        html: `<div class="custom-swal-icon"><i class="fas fa-check-circle"></i></div>`,
+        showConfirmButton: false,
+        timer: 2000,
+        background: "#222",
+        color: "#fff",
+        width: "400px",
+        customClass: {
+            popup: "custom-swal-success-popup",
+            title: "custom-swal-success-title",
+            confirmButton: "custom-swal-success-button"
+        }
+    });
+}
+
+// ✅ ตรวจสอบว่าผู้ใช้เลือกครบทั้ง 3 อย่างแล้วหรือยัง
 function checkSelection() {
     const selectedGame = localStorage.getItem("selectedGame");
     const selectedPackage = localStorage.getItem("selectedPackage");
@@ -1157,7 +1555,7 @@ function checkSelection() {
     }
 }
 
-// ฟังก์ชันบันทึกค่าเมื่อคลิกเลือกการ์ด
+// ✅ บันทึกค่าเมื่อคลิกเลือกการ์ด
 function selectGame(gameName) {
     localStorage.setItem("selectedGame", gameName);
     console.log("เลือกเกม:", gameName);
@@ -1178,67 +1576,104 @@ function selectPayment(paymentMethod) {
 </script>
 
 
+
 <!-- END Section: ปุ่มทำการชำระเงิน-->
  
 
 
 
 <!--Alert-->
-<!-- CSS ปรับแต่ง SweetAlert2 -->
+
 <style>
-    /* ✅ ซ่อนไอคอนเริ่มต้นทั้งหมด */
-    .swal2-icon {
-        display: none !important;
-    }
+/* 🎨 SweetAlert2 Error */
+.custom-swal-error-popup {
+    background-color: #222 !important; /* ✅ พื้นหลังดำ */
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.7) !important;
+    text-align: center !important;
+    color:white;
+}
 
-    /* ✅ สไตล์ของ Popup */
-    .custom-swal-success-popup {
-        border-radius: 15px !important;
-        box-shadow: 0px 0px 15px rgba(0, 255, 100, 0.7) !important;
-        width: 60% !important;
-        max-width: 350px !important;
-        text-align: center !important;
-        background: #222 !important; /* พื้นหลังดำ */
-    }
+/* ✅ Title (Error) */
+.custom-swal-error-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #ff4444 !important;
+    text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
 
-    /* ✅ ปรับขนาด Title */
-    .custom-swal-success-title {
-        font-size: 22px !important;
-        font-weight: bold !important;
-        color: #00ff99 !important;
-        text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
-    }
+/* ✅ Text (Error) */
+.custom-swal-error-text {
+    font-size: 16px !important;
+    font-weight: normal;
+    color: #ff9999 !important;
+}
 
-    /* ✅ ปรับไอคอน Success */
-    .custom-swal-success-icon {
-        font-size: 60px !important;  /* ✅ ปรับขนาดไอคอน */
-        color: #00ff99 !important;
-        margin-bottom: 10px !important;
-        text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7); /* ✅ เพิ่มเรืองแสง */
-    }
+/* ✅ Button (Error) */
+.custom-swal-error-button {
+    background-color: #ff4444 !important;
+    color: white !important;
+    font-size: 16px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease-in-out;
+}
 
-    /* ✅ ปรับขนาดข้อความ */
-    .custom-swal-success-text {
-        font-size: 16px !important;
-        color: #d4ffd4 !important;
-        margin-top: 10px !important;
-    }
+.custom-swal-error-button:hover {
+    background-color: #cc0000 !important;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.8);
+}
 
-    /* ✅ ปรับขนาดปุ่ม */
-    .custom-swal-success-button {
-        background-color: #00cc66 !important;
-        color: white !important;
-        font-size: 16px !important;
-        padding: 8px 16px !important;
-        border-radius: 6px !important;
-        transition: all 0.3s ease-in-out;
-    }
+/* 🎨 SweetAlert2 Success */
+.custom-swal-success-popup {
+    background-color: #222 !important; /* ✅ พื้นหลังดำ */
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(0, 255, 100, 0.7) !important;
+    text-align: center !important;
+    color:white;
+}
 
-    /* ✅ เอฟเฟค Hover ปุ่ม */
-    .custom-swal-success-button:hover {
-        background-color: #00994d !important;
-        box-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
-    }
+/* ✅ Title (Success) */
+.custom-swal-success-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #00ff99 !important;
+    text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+/* ✅ Text (Success) */
+.custom-swal-success-text {
+    font-size: 16px !important;
+    color: #d4ffd4 !important;
+}
+
+/* ✅ Button (Success) */
+.custom-swal-success-button {
+    background-color: #00cc66 !important;
+    color: white !important;
+    font-size: 16px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease-in-out;
+}
+
+.custom-swal-success-button:hover {
+    background-color: #00994d !important;
+    box-shadow: 0px 0px 15px rgba(0, 255, 100, 0.8);
+}
+
+/* ✅ ไอคอนเรืองแสง */
+.custom-swal-icon {
+    font-size: 50px;
+    color: #00ff99;
+    text-shadow: 0px 0px 15px rgba(0, 255, 100, 1);
+    animation: glow 1s infinite alternate;
+}
+
+/* 🔥 Animation ให้ไอคอนเรืองแสง */
+@keyframes glow {
+    0% { text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.8); }
+    100% { text-shadow: 0px 0px 20px rgba(0, 255, 100, 1); }
+}
+
 </style>
 
 
