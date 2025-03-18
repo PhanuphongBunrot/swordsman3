@@ -190,7 +190,7 @@
 
         <!-- Email -->
         <div class="mb-3">
-            <label class="form-label">Email</label>
+            <label class="form-label">อีเมล</label>
             <div class="d-flex">
                 <input type="email" id="email" name="email" class="form-control flex-grow-1" required>
                 <button type="button" class="btn btn-otp" id="email-otp-button" onclick="validateEmailBeforeOtp()">ขอ OTP</button>
@@ -213,13 +213,13 @@
 
         <!-- Password -->
         <div class="mb-3">
-            <label class="form-label">Password</label>
+            <label class="form-label">รหัสผ่าน</label>
             <input type="password" name="password" class="form-control" required>
             <span class="error-message"></span>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Confirm Password</label>
+            <label class="form-label">ยืนยัน รหัสผ่าน</label>
             <input type="password" name="confirmPassword" class="form-control" required>
             <span class="error-message"></span>
         </div>
@@ -245,7 +245,7 @@
             <span class="error-message"></span>
         </div> -->
 
-        <button type="submit" class="btn btn-otp mt-3 w-100">Register</button>
+        <button type="submit" class="btn btn-otp mt-3 w-100">ลงทะเบียน</button>
     </form>
 </div>
 
@@ -259,7 +259,7 @@ function validateEmailBeforeOtp() {
 
     if (!email) {
         Swal.fire({
-            title: "❌ กรุณากรอกอีเมล!",
+            title: "⚠️ กรุณากรอกอีเมล!",
             text: "คุณต้องกรอกอีเมลก่อนขอ OTP",
             icon: "error",
             background: "#222",
@@ -276,7 +276,7 @@ function validateEmailBeforeOtp() {
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         Swal.fire({
-            title: "❌ อีเมลไม่ถูกต้อง!",
+            title: "⚠️ อีเมลไม่ถูกต้อง!",
             text: "กรุณากรอกรูปแบบที่ถูกต้อง",
             icon: "error",
             background: "#222",
@@ -300,7 +300,19 @@ async function requestOtp(type, email) {
     let csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
     
     if (!csrfTokenElement) {
-        showError("❌ ขอ OTP ไม่สำเร็จ!", "CSRF Token ไม่พบใน HTML");
+        Swal.fire({
+            title: "❌ ขอ OTP ไม่สำเร็จ!",
+            text: "CSRF Token ไม่พบใน HTML",
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
         return;
     }
 
@@ -325,7 +337,7 @@ async function requestOtp(type, email) {
         });
 
         let result = await response.json();
-        console.log("📩 Raw Response:", result);
+        // console.log("📩 Raw Response:", result);
 
         // ✅ ตรวจสอบว่ามี `token` หรือไม่
         if (result.details?.token) {
@@ -334,7 +346,19 @@ async function requestOtp(type, email) {
             // ✅ เก็บ Token ไว้ใน Local Storage
             localStorage.setItem(`${type}_otp_token`, token);
 
-            showSuccess("✅ OTP ถูกส่งแล้ว!", "กรุณาตรวจสอบอีเมลของคุณ");
+            Swal.fire({
+                title: `<i class="fas fa-check-circle custom-swal-success-icon"></i>✅ OTP ถูกส่งแล้ว!`,
+                html: `<p class="custom-swal-success-text">กรุณาตรวจสอบอีเมลของคุณ</p>`,
+                background: "#222",
+                color: "#fff",
+                width: "400px",
+                showConfirmButton: true,
+                customClass: {
+                    popup: "custom-swal-success-popup",
+                    title: "custom-swal-success-title",
+                    confirmButton: "custom-swal-success-button"
+                }
+            });
 
             // ✅ แสดงช่อง OTP
             otpSection.style.display = "block";
@@ -359,9 +383,22 @@ async function requestOtp(type, email) {
         }
     } catch (error) {
         console.error("❌ Request Error:", error);
-        showError("❌ ขอ OTP ไม่สำเร็จ!", error.message);
+        Swal.fire({
+            title: "❌ ขอ OTP ไม่สำเร็จ!",
+            text: error.message,
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
     }
 }
+
 
 
 
@@ -371,7 +408,19 @@ async function verifyOtp(type) {
     let csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
 
     if (!csrfTokenElement) {
-        showError("❌ ยืนยัน OTP ไม่สำเร็จ!", "CSRF Token ไม่พบใน HTML");
+        Swal.fire({
+            title: "❌ ยืนยัน OTP ไม่สำเร็จ!",
+            text: "CSRF Token ไม่พบใน HTML",
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
         return;
     }
 
@@ -381,17 +430,41 @@ async function verifyOtp(type) {
     let token = localStorage.getItem(`${type}_otp_token`); // ✅ ดึง Token จาก LocalStorage
 
     if (!otpCode) {
-        showError("❌ กรุณากรอก OTP!", "คุณต้องป้อนรหัส OTP ที่ได้รับ");
+        Swal.fire({
+            title: "⚠️ กรุณากรอก OTP!",
+            text: "คุณต้องป้อนรหัส OTP ที่ได้รับ",
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
         return;
     }
 
     if (!token) {
-        showError("❌ ไม่พบ Token!", "กรุณาขอ OTP ใหม่อีกครั้ง");
+        Swal.fire({
+            title: "❌ ไม่พบ Token!",
+            text: "กรุณาขอ OTP ใหม่อีกครั้ง",
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
         return;
     }
 
-    console.log("🔍 OTP ที่ส่ง:", otpCode);
-    console.log("🔍 Token ที่ส่ง:", token);
+    // console.log("🔍 OTP ที่ส่ง:", otpCode);
+    // console.log("🔍 Token ที่ส่ง:", token);
 
     try {
         let response = await fetch("/verify-mail-otp", {
@@ -407,11 +480,23 @@ async function verifyOtp(type) {
         });
 
         let result = await response.json();
-        console.log("🔍 Raw Response:", result);
+        // console.log("🔍 Raw Response:", result);
 
         // ✅ กรณี OTP ถูกต้องให้ตรวจสอบ `"status": "verified"` หรือ `"message": "Verified success"`
         if (result.details?.status === "verified" || result.details?.message === "Verified success") {
-            showSuccess("✅ OTP ถูกต้อง!", "คุณสามารถเข้าสู่ระบบได้แล้ว");
+            Swal.fire({
+                title: `<i class="fas fa-check-circle custom-swal-success-icon"></i>✅ OTP ถูกต้อง!`,
+                html: `<p class="custom-swal-success-text">คุณสามารถเข้าสู่ระบบได้แล้ว</p>`,
+                background: "#222",
+                color: "#fff",
+                width: "400px",
+                showConfirmButton: true,
+                customClass: {
+                    popup: "custom-swal-success-popup",
+                    title: "custom-swal-success-title",
+                    confirmButton: "custom-swal-success-button"
+                }
+            });
 
             // ✅ ลบ Token ที่ใช้ไปแล้ว
             localStorage.removeItem(`${type}_otp_token`);
@@ -433,9 +518,23 @@ async function verifyOtp(type) {
 
     } catch (error) {
         console.error("❌ Request Error:", error);
-        showError("❌ ยืนยัน OTP ไม่สำเร็จ!", error.message);
+        Swal.fire({
+            title: "❌ ยืนยัน OTP ไม่สำเร็จ!",
+            text: error.message,
+            icon: "error",
+            background: "#222",
+            color: "#fff",
+            width: "400px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
     }
 }
+
+
 
 
 
