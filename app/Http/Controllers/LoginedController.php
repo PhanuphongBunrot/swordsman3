@@ -102,10 +102,7 @@ class LoginedController extends Controller
 
         public function registerUser(Request $request){
         try {
-              // ✅ เช็คว่า OTP ได้รับการยืนยันหรือไม่
-            if (!Session::get('mail-otp_verified')) { 
-                return response()->json(['status' => false, 'message' => 'กรุณายืนยัน OTP ก่อนสมัคร'], 400);
-            }
+           
 
             // รับข้อมูลจากฟอร์ม
             $email = $request->email;

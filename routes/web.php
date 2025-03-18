@@ -36,6 +36,7 @@ Route::get('/auth/facebook/callback', [FacebookController::class, 'handleFaceboo
 Route::post('/login_check', [LoginedController::class, 'login'])->name('login_check');
 Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
 
+
 Route::post('/register', [LoginedController::class, 'registerUser']);
 
 

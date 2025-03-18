@@ -296,87 +296,154 @@ function validateEmailBeforeOtp() {
     requestOtp("email", email);
 }
 
-// ✅ ฟังก์ชันขอ OTP (ส่งไป API)
 async function requestOtp(type, email) {
     let csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
     
     if (!csrfTokenElement) {
         showError("❌ ขอ OTP ไม่สำเร็จ!", "CSRF Token ไม่พบใน HTML");
-        console.error("❌ CSRF Token ไม่พบ! ตรวจสอบว่ามี <meta name='csrf-token'> ใน HTML หรือไม่");
         return;
     }
 
     let csrfToken = csrfTokenElement.getAttribute("content");
+
+    let otpSection = document.getElementById(`${type}-otp-section`);
+    let otpButton = document.getElementById(`${type}-otp-button`);
+    let resendButton = document.getElementById(`${type}-resend-button`);
 
     try {
         let response = await fetch("/send-mail-otp", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrfToken, // ✅ ส่งค่า CSRF Token
+                "X-CSRF-TOKEN": csrfToken, 
             },
             body: JSON.stringify({
-                recipient_email: email,  // ✅ ใช้ชื่อ `recipient_email`
-                template_uuid: "25031414-5310-894c-b024-4546e489a6e1" // ✅ ต้องมี template_uuid
+                recipient_email: email,
+                template_uuid: "25031414-5310-894c-b024-4546e489a6e1",
+                payload: {} 
             })
         });
 
-        let textResponse = await response.text();
-        console.log("Raw Response:", textResponse); 
+        let result = await response.json();
+        console.log("📩 Raw Response:", result);
 
-        try {
-            var result = JSON.parse(textResponse);
-        } catch (jsonError) {
-            console.error("❌ JSON Parse Error:", jsonError, "Response:", textResponse);
-            showError("❌ ขอ OTP ไม่สำเร็จ!", "รูปแบบข้อมูลไม่ถูกต้อง (JSON Error)");
-            return;
-        }
+        // ✅ ตรวจสอบว่ามี `token` หรือไม่
+        if (result.details?.token) {
+            let token = result.details.token;
 
-        if (result.success) {
+            // ✅ เก็บ Token ไว้ใน Local Storage
+            localStorage.setItem(`${type}_otp_token`, token);
+
             showSuccess("✅ OTP ถูกส่งแล้ว!", "กรุณาตรวจสอบอีเมลของคุณ");
+
+            // ✅ แสดงช่อง OTP
+            otpSection.style.display = "block";
+
+            // ✅ ใช้ Local Storage เพื่อให้ OTP ไม่หายเมื่อรีเฟรช
+            localStorage.setItem(`${type}_otp_requested`, "true");
+            localStorage.setItem(`${type}_otp_visible`, "true");
+
+            // ✅ บันทึกเวลาหมดอายุของ OTP (90 วินาที)
+            let expireTime = Date.now() + 90000;
+            localStorage.setItem(`${type}_otp_expire`, expireTime);
+
+            // ซ่อนปุ่มขอ OTP แล้วแสดงปุ่มขอใหม่
+            otpButton.style.display = "none";
+            resendButton.style.display = "inline-block";
+            resendButton.disabled = true;
+
+            // ✅ เรียก `startCountdown()` หลังจากตั้งค่า `expireTime`
+            startCountdown(resendButton, otpButton, type);
         } else {
             throw new Error(result.error || "เกิดข้อผิดพลาดในการขอ OTP");
         }
     } catch (error) {
         console.error("❌ Request Error:", error);
-        showError("❌ ขอ OTP ไม่สำเร็จ!", error.message || "เกิดข้อผิดพลาด");
+        showError("❌ ขอ OTP ไม่สำเร็จ!", error.message);
     }
 }
+
 
 
 
 // ✅ ฟังก์ชันยืนยัน OTP
 async function verifyOtp(type) {
-    let otpInput = document.getElementById(`${type}-otp`).value.trim();
+    let csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
 
-    if (!/^\d{6}$/.test(otpInput)) {
-        showError("❌ OTP ไม่ถูกต้อง!", "OTP ต้องเป็นตัวเลข 6 หลัก");
+    if (!csrfTokenElement) {
+        showError("❌ ยืนยัน OTP ไม่สำเร็จ!", "CSRF Token ไม่พบใน HTML");
         return;
     }
+
+    let csrfToken = csrfTokenElement.getAttribute("content");
+    let otpInput = document.getElementById(`${type}-otp`);
+    let otpCode = otpInput.value.trim();
+    let token = localStorage.getItem(`${type}_otp_token`); // ✅ ดึง Token จาก LocalStorage
+
+    if (!otpCode) {
+        showError("❌ กรุณากรอก OTP!", "คุณต้องป้อนรหัส OTP ที่ได้รับ");
+        return;
+    }
+
+    if (!token) {
+        showError("❌ ไม่พบ Token!", "กรุณาขอ OTP ใหม่อีกครั้ง");
+        return;
+    }
+
+    console.log("🔍 OTP ที่ส่ง:", otpCode);
+    console.log("🔍 Token ที่ส่ง:", token);
 
     try {
         let response = await fetch("/verify-mail-otp", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ otp: otpInput })
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken
+            },
+            body: JSON.stringify({
+                otp_code: otpCode, // ✅ รหัส OTP
+                token: token // ✅ Token ที่ได้รับจาก `requestOtp()`
+            })
         });
 
         let result = await response.json();
+        console.log("🔍 Raw Response:", result);
 
-        if (result.success) {
-            showSuccess("✅ OTP ถูกต้อง!", "สามารถดำเนินการต่อได้");
+        // ✅ กรณี OTP ถูกต้องให้ตรวจสอบ `"status": "verified"` หรือ `"message": "Verified success"`
+        if (result.details?.status === "verified" || result.details?.message === "Verified success") {
+            showSuccess("✅ OTP ถูกต้อง!", "คุณสามารถเข้าสู่ระบบได้แล้ว");
 
-            // ✅ ลบ OTP จาก Local Storage เมื่อยืนยันสำเร็จ
-            localStorage.removeItem(`${type}_otp_expire`);
-            localStorage.removeItem(`${type}_otp_requested`);
-            localStorage.removeItem(`${type}_otp_visible`);
-        } else {
-            throw new Error(result.message || "OTP ไม่ถูกต้อง");
+            // ✅ ลบ Token ที่ใช้ไปแล้ว
+            localStorage.removeItem(`${type}_otp_token`);
+
+            document.getElementById(`${type}-otp-section`).innerHTML = `
+                <p class="text-success">✅ OTP ถูกต้อง! ดำเนินการต่อได้</p>
+            `;
+
+            return; // ✅ ออกจากฟังก์ชันทันทีเพราะสำเร็จแล้ว
         }
+
+        // ✅ ถ้า API ตอบ `invalid_request` หรือ `Invalid OTP` ให้ขึ้นแจ้งเตือนว่า OTP ไม่ถูกต้อง
+        if (result.error === "invalid_request" || result.details?.message === "Invalid OTP") {
+            throw new Error("❌ OTP ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง!");
+        }
+
+        // ✅ ถ้าไม่มีเงื่อนไขไหนผ่าน ให้ถือว่า OTP ผิด
+        throw new Error(result.error);
+
     } catch (error) {
-        showError("❌ OTP ไม่ถูกต้อง!", error.message);
+        console.error("❌ Request Error:", error);
+        showError("❌ ยืนยัน OTP ไม่สำเร็จ!", error.message);
     }
 }
+
+
+
+
+
+
+
+
 
 // ✅ ฟังก์ชันเริ่มนับถอยหลัง (บันทึกลง Local Storage)
 function startCountdown(resendButton, otpButton, type) {
