@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EXP UP เติมเงิน</title>
-     <meta name="csrf-token" content="{!! csrf_token() !!}">
+    
    
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -250,11 +250,11 @@
 </div>
 
     <!-- OTP section -->
-   
-<script>
-// ✅ ฟังก์ชันตรวจสอบ Email ก่อนขอ OTP
+    <script>
+
+/*ฟังก์ชัะ่นตรวจสอบการกรอกอีเมลก่อนกดขอOTP */
 function validateEmailBeforeOtp() {
-   let emailInput = document.getElementById("email");
+    let emailInput = document.getElementById("email");
     let email = emailInput.value.trim();
 
     if (!email) {
@@ -291,160 +291,120 @@ function validateEmailBeforeOtp() {
         return;
     }
 
-
-    // ✅ ถ้าอีเมลถูกต้อง → เรียก requestOtp() (ขอ OTP จาก API จริง)
-    requestOtp("email", email);
-}
-
-// ✅ ฟังก์ชันขอ OTP (ส่งไป API)
-async function requestOtp(type, email) {
-    let csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
-    
-    if (!csrfTokenElement) {
-        showError("❌ ขอ OTP ไม่สำเร็จ!", "CSRF Token ไม่พบใน HTML");
-        console.error("❌ CSRF Token ไม่พบ! ตรวจสอบว่ามี <meta name='csrf-token'> ใน HTML หรือไม่");
-        return;
-    }
-
-    let csrfToken = csrfTokenElement.getAttribute("content");
-
-    try {
-        let response = await fetch("/send-mail-otp", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrfToken, // ✅ ส่งค่า CSRF Token
-            },
-            body: JSON.stringify({
-                recipient_email: email,  // ✅ ใช้ชื่อ `recipient_email`
-                template_uuid: "25031414-5310-894c-b024-4546e489a6e1" // ✅ ต้องมี template_uuid
-            })
-        });
-
-        let textResponse = await response.text();
-        console.log("Raw Response:", textResponse); 
-
-        try {
-            var result = JSON.parse(textResponse);
-        } catch (jsonError) {
-            console.error("❌ JSON Parse Error:", jsonError, "Response:", textResponse);
-            showError("❌ ขอ OTP ไม่สำเร็จ!", "รูปแบบข้อมูลไม่ถูกต้อง (JSON Error)");
-            return;
-        }
-
-        if (result.success) {
-            showSuccess("✅ OTP ถูกส่งแล้ว!", "กรุณาตรวจสอบอีเมลของคุณ");
-        } else {
-            throw new Error(result.error || "เกิดข้อผิดพลาดในการขอ OTP");
-        }
-    } catch (error) {
-        console.error("❌ Request Error:", error);
-        showError("❌ ขอ OTP ไม่สำเร็จ!", error.message || "เกิดข้อผิดพลาด");
-    }
+    // ✅ ถ้าอีเมลถูกต้อง → เรียก requestOtp()
+    requestOtp("email");
 }
 
 
+let otpTimers = {}; // เก็บตัวจับเวลาของแต่ละประเภท OTP
 
-// ✅ ฟังก์ชันยืนยัน OTP
-async function verifyOtp(type) {
-    let otpInput = document.getElementById(`${type}-otp`).value.trim();
+function requestOtp(type) {
+    let otpSection = document.getElementById(`${type}-otp-section`);
+    let otpButton = document.getElementById(`${type}-otp-button`);
+    let resendButton = document.getElementById(`${type}-resend-button`);
 
-    if (!/^\d{6}$/.test(otpInput)) {
-        showError("❌ OTP ไม่ถูกต้อง!", "OTP ต้องเป็นตัวเลข 6 หลัก");
-        return;
-    }
+    // บันทึกสถานะว่าเคยขอ OTP
+    localStorage.setItem(`${type}_otp_requested`, "true");
+    localStorage.setItem(`${type}_otp_visible`, "true"); // บันทึกให้ช่อง OTP แสดง
 
-    try {
-        let response = await fetch("/verify-mail-otp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ otp: otpInput })
-        });
+    // แสดงช่อง OTP
+    otpSection.style.display = "block";
 
-        let result = await response.json();
+    // ซ่อนปุ่มขอ OTP แล้วแสดงปุ่มขอใหม่
+    otpButton.style.display = "none";
+    resendButton.style.display = "inline-block";
+    localStorage.setItem(`${type}_resend_visible`, "true"); // บันทึกให้ปุ่มขอใหม่แสดง
 
-        if (result.success) {
-            showSuccess("✅ OTP ถูกต้อง!", "สามารถดำเนินการต่อได้");
+    // ตั้งเวลาถอยหลัง (90 วินาที)
+    let countdown = 90;
+    let expireTime = Date.now() + countdown * 1000; // เวลาหมดอายุ
+    localStorage.setItem(`${type}_otp_expire`, expireTime);
 
-            // ✅ ลบ OTP จาก Local Storage เมื่อยืนยันสำเร็จ
-            localStorage.removeItem(`${type}_otp_expire`);
-            localStorage.removeItem(`${type}_otp_requested`);
-            localStorage.removeItem(`${type}_otp_visible`);
-        } else {
-            throw new Error(result.message || "OTP ไม่ถูกต้อง");
-        }
-    } catch (error) {
-        showError("❌ OTP ไม่ถูกต้อง!", error.message);
-    }
+    startCountdown(resendButton, otpButton, type);
 }
 
-// ✅ ฟังก์ชันเริ่มนับถอยหลัง (บันทึกลง Local Storage)
 function startCountdown(resendButton, otpButton, type) {
     let expireTime = localStorage.getItem(`${type}_otp_expire`);
     if (!expireTime) return;
 
-    let countdown = Math.floor((expireTime - Date.now()) / 1000);
+    let countdown = Math.floor((expireTime - Date.now()) / 1000); // เวลาที่เหลืออยู่
 
-    let timer = setInterval(() => {
-        countdown--;
+    // ถ้ามีตัวจับเวลาอยู่แล้ว ให้เคลียร์ก่อน
+    if (otpTimers[type]) {
+        clearInterval(otpTimers[type]);
+    }
+
+    if (countdown > 0) {
         resendButton.innerText = `ขอใหม่ (${countdown})`;
+        resendButton.disabled = true;
+        localStorage.setItem(`${type}_resend_visible`, "true"); // บันทึกให้ปุ่มขอใหม่แสดง
 
-        if (countdown <= 0) {
-            clearInterval(timer);
-            resendButton.innerText = "ขอใหม่";
-            resendButton.disabled = false;
-            resendButton.style.display = "none";
-            otpButton.style.display = "inline-block";
-            localStorage.removeItem(`${type}_otp_expire`);
-            localStorage.removeItem(`${type}_otp_requested`);
-            localStorage.removeItem(`${type}_otp_visible`);
-        }
-    }, 1000);
+        otpTimers[type] = setInterval(() => {
+            countdown--;
+            resendButton.innerText = `ขอใหม่ (${countdown})`;
+
+            if (countdown <= 0) {
+                clearInterval(otpTimers[type]);
+                resendButton.innerText = "ขอใหม่";
+                resendButton.disabled = false;
+                resendButton.style.display = "none"; // ซ่อนปุ่มขอใหม่
+                otpButton.style.display = "inline-block"; // แสดงปุ่มขอ OTP กลับมา
+                localStorage.removeItem(`${type}_otp_expire`);
+                localStorage.removeItem(`${type}_resend_visible`); // ลบค่าการแสดงปุ่มขอใหม่
+                localStorage.removeItem(`${type}_otp_requested`); // ลบค่าการขอ OTP
+                localStorage.removeItem(`${type}_otp_visible`); // ซ่อนช่อง OTP เมื่อหมดเวลา
+            }
+        }, 1000);
+    } else {
+        resendButton.innerText = "ขอใหม่";
+        resendButton.disabled = false;
+        resendButton.style.display = "none"; // ซ่อนปุ่มขอใหม่
+        otpButton.style.display = "inline-block"; // แสดงปุ่มขอ OTP กลับมา
+        localStorage.removeItem(`${type}_otp_expire`);
+        localStorage.removeItem(`${type}_resend_visible`); // ลบค่าการแสดงปุ่มขอใหม่
+        localStorage.removeItem(`${type}_otp_requested`); // ลบค่าการขอ OTP
+        localStorage.removeItem(`${type}_otp_visible`); // ซ่อนช่อง OTP เมื่อหมดเวลา
+    }
 }
 
-// ✅ โหลดค่าจาก LocalStorage เมื่อรีเฟรช
+// ดึงค่าจาก localStorage เมื่อรีเฟรช
 document.addEventListener("DOMContentLoaded", function () {
     ["email", "phone"].forEach(type => {
-        let otpSection = document.getElementById(`${type}-otp-section`);
         let resendButton = document.getElementById(`${type}-resend-button`);
         let otpButton = document.getElementById(`${type}-otp-button`);
+        let otpSection = document.getElementById(`${type}-otp-section`);
 
-        let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
-        let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
+        // เช็คก่อนว่า otpSection มีอยู่ใน DOM หรือไม่
+        if (otpSection) {
+            let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
+            let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
 
-        if (otpSection && isOtpVisible) otpSection.style.display = "block";
-        if (resendButton && isOtpRequested) resendButton.style.display = "inline-block";
-        if (otpButton && !isOtpRequested) otpButton.style.display = "inline-block";
+            if (isOtpRequested && isOtpVisible) {
+                otpSection.style.display = "block";
+            } else {
+                otpSection.style.display = "none";
+            }
+        }
 
-        startCountdown(resendButton, otpButton, type);
+        // ตรวจสอบว่าปุ่มมีอยู่ใน DOM ก่อนเปลี่ยนค่า style
+        if (resendButton && otpButton) {
+            if (localStorage.getItem(`${type}_resend_visible`) === "true") {
+                resendButton.style.display = "inline-block";
+                otpButton.style.display = "none";
+            } else {
+                resendButton.style.display = "none";
+                otpButton.style.display = "inline-block";
+            }
+
+            startCountdown(resendButton, otpButton, type);
+        }
     });
 });
 
-// ✅ ฟังก์ชันแสดงแจ้งเตือน SweetAlert (Success)
-function showSuccess(title, text) {
-    Swal.fire({
-        title: title,
-        text: text,
-        icon: "success",
-        background: "#222",
-        color: "#fff",
-        width: "400px",
-    });
-}
 
-// ✅ ฟังก์ชันแสดงแจ้งเตือน SweetAlert (Error)
-function showError(title, text) {
-    Swal.fire({
-        title: title,
-        text: text,
-        icon: "error",
-        background: "#222",
-        color: "#fff",
-        width: "400px",
-    });
-}
-</script>
 
+
+    </script>
 
 
 

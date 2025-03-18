@@ -60,4 +60,27 @@ class PhoneOtpController extends Controller
     }
 }
 
+/*ดึงget phone จากดาต้าเบสมาแสดง */
+  
+    // public function getUserPhoneAndStoreInSession()
+    // {
+    //     $uid = Session::get('uid'); // ดึง UID จาก Session
+
+    //     if (!$uid) {
+    //         return response()->json(['error' => 'User not logged in'], 401);
+    //     }
+
+    //     // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
+    //     $user = DB::table('users')->where('uid', $uid)->first();
+
+    //     if (!$user) {
+    //         return response()->json(['error' => 'User not found'], 404);
+    //     }
+
+    //     // เก็บเบอร์โทรศัพท์ไว้ใน Session
+    //     Session::put('phone', $user->phone);
+
+    //     return response()->json(['phone' => $user->phone]);
+    // }
+
 }

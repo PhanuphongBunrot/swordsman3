@@ -10,6 +10,7 @@ use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\AppleAuthController;
 
 use App\Http\Controllers\PhoneOtpController;
+use App\Http\Controllers\MailOtpController;
 
 
 /*
@@ -42,6 +43,11 @@ Route::post('/register', [LoginedController::class, 'registerUser']);
 
 Route::get('/check-user-phone', [PhoneOtpController::class, 'checkUserPhone']);
 Route::post('/save-user-phone', [PhoneOtpController::class, 'saveUserPhone']);
+
+
+Route::post('/send-mail-otp', [MailOtpController::class, 'sendMailOtp']);
+Route::post('/verify-mail-otp', [MailOtpController::class, 'verifyMailOtp']);
+
 
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);

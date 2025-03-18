@@ -2,10 +2,13 @@
 <html lang="th">
 
 <head>
+    <meta name="csrf-token" content="{!! csrf_token() !!}">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EXP UP เติมเงิน</title>
-<   <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  
 
 
     <!-- Favicon -->
@@ -352,6 +355,10 @@
         <li class="user-info-item">
             <span class="user-name">{{ session('username') }}</span>
         </li>
+        <!-- <li class="user-info-item">
+    <span class="user-phone text-white">📱 {{ session('phone') ?? 'ไม่ระบุ' }}</span>
+</li> -->
+
         <li class="user-info-item">
             <span class="user-balance">฿{{ number_format(session('amount'), 2) }}</span>
         </li>
