@@ -123,7 +123,7 @@ class ApisdkController extends Controller
         $params = [
             'openId' => $openId,
             'productCode' => $productCode,
-            'Email' => $Email,
+            'email' => $Email,
             'sendType' => $sendType
            
         ];
