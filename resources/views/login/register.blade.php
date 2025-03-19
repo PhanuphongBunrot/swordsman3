@@ -252,7 +252,7 @@
     <!-- OTP section -->
    
 <script>
-// ✅ ฟังก์ชันตรวจสอบ Email ก่อนขอ OTP
+//  ฟังก์ชันตรวจสอบ Email ก่อนขอ OTP  ใส่ Email จะบันทึกลง Local Storage ก่อนขอ OTP
 function validateEmailBeforeOtp() {
    let emailInput = document.getElementById("email");
     let email = emailInput.value.trim();
@@ -291,6 +291,8 @@ function validateEmailBeforeOtp() {
         return;
     }
 
+      // ✅ เก็บอีเมลลง Local Storage
+    localStorage.setItem("stored_email", email);
 
     // ✅ ถ้าอีเมลถูกต้อง → เรียก requestOtp() (ขอ OTP จาก API จริง)
     requestOtp("email", email);
@@ -321,6 +323,12 @@ async function requestOtp(type, email) {
     let otpSection = document.getElementById(`${type}-otp-section`);
     let otpButton = document.getElementById(`${type}-otp-button`);
     let resendButton = document.getElementById(`${type}-resend-button`);
+
+     // ล้างค่าการนับถอยหลังก่อนเริ่มใหม่ กันการขอซ้ำนับซ้ำ
+    clearInterval(window.otpTimer);
+    localStorage.removeItem(`${type}_otp_expire`);
+    localStorage.removeItem(`${type}_otp_requested`);
+    localStorage.removeItem(`${type}_otp_visible`);
 
     try {
         let response = await fetch("/send-mail-otp", {
@@ -544,6 +552,29 @@ async function verifyOtp(type) {
 
 
 
+
+// function startCountdown(resendButton, otpButton, type) {
+//     let expireTime = localStorage.getItem(`${type}_otp_expire`);
+//     if (!expireTime) return;
+
+//     let countdown = Math.floor((expireTime - Date.now()) / 1000);
+
+//     let timer = setInterval(() => {
+//         countdown--;
+//         resendButton.innerText = `ขอใหม่ (${countdown})`;
+
+//         if (countdown <= 0) {
+//             clearInterval(timer);
+//             resendButton.innerText = "ขอใหม่";
+//             resendButton.disabled = false;
+//             resendButton.style.display = "none";
+//             otpButton.style.display = "inline-block";
+//             localStorage.removeItem(`${type}_otp_expire`);
+//             localStorage.removeItem(`${type}_otp_requested`);
+//             localStorage.removeItem(`${type}_otp_visible`);
+//         }
+//     }, 1000);
+// }
 // ✅ ฟังก์ชันเริ่มนับถอยหลัง (บันทึกลง Local Storage)
 function startCountdown(resendButton, otpButton, type) {
     let expireTime = localStorage.getItem(`${type}_otp_expire`);
@@ -551,16 +582,29 @@ function startCountdown(resendButton, otpButton, type) {
 
     let countdown = Math.floor((expireTime - Date.now()) / 1000);
 
-    let timer = setInterval(() => {
+    if (countdown > 0) {
+        otpButton.style.display = "none"; // ซ่อนปุ่มขอ OTP ถ้าเวลายังเหลือ
+        resendButton.style.display = "inline-block";
+        resendButton.disabled = true;
+    }
+
+    // ✅ ล้าง Timer เก่าก่อนเริ่มใหม่
+    clearInterval(window.otpTimer);
+
+    window.otpTimer = setInterval(() => {
         countdown--;
         resendButton.innerText = `ขอใหม่ (${countdown})`;
 
         if (countdown <= 0) {
-            clearInterval(timer);
+            clearInterval(window.otpTimer);
             resendButton.innerText = "ขอใหม่";
             resendButton.disabled = false;
             resendButton.style.display = "none";
-            otpButton.style.display = "inline-block";
+            otpButton.style.display = "inline-block"; // ✅ แสดงปุ่มขอ OTP เมื่อหมดเวลา
+
+   
+
+
             localStorage.removeItem(`${type}_otp_expire`);
             localStorage.removeItem(`${type}_otp_requested`);
             localStorage.removeItem(`${type}_otp_visible`);
@@ -568,6 +612,33 @@ function startCountdown(resendButton, otpButton, type) {
     }, 1000);
 }
 
+/*Auto fill ใส่อีเมลอัตโนมัติในช่องinput */
+document.addEventListener("DOMContentLoaded", function () {
+    // ดึงค่าที่เก็บไว้จาก localStorage
+    let storedEmail = localStorage.getItem("stored_email");
+
+    if (storedEmail) {
+        // ถ้ามีค่าอีเมล ให้ใส่ลงไปในช่อง input อัตโนมัติ
+        document.getElementById("email").value = storedEmail;
+    }
+});
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     ["email", "phone"].forEach(type => {
+//         let otpSection = document.getElementById(`${type}-otp-section`);
+//         let resendButton = document.getElementById(`${type}-resend-button`);
+//         let otpButton = document.getElementById(`${type}-otp-button`);
+
+//         let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
+//         let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
+
+//         if (otpSection && isOtpVisible) otpSection.style.display = "block";
+//         if (resendButton && isOtpRequested) resendButton.style.display = "inline-block";
+//         if (otpButton && !isOtpRequested) otpButton.style.display = "inline-block";
+
+//         startCountdown(resendButton, otpButton, type);
+//     });
+// });
 // ✅ โหลดค่าจาก LocalStorage เมื่อรีเฟรช
 document.addEventListener("DOMContentLoaded", function () {
     ["email", "phone"].forEach(type => {
@@ -577,12 +648,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
         let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
+        let expireTime = localStorage.getItem(`${type}_otp_expire`);
 
         if (otpSection && isOtpVisible) otpSection.style.display = "block";
         if (resendButton && isOtpRequested) resendButton.style.display = "inline-block";
         if (otpButton && !isOtpRequested) otpButton.style.display = "inline-block";
 
-        startCountdown(resendButton, otpButton, type);
+        // ✅ ถ้า Countdown Timer ยังทำงานให้ซ่อนปุ่มขอ OTP
+        if (expireTime && Date.now() < expireTime) {
+            otpButton.style.display = "none";  // ซ่อนปุ่มขอ OTP
+            resendButton.style.display = "inline-block";
+            resendButton.disabled = true;
+            startCountdown(resendButton, otpButton, type);
+        } else {
+            otpButton.style.display = "inline-block";  // แสดงปุ่มขอ OTP เมื่อหมดเวลา
+            resendButton.style.display = "none";
+        }
     });
 });
 

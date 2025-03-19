@@ -361,11 +361,11 @@
 
 <!-- 🔹 แถบแจ้งเตือน OTP -->
 
-<div class="otp-warning-bar">
+<!-- <div class="otp-warning-bar">
     ⚠️ เพื่อความปลอดภัยของบัญชี กรุณา 
     <a href="javascript:void(0);" onclick="openOtpModal()" class="otp-link">คลิกที่นี่</a> 
     เพื่อยืนยัน OTP เบอร์โทรศัพท์ของท่านก่อนทำการชำระเงิน
-</div>
+</div> -->
 
 <!-- 🔹 Modal สำหรับยืนยัน OTP -->
 <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
@@ -1484,30 +1484,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ ตั้งค่า Event ให้ปุ่มชำระเงิน
     payButton.addEventListener("click", function () {
-        if (!this.disabled) {
-            if (!userHasPhone) {
-                // ❌ ถ้ายังไม่ได้ยืนยัน OTP แจ้งเตือนก่อน
-                Swal.fire({
-                    title: "⚠️ กรุณายืนยันเบอร์โทร",
-                    text: "คุณต้องยืนยันเบอร์โทรก่อนทำการชำระเงิน",
-                    icon: "warning",
-                    confirmButtonColor: "#ff5e62",
-                    confirmButtonText: "ตกลง",
-                    customClass: {
-                        popup: "custom-swal-error-popup",
-                        title: "custom-swal-error-title",
-                        confirmButton: "custom-swal-error-button"
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        openOtpModal(); // เปิด OTP Modal หลังจากกด OK
-                    }
-                });
-            } else {
+        // if (!this.disabled) {
+        //     if (!userHasPhone) {
+        //         // ❌ ถ้ายังไม่ได้ยืนยัน OTP แจ้งเตือนก่อน
+        //         Swal.fire({
+        //             title: "⚠️ กรุณายืนยันเบอร์โทร",
+        //             text: "คุณต้องยืนยันเบอร์โทรก่อนทำการชำระเงิน",
+        //             icon: "warning",
+        //             confirmButtonColor: "#ff5e62",
+        //             confirmButtonText: "ตกลง",
+        //             customClass: {
+        //                 popup: "custom-swal-error-popup",
+        //                 title: "custom-swal-error-title",
+        //                 confirmButton: "custom-swal-error-button"
+        //             }
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 openOtpModal(); // เปิด OTP Modal หลังจากกด OK
+        //             }
+        //         });
+        //     } else {
                 // ✅ ถ้ามีเบอร์แล้ว ดำเนินการชำระเงิน
                 processPayment();
-            }
-        }
+            // }
+        // }
     });
 });
 
