@@ -252,7 +252,7 @@
     <!-- OTP section -->
    
 <script>
-// ✅ ฟังก์ชันตรวจสอบ Email ก่อนขอ OTP
+//  ฟังก์ชันตรวจสอบ Email ก่อนขอ OTP  ใส่ Email จะบันทึกลง Local Storage ก่อนขอ OTP
 function validateEmailBeforeOtp() {
    let emailInput = document.getElementById("email");
     let email = emailInput.value.trim();
@@ -264,7 +264,7 @@ function validateEmailBeforeOtp() {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -281,7 +281,7 @@ function validateEmailBeforeOtp() {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -291,6 +291,8 @@ function validateEmailBeforeOtp() {
         return;
     }
 
+      // ✅ เก็บอีเมลลง Local Storage
+    localStorage.setItem("stored_email", email);
 
     // ✅ ถ้าอีเมลถูกต้อง → เรียก requestOtp() (ขอ OTP จาก API จริง)
     requestOtp("email", email);
@@ -306,7 +308,7 @@ async function requestOtp(type, email) {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -321,6 +323,12 @@ async function requestOtp(type, email) {
     let otpSection = document.getElementById(`${type}-otp-section`);
     let otpButton = document.getElementById(`${type}-otp-button`);
     let resendButton = document.getElementById(`${type}-resend-button`);
+
+     // ล้างค่าการนับถอยหลังก่อนเริ่มใหม่ กันการขอซ้ำนับซ้ำ
+    clearInterval(window.otpTimer);
+    localStorage.removeItem(`${type}_otp_expire`);
+    localStorage.removeItem(`${type}_otp_requested`);
+    localStorage.removeItem(`${type}_otp_visible`);
 
     try {
         let response = await fetch("/send-mail-otp", {
@@ -351,7 +359,7 @@ async function requestOtp(type, email) {
                 html: `<p class="custom-swal-success-text">กรุณาตรวจสอบอีเมลของคุณ</p>`,
                 background: "#222",
                 color: "#fff",
-                width: "400px",
+                width: "500px",
                 showConfirmButton: true,
                 customClass: {
                     popup: "custom-swal-success-popup",
@@ -389,7 +397,7 @@ async function requestOtp(type, email) {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -414,7 +422,7 @@ async function verifyOtp(type) {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -436,7 +444,7 @@ async function verifyOtp(type) {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -453,7 +461,7 @@ async function verifyOtp(type) {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -486,10 +494,10 @@ async function verifyOtp(type) {
         if (result.details?.status === "verified" || result.details?.message === "Verified success") {
             Swal.fire({
                 title: `<i class="fas fa-check-circle custom-swal-success-icon"></i>✅ OTP ถูกต้อง!`,
-                html: `<p class="custom-swal-success-text">คุณสามารถเข้าสู่ระบบได้แล้ว</p>`,
+                html: `<p class="custom-swal-success-text">คุณสามารถกรอกแบบฟอร์มต่อได้</p>`,
                 background: "#222",
                 color: "#fff",
-                width: "400px",
+                width: "500px",
                 showConfirmButton: true,
                 customClass: {
                     popup: "custom-swal-success-popup",
@@ -524,7 +532,7 @@ async function verifyOtp(type) {
             icon: "error",
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -544,6 +552,29 @@ async function verifyOtp(type) {
 
 
 
+
+// function startCountdown(resendButton, otpButton, type) {
+//     let expireTime = localStorage.getItem(`${type}_otp_expire`);
+//     if (!expireTime) return;
+
+//     let countdown = Math.floor((expireTime - Date.now()) / 1000);
+
+//     let timer = setInterval(() => {
+//         countdown--;
+//         resendButton.innerText = `ขอใหม่ (${countdown})`;
+
+//         if (countdown <= 0) {
+//             clearInterval(timer);
+//             resendButton.innerText = "ขอใหม่";
+//             resendButton.disabled = false;
+//             resendButton.style.display = "none";
+//             otpButton.style.display = "inline-block";
+//             localStorage.removeItem(`${type}_otp_expire`);
+//             localStorage.removeItem(`${type}_otp_requested`);
+//             localStorage.removeItem(`${type}_otp_visible`);
+//         }
+//     }, 1000);
+// }
 // ✅ ฟังก์ชันเริ่มนับถอยหลัง (บันทึกลง Local Storage)
 function startCountdown(resendButton, otpButton, type) {
     let expireTime = localStorage.getItem(`${type}_otp_expire`);
@@ -551,16 +582,29 @@ function startCountdown(resendButton, otpButton, type) {
 
     let countdown = Math.floor((expireTime - Date.now()) / 1000);
 
-    let timer = setInterval(() => {
+    if (countdown > 0) {
+        otpButton.style.display = "none"; // ซ่อนปุ่มขอ OTP ถ้าเวลายังเหลือ
+        resendButton.style.display = "inline-block";
+        resendButton.disabled = true;
+    }
+
+    // ✅ ล้าง Timer เก่าก่อนเริ่มใหม่
+    clearInterval(window.otpTimer);
+
+    window.otpTimer = setInterval(() => {
         countdown--;
         resendButton.innerText = `ขอใหม่ (${countdown})`;
 
         if (countdown <= 0) {
-            clearInterval(timer);
+            clearInterval(window.otpTimer);
             resendButton.innerText = "ขอใหม่";
             resendButton.disabled = false;
             resendButton.style.display = "none";
-            otpButton.style.display = "inline-block";
+            otpButton.style.display = "inline-block"; // ✅ แสดงปุ่มขอ OTP เมื่อหมดเวลา
+
+   
+
+
             localStorage.removeItem(`${type}_otp_expire`);
             localStorage.removeItem(`${type}_otp_requested`);
             localStorage.removeItem(`${type}_otp_visible`);
@@ -568,6 +612,33 @@ function startCountdown(resendButton, otpButton, type) {
     }, 1000);
 }
 
+/*Auto fill ใส่อีเมลอัตโนมัติในช่องinput */
+document.addEventListener("DOMContentLoaded", function () {
+    // ดึงค่าที่เก็บไว้จาก localStorage
+    let storedEmail = localStorage.getItem("stored_email");
+
+    if (storedEmail) {
+        // ถ้ามีค่าอีเมล ให้ใส่ลงไปในช่อง input อัตโนมัติ
+        document.getElementById("email").value = storedEmail;
+    }
+});
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     ["email", "phone"].forEach(type => {
+//         let otpSection = document.getElementById(`${type}-otp-section`);
+//         let resendButton = document.getElementById(`${type}-resend-button`);
+//         let otpButton = document.getElementById(`${type}-otp-button`);
+
+//         let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
+//         let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
+
+//         if (otpSection && isOtpVisible) otpSection.style.display = "block";
+//         if (resendButton && isOtpRequested) resendButton.style.display = "inline-block";
+//         if (otpButton && !isOtpRequested) otpButton.style.display = "inline-block";
+
+//         startCountdown(resendButton, otpButton, type);
+//     });
+// });
 // ✅ โหลดค่าจาก LocalStorage เมื่อรีเฟรช
 document.addEventListener("DOMContentLoaded", function () {
     ["email", "phone"].forEach(type => {
@@ -577,38 +648,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
         let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
+        let expireTime = localStorage.getItem(`${type}_otp_expire`);
 
         if (otpSection && isOtpVisible) otpSection.style.display = "block";
         if (resendButton && isOtpRequested) resendButton.style.display = "inline-block";
         if (otpButton && !isOtpRequested) otpButton.style.display = "inline-block";
 
-        startCountdown(resendButton, otpButton, type);
+        // ✅ ถ้า Countdown Timer ยังทำงานให้ซ่อนปุ่มขอ OTP
+        if (expireTime && Date.now() < expireTime) {
+            otpButton.style.display = "none";  // ซ่อนปุ่มขอ OTP
+            resendButton.style.display = "inline-block";
+            resendButton.disabled = true;
+            startCountdown(resendButton, otpButton, type);
+        } else {
+            otpButton.style.display = "inline-block";  // แสดงปุ่มขอ OTP เมื่อหมดเวลา
+            resendButton.style.display = "none";
+        }
     });
 });
 
-// ✅ ฟังก์ชันแสดงแจ้งเตือน SweetAlert (Success)
-function showSuccess(title, text) {
-    Swal.fire({
-        title: title,
-        text: text,
-        icon: "success",
-        background: "#222",
-        color: "#fff",
-        width: "400px",
-    });
-}
 
-// ✅ ฟังก์ชันแสดงแจ้งเตือน SweetAlert (Error)
-function showError(title, text) {
-    Swal.fire({
-        title: title,
-        text: text,
-        icon: "error",
-        background: "#222",
-        color: "#fff",
-        width: "400px",
-    });
-}
 </script>
 
 
@@ -619,11 +678,15 @@ function showError(title, text) {
 
  <!--  Validator -->
     <script>
-   document.addEventListener("DOMContentLoaded", function () {
+
+document.addEventListener("DOMContentLoaded", function () {
     function validateInput(input) {
         const name = input.name;
         const value = input.value.trim();
         let errorMessage = "";
+        let passwordInput = document.querySelector("input[name='password']");
+        let confirmPasswordInput = document.querySelector("input[name='confirmPassword']");
+        let submitButton = document.querySelector("#registerForm button[type='submit']");
 
         // ตรวจสอบ Email
         if (name === "email") {
@@ -643,52 +706,44 @@ function showError(title, text) {
 
         // ตรวจสอบ Confirm Password
         if (name === "confirmPassword") {
-            const password = document.querySelector("input[name='password']").value;
-            if (value !== password) {
+            if (value !== passwordInput.value) {
                 errorMessage = "รหัสผ่านไม่ตรงกัน";
             }
         }
 
-        // ตรวจสอบ Phone Number
-        // if (name === "phone") {
-        //     if (!/^\d{10}$/.test(value)) {
-        //         errorMessage = "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก";
-        //     }
-        // }
-
-        // ตรวจสอบ OTP
-        if (name === "emailOtp" || name === "phoneOtp") {
-            if (!/^\d{6}$/.test(value)) {
-                errorMessage = "OTP ต้องเป็นตัวเลข 6 หลัก";
-            }
-        }
-
-        // แสดงหรือซ่อนข้อความผิดพลาด
+        // แสดงข้อความผิดพลาด
         const errorSpan = input.closest(".mb-3").querySelector(".error-message");
-        const otpButton = input.closest(".mb-3").querySelector(".btn-otp");
-
         if (errorMessage) {
             input.classList.add("is-invalid");
             errorSpan.textContent = errorMessage;
             errorSpan.style.color = "red";
-            // if (otpButton) otpButton.style.visibility = "hidden"; // แค่ซ่อน ไม่ลบออกจาก Layout
         } else {
             input.classList.remove("is-invalid");
             errorSpan.textContent = "";
-            if (otpButton) otpButton.style.visibility = "visible"; // แสดงปุ่ม OTP
+        }
+
+        // ✅ ปิดปุ่มลงทะเบียนถ้ารหัสผ่านไม่ตรงกัน หรือสั้นเกินไป
+        if (passwordInput.value !== confirmPasswordInput.value || passwordInput.value.length < 6) {
+            submitButton.disabled = true;
+        } else {
+            submitButton.disabled = false;
         }
     }
 
-    // ตรวจสอบค่าขณะที่พิมพ์
+    // ✅ ตรวจสอบค่าขณะที่พิมพ์
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("input", function () {
             validateInput(this);
         });
     });
 
-    // ตรวจสอบทั้งหมดก่อนส่งฟอร์ม
+    // ✅ ตรวจสอบทั้งหมดก่อนส่งฟอร์ม
     document.getElementById("registerForm").addEventListener("submit", function (e) {
         let isValid = true;
+        let passwordInput = document.querySelector("input[name='password']");
+        let confirmPasswordInput = document.querySelector("input[name='confirmPassword']");
+        let submitButton = document.querySelector("#registerForm button[type='submit']");
+
         document.querySelectorAll("input").forEach(input => {
             validateInput(input);
             if (input.classList.contains("is-invalid")) {
@@ -696,12 +751,133 @@ function showError(title, text) {
             }
         });
 
+        // ✅ ถ้ารหัสผ่านไม่ตรงกัน ปิดปุ่มและแจ้งเตือน
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            isValid = false;
+            submitButton.disabled = true;
+
+            Swal.fire({
+                title: "❌ รหัสผ่านไม่ตรงกัน!",
+                text: "กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน",
+                icon: "error",
+                background: "#222",
+                color: "#fff",
+                width: "500px",
+                customClass: {
+                    popup: "custom-swal-error-popup",
+                    title: "custom-swal-error-title",
+                    confirmButton: "custom-swal-error-button"
+                }
+            });
+
+            passwordInput.classList.add("is-invalid");
+            confirmPasswordInput.classList.add("is-invalid");
+
+            e.preventDefault(); // ❌ ป้องกันการส่งฟอร์ม
+            return;
+        }
+
+        // ✅ ถ้าข้อมูลผิดพลาด แสดงแจ้งเตือน
         if (!isValid) {
-            alert("❌ กรุณากรอกข้อมูลให้ถูกต้อง");
-            e.preventDefault(); // ป้องกันการส่งฟอร์มถ้าข้อมูลผิดพลาด
+            Swal.fire({
+                title: "❌ กรุณากรอกข้อมูลให้ถูกต้อง!",
+                text: "กรุณาตรวจสอบและแก้ไขข้อผิดพลาดก่อนส่งฟอร์ม",
+                icon: "error",
+                background: "#222",
+                color: "#fff",
+                width: "500px",
+                customClass: {
+                    popup: "custom-swal-error-popup",
+                    title: "custom-swal-error-title",
+                    confirmButton: "custom-swal-error-button"
+                }
+            });
+
+            e.preventDefault(); // ❌ ป้องกันการส่งฟอร์ม
         }
     });
 });
+
+
+
+//    document.addEventListener("DOMContentLoaded", function () {
+//     function validateInput(input) {
+//         const name = input.name;
+//         const value = input.value.trim();
+//         let errorMessage = "";
+
+//         // ตรวจสอบ Email
+//         if (name === "email") {
+//             if (value === "") {
+//                 errorMessage = "กรุณากรอกอีเมล";
+//             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+//                 errorMessage = "รูปแบบอีเมลไม่ถูกต้อง";
+//             }
+//         }
+
+//         // ตรวจสอบ Password
+//         if (name === "password") {
+//             if (value.length < 6) {
+//                 errorMessage = "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร";
+//             }
+//         }
+
+//         // ตรวจสอบ Confirm Password
+//         if (name === "confirmPassword") {
+//             const password = document.querySelector("input[name='password']").value;
+//             if (value !== password) {
+//                 errorMessage = "รหัสผ่านไม่ตรงกัน";
+//             }
+//         }
+
+      
+
+//         // ตรวจสอบ OTP
+//         if (name === "emailOtp" || name === "phoneOtp") {
+//             if (!/^\d{6}$/.test(value)) {
+//                 errorMessage = "OTP ต้องเป็นตัวเลข 6 หลัก";
+//             }
+//         }
+
+//         // แสดงหรือซ่อนข้อความผิดพลาด
+//         const errorSpan = input.closest(".mb-3").querySelector(".error-message");
+//         const otpButton = input.closest(".mb-3").querySelector(".btn-otp");
+
+//         if (errorMessage) {
+//             input.classList.add("is-invalid");
+//             errorSpan.textContent = errorMessage;
+//             errorSpan.style.color = "red";
+//             // if (otpButton) otpButton.style.visibility = "hidden"; // แค่ซ่อน ไม่ลบออกจาก Layout
+//         } else {
+//             input.classList.remove("is-invalid");
+//             errorSpan.textContent = "";
+//             if (otpButton) otpButton.style.visibility = "visible"; // แสดงปุ่ม OTP
+//         }
+//     }
+
+//     // ตรวจสอบค่าขณะที่พิมพ์
+//     document.querySelectorAll("input").forEach(input => {
+//         input.addEventListener("input", function () {
+//             validateInput(this);
+//         });
+//     });
+
+//     // ตรวจสอบทั้งหมดก่อนส่งฟอร์ม
+//     document.getElementById("registerForm").addEventListener("submit", function (e) {
+//         let isValid = true;
+//         document.querySelectorAll("input").forEach(input => {
+//             validateInput(input);
+//             if (input.classList.contains("is-invalid")) {
+//                 isValid = false;
+//             }
+//         });
+
+//         if (!isValid) {
+//             alert("❌ กรุณากรอกข้อมูลให้ถูกต้อง");
+//             e.preventDefault(); // ป้องกันการส่งฟอร์มถ้าข้อมูลผิดพลาด
+//         }
+//     });
+// });
 
     </script>
 
@@ -715,7 +891,7 @@ function showError(title, text) {
             showConfirmButton: true,
             background: "#222",
             color: "#fff",
-            width: "400px",
+            width: "500px",
             customClass: {
                 popup: "custom-swal-error-popup",
                 title: "custom-swal-error-title",
@@ -730,6 +906,16 @@ function showError(title, text) {
 /* ==============================
 🎨 SweetAlert2 แจ้งเตือนแบบ Error
 ============================== */
+/* ปิดการใช้งานเฉพาะปุ่ม "ลงทะเบียน" */
+#registerForm button[type="submit"]:disabled {
+    background-color: #666 !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+    border: 2px solid #444 !important;
+}
+
+
+
 .custom-swal-error-popup {
     border-radius: 15px !important;
     box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.7) !important;
