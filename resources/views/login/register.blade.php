@@ -661,8 +661,10 @@ document.addEventListener("DOMContentLoaded", function () {
             resendButton.disabled = true;
             startCountdown(resendButton, otpButton, type);
         } else {
-            otpButton.style.display = "inline-block";  // แสดงปุ่มขอ OTP เมื่อหมดเวลา
-            resendButton.style.display = "none";
+           if (otpSection) otpSection.style.display = "none";
+           if (otpButton) otpButton.style.display = "inline-block";
+           if (resendButton) resendButton.style.display = "none";
+
         }
     });
 });
@@ -889,6 +891,26 @@ document.addEventListener("DOMContentLoaded", function () {
             title: "❌ อีเมลนี้เคยลงทะเบียนแล้ว!",
             html: '<i class="fas fa-exclamation-circle custom-swal-error-icon"></i>',
             showConfirmButton: true,
+            background: "#222",
+            color: "#fff",
+            width: "500px",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button"
+            }
+        });
+    });
+</script>
+@endif
+
+@if(session()->pull('register-error')) 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            title: "❌ เกิดข้อผิดพลาด!",
+            text: "{{ session('register-error') }}",
+            icon: "error",
             background: "#222",
             color: "#fff",
             width: "500px",

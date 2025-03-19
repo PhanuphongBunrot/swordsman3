@@ -892,13 +892,56 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 </style>
 
-
-@if(session()->pull('register-success'))
+@if(session()->has('register-success'))
 <script>
+    localStorage.setItem("register-success", "true");
+
     document.addEventListener("DOMContentLoaded", function () {
+    // ✅ ถ้ามี `register-success` ใน Local Storage
+    if (localStorage.getItem("register-success")) {
         Swal.fire({
             title: "🎉 ลงทะเบียนสำเร็จ!",
-            html: '<i class="fas fa-check-circle custom-swal-success-icon"></i>',
+            showConfirmButton: true,
+            background: "#222",
+            color: "#fff",
+            width: "500px",
+            customClass: {
+                popup: "custom-swal-success-popup",
+                title: "custom-swal-success-title",
+                confirmButton: "custom-swal-success-button"
+            }
+        }).then(() => {
+            // ✅ เคลียร์ค่า Local Storage ที่เกี่ยวข้อง
+            ["register-success", "email_otp_expire", "email_otp_requested", "email_otp_visible", "stored_email"]
+                .forEach(item => localStorage.removeItem(item));
+
+            // ✅ รีเซ็ตค่าฟอร์ม
+            let registerForm = document.getElementById("registerForm");
+            if (registerForm) registerForm.reset();
+
+            // ✅ ซ่อนช่อง OTP และรีเซ็ตปุ่มขอ OTP
+            let otpSection = document.getElementById("email-otp-section");
+            let otpButton = document.getElementById("email-otp-button");
+            let resendButton = document.getElementById("email-resend-button");
+
+            if (otpSection) otpSection.style.display = "none";
+            if (otpButton) otpButton.style.display = "inline-block";
+            if (resendButton) resendButton.style.display = "none";
+        });
+    }
+});
+
+</script>
+@endif
+
+<!-- @if(session()->pull('register-success'))
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    // ✅ ถ้ามี `register-success` ใน Local Storage
+    if (localStorage.getItem("register-success")) {
+        Swal.fire({
+            title: "🎉 ลงทะเบียนสำเร็จ!",
+            html: '<i class="fas fa-check-circle custom-swal-success-icon"></i><br><br><span style="color: #fff;">สามารถล็อกอินได้แล้ว</span>',
             showConfirmButton: true,
             background: "#222",
             color: "#fff",
@@ -908,10 +951,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 title: "custom-swal-success-title",
                 confirmButton: "custom-swal-success-button"
             }
+        }).then(() => {
+            // ✅ เคลียร์ค่า Local Storage
+            localStorage.removeItem("register-success");
+            localStorage.removeItem("email_otp_expire");
+            localStorage.removeItem("email_otp_requested");
+            localStorage.removeItem("email_otp_visible");
+            localStorage.removeItem("stored_email");
+
+            // ✅ รีเซ็ตค่าฟอร์ม
+            let registerForm = document.getElementById("registerForm");
+            if (registerForm) registerForm.reset();
+
+            // ✅ ซ่อนช่อง OTP และรีเซ็ตปุ่มขอ OTP
+            let otpSection = document.getElementById("email-otp-section");
+            let otpButton = document.getElementById("email-otp-button");
+            let resendButton = document.getElementById("email-resend-button");
+
+            if (otpSection) otpSection.style.display = "none";
+            if (otpButton) otpButton.style.display = "inline-block";
+            if (resendButton) resendButton.style.display = "none";
         });
-    });
+    }
+});
+
+
 </script>
-@endif
+@endif -->
 
 
 

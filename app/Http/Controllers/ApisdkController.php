@@ -117,9 +117,6 @@ class ApisdkController extends Controller
         $sendType  = 4;
         $openKey = env('openKey');
 
-
-
-
         $params = [
             'openId' => $openId,
             'productCode' => $productCode,
@@ -139,7 +136,7 @@ class ApisdkController extends Controller
 
         // ส่ง API
         $response = $this->sendPostRequest($url, $params);
-        echo   $response;
+        echo  $response;
 
 
     }
