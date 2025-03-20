@@ -894,9 +894,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 @if(session()->has('register-success'))
 <script>
-    localStorage.setItem("register-success", "true");
+   localStorage.setItem("register-success", "true");
 
-    document.addEventListener("DOMContentLoaded", function () {
+   document.addEventListener("DOMContentLoaded", function () {
     // ✅ ถ้ามี `register-success` ใน Local Storage
     if (localStorage.getItem("register-success")) {
         Swal.fire({
@@ -912,8 +912,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }).then(() => {
             // ✅ เคลียร์ค่า Local Storage ที่เกี่ยวข้อง
-            ["register-success", "email_otp_expire", "email_otp_requested", "email_otp_visible", "stored_email"]
-                .forEach(item => localStorage.removeItem(item));
+            [
+                "register-success",
+                "otpVerified", // ✅ เคลียร์ otpVerified ด้วย!
+                "email_otp_expire",
+                "email_otp_requested",
+                "email_otp_visible",
+                "stored_email"
+            ].forEach(item => localStorage.removeItem(item));
 
             // ✅ รีเซ็ตค่าฟอร์ม
             let registerForm = document.getElementById("registerForm");
@@ -930,6 +936,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
 
 </script>
 @endif

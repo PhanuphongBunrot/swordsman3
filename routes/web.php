@@ -37,8 +37,15 @@ Route::post('/login_check', [LoginedController::class, 'login'])->name('login_ch
 Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
 
 
+
+
 Route::post('/register', [LoginedController::class, 'registerUser']);
 
+
+// แสดงฟอร์มลืมรหัสผ่าน
+Route::get('/forgot-password', function () {
+    return view('login.forget-password');
+})->name('password.reset');
 
 
 

@@ -435,6 +435,15 @@
                                 <input type="password" class="form-control" id="password" name="password" required>
 
                             </div>
+
+                             <!-- ช่องลืมรหัสผ่าน -->
+                            <div class="text-end">
+                            <a href="{{ route('password.reset') }}" class="text-decoration-none" style="color: black;">
+                                ลืมรหัสผ่าน?
+                            </a>
+                            </div>
+
+
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-block email-login-btn mb-3" style="color: #000; background-color:#41e0cf; filter: drop-shadow(4px 4px 8px rgba(0, 255, 255, 0.4));">
                                     Login with Email
