@@ -332,6 +332,7 @@ async function requestOtp(type, email) {
     localStorage.removeItem(`${type}_otp_expire`);
     localStorage.removeItem(`${type}_otp_requested`);
     localStorage.removeItem(`${type}_otp_visible`);
+    localStorage.removeItem(`otpVerified`);
 
     try {
         let response = await fetch("/send-mail-otp", {
@@ -555,36 +556,6 @@ async function verifyOtp(type) {
 
 
 
-
-
-
-
-
-
-
-
-// function startCountdown(resendButton, otpButton, type) {
-//     let expireTime = localStorage.getItem(`${type}_otp_expire`);
-//     if (!expireTime) return;
-
-//     let countdown = Math.floor((expireTime - Date.now()) / 1000);
-
-//     let timer = setInterval(() => {
-//         countdown--;
-//         resendButton.innerText = `ขอใหม่ (${countdown})`;
-
-//         if (countdown <= 0) {
-//             clearInterval(timer);
-//             resendButton.innerText = "ขอใหม่";
-//             resendButton.disabled = false;
-//             resendButton.style.display = "none";
-//             otpButton.style.display = "inline-block";
-//             localStorage.removeItem(`${type}_otp_expire`);
-//             localStorage.removeItem(`${type}_otp_requested`);
-//             localStorage.removeItem(`${type}_otp_visible`);
-//         }
-//     }, 1000);
-// }
 // ✅ ฟังก์ชันเริ่มนับถอยหลัง (บันทึกลง Local Storage)
 function startCountdown(resendButton, otpButton, type) {
     let expireTime = localStorage.getItem(`${type}_otp_expire`);
@@ -633,22 +604,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     ["email", "phone"].forEach(type => {
-//         let otpSection = document.getElementById(`${type}-otp-section`);
-//         let resendButton = document.getElementById(`${type}-resend-button`);
-//         let otpButton = document.getElementById(`${type}-otp-button`);
 
-//         let isOtpRequested = localStorage.getItem(`${type}_otp_requested`) === "true";
-//         let isOtpVisible = localStorage.getItem(`${type}_otp_visible`) === "true";
 
-//         if (otpSection && isOtpVisible) otpSection.style.display = "block";
-//         if (resendButton && isOtpRequested) resendButton.style.display = "inline-block";
-//         if (otpButton && !isOtpRequested) otpButton.style.display = "inline-block";
-
-//         startCountdown(resendButton, otpButton, type);
-//     });
-// });
 // ✅ โหลดค่าจาก LocalStorage เมื่อรีเฟรช
 document.addEventListener("DOMContentLoaded", function () {
     ["email", "phone"].forEach(type => {
