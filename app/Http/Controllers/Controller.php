@@ -15,11 +15,11 @@ class Controller extends BaseController
     public function getMd5Sign($params_in, $openKey)
     {
         $params = $params_in;
-      
+
         ksort($params);
         $signKey = '';
-        foreach($params as $key => $val){
-        $signKey .= $key.'='.$val.'&';
+        foreach ($params as $key => $val) {
+            $signKey .= $key . '=' . $val . '&';
         }
         $signKey .= $openKey;
         return md5($signKey);
@@ -40,7 +40,26 @@ class Controller extends BaseController
         return $response;
     }
 
-    public function  get_poin_sdk ($uid){
+
+    public function sendPostRequestv2($url, $params)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params, '', '&', PHP_QUERY_RFC1738));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/x-www-form-urlencoded'
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
+    }
+
+    public function  get_poin_sdk($uid)
+    {
 
         $openId = env('openID');
         $productCode = env('productCode');
@@ -53,7 +72,7 @@ class Controller extends BaseController
             'openId' => $openId,
             'productCode' => $productCode,
             'userId' => $userId,
-            
+
         ];
 
         // คำนวณค่า MD5 sign
@@ -69,7 +88,7 @@ class Controller extends BaseController
         $response = $this->sendPostRequest($url, $params);
         $res = json_decode($response, true);
 
-        
+
         return $res['data']['amount'];
     }
 }

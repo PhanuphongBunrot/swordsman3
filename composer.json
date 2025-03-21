@@ -2,18 +2,24 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
         "firebase/php-jwt": "^6.11",
         "google/apiclient": "^2.18",
         "guzzlehttp/guzzle": "^7.2",
+        "kreait/firebase-php": "*",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.18",
         "laravel/tinker": "^2.7",
-        "socialiteproviders/apple": "^5.6"
+        "socialiteproviders/apple": "^5.6",
+        "socialiteproviders/google": "^4.1",
+        "tymon/jwt-auth": "2.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -66,4 +72,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true
+  
 }

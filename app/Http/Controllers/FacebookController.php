@@ -25,7 +25,7 @@ class FacebookController extends Controller
         try {
             $facebookUser = Socialite::driver('facebook')->stateless()->user();
             
-
+            print_r( $facebookUser);
 
             $facebookUserArray = [
                 'id' => $facebookUser->getId(),
@@ -68,8 +68,9 @@ class FacebookController extends Controller
           
         $res = json_decode($response, true);
 
-            // echo "<pre>";
-            // print_r( $res['data']['otherAccountName'] );
+            echo "<pre>";
+            print_r( $res['data']['otherAccountName'] );
+            exit();
 
         if ($res['status'] == 1) {
 

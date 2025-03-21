@@ -76,6 +76,12 @@ Route::controller(ApisdkController::class)->group(function () {
     Route::get('/sendCodeByEmail', 'sendCodeByEmail');
     Route::get('/payToUser', 'payToUser');
     Route::get('/walletInfo', 'walletInfo');
+    Route::get('/test_api', 'test_api');
+    Route::get('/startPay', 'startPay');
+    Route::get('/setNewPass', 'setNewPass');
+    
+  
+    
 });
 
 // Route::get('/', function () {

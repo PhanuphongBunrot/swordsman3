@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
+
 class AppleAuthController extends Controller
 {
     // Redirect ไปที่ Apple OAuth
