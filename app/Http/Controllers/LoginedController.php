@@ -47,7 +47,12 @@ class LoginedController extends Controller
         $data = json_decode($response, true);
 
         if ($data['status'] != 1) {
-            return response()->json(['status' => false], 200);
+            // return response()->json(['status' => false], 200);
+              // 🛑 ถ้า Login ไม่ผ่าน ส่ง error กลับไปแสดงผล
+        if (!isset($data['status']) || $data['status'] != 1) {
+            return back()->withErrors(['login_error' => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง']);
+        }
+
             exit();
         }
 

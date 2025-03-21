@@ -57,6 +57,10 @@ Route::post('/send-mail-otp', [MailOtpController::class, 'sendMailOtp']);
 Route::post('/verify-mail-otp', [MailOtpController::class, 'verifyMailOtp']);
 
 
+Route::get('/delete-policy', function () {
+    return view('user.delete-policy'); 
+});
+
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);

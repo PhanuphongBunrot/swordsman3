@@ -25,7 +25,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
 
-
+       <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -315,7 +316,60 @@
 
         }
         
-   
+        /* ==============================
+        🎨 SweetAlert2 แจ้งเตือนแบบ Error
+        ============================== */
+        /* ปิดการใช้งานเฉพาะปุ่ม "ลงทะเบียน" */
+        #registerForm button[type="submit"]:disabled {
+            background-color: #666 !important;
+            cursor: not-allowed !important;
+            opacity: 0.5 !important;
+            border: 2px solid #444 !important;
+        }
+
+
+
+        .custom-swal-error-popup {
+            border-radius: 15px !important;
+            box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.7) !important;
+            width: 60% !important;
+            max-width: 350px !important;
+            text-align: center !important;
+        }
+
+        /* ✅ ปรับขนาด Title */
+        .custom-swal-error-title {
+            font-size: 22px !important;
+            font-weight: bold !important;
+            color: #ff4444 !important;
+            text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+        }
+
+        /* ✅ ปรับขนาดไอคอน Error */
+        .custom-swal-error-icon {
+            font-size: 60px !important;
+            color: #ff4444 !important;
+            display: block !important;
+            margin: 10px auto !important;
+            text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+        }
+
+        /* ✅ ปรับขนาดปุ่ม */
+        .custom-swal-error-button {
+            background-color: #ff4444 !important;
+            color: white !important;
+            font-size: 16px !important;
+            padding: 8px 16px !important;
+            border-radius: 6px !important;
+        }
+
+        /* ✅ ปรับสไตล์ของข้อความแจ้งเตือน */
+        .custom-swal-error-text {
+            font-size: 16px;
+            font-weight: normal;
+            color: #ff6666;
+            margin-top: 10px;
+        }
     
 
     </style>
@@ -339,7 +393,7 @@
     <nav class="navbar navbar-expand-lg" style="background-color:#000; border-bottom: 1px solid #41e0cf; padding: 1px;">
     <div class="container">
         <!-- โลโก้ -->
-        <a class="navbar-brand d-flex align-items-center" href="#">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url('/user') }}">
             <img src="{{ asset('images/logo.png') }}" width="45" height="45" class="d-inline-block align-top" alt="" loading="lazy">
             <h1 class="ms-2 mb-0 d-md-block" style="color: #41e0cf; font-size: 22px;">EXP TOPUP</h1>
         </a>
@@ -379,7 +433,7 @@
     <nav class="navbar navbar-expand-lg" style="background-color:#000;border-bottom: 1px solid #41e0cf;padding:1px;">
         <div class="container">
             <!-- โลโก้ -->
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 <img src="{{ asset('images/logo.png') }}" width="45" height="45" class="d-inline-block align-top" alt="" loading="lazy">
                 <h1 class="ms-2 mb-0 d-md-block" style="color: #41e0cf; font-size: 22px;">EXP TOPUP</h1>
             </a>
@@ -481,7 +535,38 @@
         </div>
     </div>
 
-  
+   @if ($errors->has('login_error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // เปิด Modal Login ถ้ายังไม่เปิด
+            var myModal = new bootstrap.Modal(document.getElementById('loginModal'), {
+                keyboard: false,
+                backdrop: 'static' // ทำให้ modal ไม่ปิดเอง
+            });
+            myModal.show();
+
+           
+            Swal.fire({
+                icon: 'error',
+                title: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง!',
+                text: 'โปรดลองล็อกอินอีกครั้ง',
+                confirmButtonColor: '#ff4444',
+                confirmButtonText: 'ตกลง',
+                customClass: {
+                    popup: 'custom-swal-error-popup',
+                    title: 'custom-swal-error-title',
+                    icon: 'custom-swal-error-icon',
+                    confirmButton: 'custom-swal-error-button',
+                    content: 'custom-swal-error-text'
+                }
+            });
+        });
+    </script>
+    @endif
+
+
+
+
 
 
     <div class="container mt-4">

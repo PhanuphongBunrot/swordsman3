@@ -836,11 +836,8 @@ document.getElementById("registerForm").addEventListener("submit", function (e) 
 
 });
 
-/*ล้าง otpVerified localstorage*/
-// document.addEventListener("DOMContentLoaded", function () {
-//     localStorage.setItem("otpVerified", "false"); // ✅ รีเซ็ตค่าเป็น `false` เมื่อหน้าโหลดใหม่
-// });
 
+/*เช็คจาก Input hidden ที่ส่งไปหลังบ้าน ว่า otp_verified เป็น true or false */
 document.getElementById("registerForm").addEventListener("submit", function (e) {
     let otpVerified = localStorage.getItem("otpVerified") === "true"; 
 
