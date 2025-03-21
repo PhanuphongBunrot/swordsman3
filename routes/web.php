@@ -48,6 +48,8 @@ Route::get('/forgot-password', function () {
 })->name('password.reset');
 
 
+Route::post('/reset-password', [LoginedController::class, 'resetPassword'])->name('reset.password');
+
 
 Route::get('/check-user-phone', [PhoneOtpController::class, 'checkUserPhone']);
 Route::post('/save-user-phone', [PhoneOtpController::class, 'saveUserPhone']);

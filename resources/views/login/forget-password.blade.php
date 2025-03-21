@@ -8,7 +8,8 @@
         <h4 class="text-white">🔒 ลืมรหัสผ่าน</h4>
         <p class="text-white">กรุณากรอกอีเมลของคุณเพื่อขอรหัส OTP และตั้งค่ารหัสผ่านใหม่</p>
 
-        <form action="#" method="POST" id="resetpassword-forgotPasswordForm" onsubmit="return handleResetSubmit(event)">
+        <form action="/reset-password" method="POST" id="resetpassword-forgotPasswordForm" onsubmit="return handleResetSubmit(event)">
+
 
             @csrf
 
@@ -410,32 +411,62 @@ function handleResetSubmit(event) {
     event.preventDefault(); // ป้องกันการ reload หน้า
 
     const email = document.getElementById("resetpassword-email").value.trim();
-    const requestedEmail = localStorage.getItem("resetpassword_email");
-    const isOtpVerified = localStorage.getItem("resetpassword_otpVerified") === "true";
+    const password = document.getElementById("resetpassword-password").value;
+    const confirmPassword = document.getElementById("resetpassword-confirmPassword").value;
+    const otpVerified = localStorage.getItem("resetpassword_otpVerified") === "true";
 
-    if (!isOtpVerified || email !== requestedEmail) {
-        Swal.fire("❌ ไม่สามารถส่งฟอร์มได้", "กรุณาตรวจสอบอีเมลหรือ OTP", "error");
-        return false;
+    if (!otpVerified) {
+        Swal.fire("❌ กรุณายืนยัน OTP ก่อน!", "", "error");
+        return;
     }
 
-    //  จำลองการส่งฟอร์ม
-    Swal.fire({
-        icon: "success",
-        title: "ส่งข้อมูลสำเร็จ",
-        text: "ระบบจะส่งรหัสผ่านใหม่ไปยังอีเมลของคุณ",
+    if (password !== confirmPassword) {
+        Swal.fire("❌ รหัสผ่านไม่ตรงกัน!", "", "error");
+        return;
+    }
+
+    // ✅ ส่งข้อมูลไป Backend
+    fetch("/reset-password", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ 
+            email, 
+            password, 
+            resetpassword_otp_verified: "true"
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === false) {
+            Swal.fire("❌ " + data.message, "", "error");
+        } else {
+            // ✅ แจ้งเตือนสำเร็จ
+            Swal.fire("✅ เปลี่ยนรหัสผ่านสำเร็จ!", "คุณสามารถใช้รหัสผ่านใหม่เข้าสู่ระบบได้", "success");
+
+            // 🧹 ✅ เคลียร์ LocalStorage หลังจากเปลี่ยนรหัสผ่านสำเร็จ
+            localStorage.removeItem("resetpassword_email");
+            localStorage.removeItem("resetpassword_otpVerified");
+            localStorage.removeItem("email_otp_expire");
+            localStorage.removeItem("email_otp_requested");
+            localStorage.removeItem("email_otp_visible");
+            localStorage.removeItem("otpVerified");
+            localStorage.removeItem("stored_email");
+
+            // ✅ ล้างช่องกรอกรหัสผ่าน
+            document.getElementById("resetpassword-password").value = "";
+            document.getElementById("resetpassword-confirmPassword").value = "";
+        }
+    })
+    .catch(error => {
+        Swal.fire("❌ เกิดข้อผิดพลาด!", "", "error");
+        console.error(error);
     });
-
-    //  เคลียร์ข้อมูล localStorage
-    localStorage.removeItem("resetpassword_email");
-    localStorage.removeItem("resetpassword_otpVerified");
-    localStorage.removeItem("resetpassword_otp_requested");
-    localStorage.removeItem("resetpassword_otp_expire");
-
-    //  เคลียร์ฟอร์ม
-    document.getElementById("resetpassword-forgotPasswordForm").reset();
-    document.getElementById("resetpassword-reset-password-button").disabled = true;
-
-    return false; 
 }
+
+
+
 </script>
 

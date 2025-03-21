@@ -228,5 +228,61 @@ class LoginedController extends Controller
     // }
 
 
+
+public function resetPassword(Request $request) {
+    try {
+        // ✅ ตรวจสอบว่าใช้ POST จริงไหม
+        if (!$request->isMethod('post')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Method not allowed. Please use POST.'
+            ], 405);
+        }
+
+        // ✅ ตรวจสอบว่า OTP ได้รับการยืนยันหรือไม่
+        if (!$request->has('resetpassword_otp_verified') || $request->resetpassword_otp_verified !== "true") {
+            return response()->json([
+                'status' => false,
+                'message' => '❌ กรุณายืนยัน OTP ก่อนเปลี่ยนรหัสผ่าน!'
+            ], 400);
+        }
+
+        // ✅ ตรวจสอบอีเมล
+        $email = $request->email;
+        $newPassword = Hash::make($request->password);
+
+        // ✅ ค้นหา User
+        $user = DB::table('users')->where('email', $email)->first();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => '❌ ไม่พบอีเมลนี้ในระบบ!'
+            ], 404);
+        }
+
+        // ✅ อัปเดตรหัสผ่าน
+        DB::table('users')->where('email', $email)->update([
+            'password' => $newPassword,
+            'updated_at' => now(),
+        ]);
+
+        // ✅ ส่ง JSON กลับ
+        return response()->json([
+            'status' => true,
+            'message' => '✅ เปลี่ยนรหัสผ่านสำเร็จ!'
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'เกิดข้อผิดพลาดระหว่างเปลี่ยนรหัสผ่าน',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
+
+
     }
 
