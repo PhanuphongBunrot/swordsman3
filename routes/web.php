@@ -41,6 +41,8 @@ Route::post('/logout', [LoginedController::class, 'logout'])->name('logout');
 
 Route::post('/register', [LoginedController::class, 'registerUser']);
 
+Route::post('/send-mail-otp', [MailOtpController::class, 'sendMailOtp']);
+Route::post('/verify-mail-otp', [MailOtpController::class, 'verifyMailOtp']);
 
 
 Route::get('/forgot-password', function () {
@@ -55,8 +57,7 @@ Route::get('/check-user-phone', [PhoneOtpController::class, 'checkUserPhone']);
 Route::post('/save-user-phone', [PhoneOtpController::class, 'saveUserPhone']);
 
 
-Route::post('/send-mail-otp', [MailOtpController::class, 'sendMailOtp']);
-Route::post('/verify-mail-otp', [MailOtpController::class, 'verifyMailOtp']);
+
 
 
 Route::get('/delete-policy', function () {

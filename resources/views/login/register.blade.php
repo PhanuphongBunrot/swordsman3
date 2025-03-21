@@ -492,7 +492,7 @@ async function verifyOtp(type) {
         });
 
         let result = await response.json();
-        // console.log("🔍 Raw Response:", result);
+        console.log("🔍 Raw Response:", result);
 
         // ✅ กรณี OTP ถูกต้องให้ตรวจสอบ `"status": "verified"` หรือ `"message": "Verified success"`
         if (result.details?.status === "verified" || result.details?.message === "Verified success") {
