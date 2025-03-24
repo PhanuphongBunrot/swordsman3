@@ -15,17 +15,26 @@
 .carousel-inner {
     display: flex;
     align-items: center;
-    background-color: black;
+    background-color: transparent;
 }
 
-
-.carousel-item {
+/* .carousel-item {
     text-align: center;
     height: 50vh; 
     display: flex;
     justify-content: center;
     align-items: center;
     background:transparent;
+} */
+
+.carousel-item {
+    text-align: center;
+    height: 50vh; 
+    display: flex !important;
+    justify-content: center;
+    align-items: start;
+    background: transparent;
+    transition: opacity 0.5s ease-in-out;
 }
 
 
@@ -341,7 +350,7 @@
         .carousel-item {
         text-align: center;
         background:transparent;
-         height: 100%; 
+         height: 50vh !important; 
         display: flex;
         justify-content: center;
         align-items: center;
