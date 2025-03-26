@@ -164,7 +164,7 @@ class GoogleAuthController extends Controller
         $sign = $this->getMd5Sign($params, $openKey);
         $params['sign'] = $sign;
 
-        print_r($params);
+        // print_r($params);
 
         // API URL
         $url = env('URL_SDK') . "open/snsLogin";
@@ -175,7 +175,14 @@ class GoogleAuthController extends Controller
 
 
         $res = json_decode($response, true);
+        
+        if ($res['status'] == 1) {
 
-       print_r($res);
+            Session::put('authenticated', true);
+            Session::put('username',$res['data']['otherAccountName'] );
+
+            return redirect()->route('user');
+        }
+    //    print_r($res);
     }
 }

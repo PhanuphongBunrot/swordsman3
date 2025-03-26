@@ -179,6 +179,122 @@
     }
 </style>
 
+
+
+<style>
+/* ==============================
+🎨 SweetAlert2 แจ้งเตือนแบบ Error
+============================== */
+/* ปิดการใช้งานเฉพาะปุ่ม "ลงทะเบียน" */
+#registerForm button[type="submit"]:disabled {
+    background-color: #666 !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+    border: 2px solid #444 !important;
+}
+
+
+.custom-swal-error-popup {
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.7) !important;
+    background-color: #1a1a1a !important;
+    width: 60% !important;
+    max-width: 350px !important;
+    text-align: center !important;
+}
+
+/* ✅ ปรับขนาด Title */
+.custom-swal-error-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #ff4444 !important;
+    text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+/* ✅ ปรับขนาดไอคอน Error */
+.custom-swal-error-icon {
+    font-size: 60px !important;
+    color: #ff4444 !important;
+    display: block !important;
+    margin: 10px auto !important;
+    text-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+/* ✅ ปรับขนาดปุ่ม */
+.custom-swal-error-button {
+    background-color: #ff4444 !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+}
+
+/* ✅ ปรับสไตล์ของข้อความแจ้งเตือน */
+.custom-swal-error-text {
+    font-size: 16px;
+    font-weight: normal;
+    color: white !important;
+    margin-top: 10px;
+}
+
+/* ==============================
+🎨 SweetAlert2 แจ้งเตือนแบบ Success
+============================== */
+.swal2-icon {
+    display: none !important; /* ✅ ซ่อนไอคอนเริ่มต้นทั้งหมด */
+}
+
+/* ✅ สไตล์ของ Popup */
+.custom-swal-success-popup {
+    border-radius: 15px !important;
+    box-shadow: 0px 0px 15px rgba(0, 255, 100, 0.7) !important;
+    background-color: #1a1a1a !important;
+    width: 60% !important;
+    max-width: 350px !important;
+    text-align: center !important;
+}
+
+/* ✅ ปรับขนาด Title */
+.custom-swal-success-title {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #00ff99 !important;
+    text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+/* ✅ ปรับไอคอน Success */
+.custom-swal-success-icon {
+    font-size: 60px !important;
+    color: #00ff99 !important;
+    margin-bottom: 10px !important;
+    text-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+/* ✅ ปรับขนาดข้อความ */
+.custom-swal-success-text {
+    font-size: 16px !important;
+    color:rgb(252, 252, 252) !important;
+    margin-top: 10px !important;
+}
+
+/* ✅ ปรับขนาดปุ่ม */
+.custom-swal-success-button {
+    background-color: #00cc66 !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ เอฟเฟค Hover ปุ่ม */
+.custom-swal-success-button:hover {
+    background-color: #00994d !important;
+    box-shadow: 0px 0px 10px rgba(0, 255, 100, 0.7);
+}
+
+</style>
+
 <script>
     let resetpasswordOtpVerified = false;
     let csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
@@ -186,13 +302,40 @@
    
 
 
-    function resetpasswordRequestOtp() {
-        const email = document.getElementById("resetpassword-email").value.trim();
-        if (!email) {
-            Swal.fire("⚠️ กรุณากรอกอีเมล", "", "error");
-            return;
-        }
-    
+   function resetpasswordRequestOtp() {
+    const email = document.getElementById("resetpassword-email").value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // ❌ ไม่กรอกอีเมล
+    if (!email) {
+        Swal.fire({
+            title: "⚠️ กรุณากรอกอีเมล",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button",
+                htmlContainer: "custom-swal-error-text",
+                icon: "custom-swal-error-icon"
+            }
+        });
+        return;
+    }
+
+    // ❌ รูปแบบอีเมลไม่ถูกต้อง
+    if (!emailRegex.test(email)) {
+        Swal.fire({
+            title: "❌ รูปแบบอีเมลไม่ถูกต้อง",
+            text: "กรุณากรอกอีเมลให้ถูกต้อง ต้องมี@และ.com",
+            customClass: {
+                popup: "custom-swal-error-popup",
+                title: "custom-swal-error-title",
+                confirmButton: "custom-swal-error-button",
+                htmlContainer: "custom-swal-error-text",
+                icon: "custom-swal-error-icon"
+            }
+        });
+        return;
+    }
 
         fetch("/api-sendCodeResetPass", {
                 method: "POST",
@@ -207,7 +350,17 @@
             .then(response => response.json()) // แปลงเป็น JSON
             .then(status => {
                 if (status) {
-                    Swal.fire("✅ OTP ถูกส่งไปยังอีเมลของคุณ!", "โปรดตรวจสอบอีเมล", "success");
+                   Swal.fire({
+                    title: "✅ OTP ถูกส่งไปยังอีเมลของคุณ!",
+                    text: "โปรดตรวจสอบอีเมล",
+                    customClass: {
+                        popup: "custom-swal-success-popup",
+                        title: "custom-swal-success-title",
+                        confirmButton: "custom-swal-success-button",
+                        htmlContainer: "custom-swal-success-text",
+                        icon: "custom-swal-success-icon"
+                    }
+                    });
 
                     // แสดงฟอร์ม OTP
                     document.getElementById("resetpassword-otp-section").style.display = "block";
@@ -468,16 +621,37 @@
         const otp = document.getElementById("resetpassword-otp").value.trim();
         const password = document.getElementById("resetpassword-password").value;
         const confirmPassword = document.getElementById("resetpassword-confirmPassword").value;
-
+        
         if (!otp || otp.length !== 6) {
-            Swal.fire("❌ กรุณากรอก OTP ให้ถูกต้อง", "ต้องเป็นตัวเลข 6 หลัก", "error");
+            Swal.fire({
+                title: "❌ กรุณากรอก OTP ให้ถูกต้อง",
+                text: "ต้องเป็นตัวเลข 6 หลัก",
+                customClass: {
+                    popup: "custom-swal-error-popup",
+                    title: "custom-swal-error-title",
+                    confirmButton: "custom-swal-error-button",
+                    htmlContainer: "custom-swal-error-text",
+                    icon: "custom-swal-error-icon"
+                }
+            });
             return;
         }
 
         if (password !== confirmPassword) {
-            Swal.fire("❌ รหัสผ่านไม่ตรงกัน!", "", "error");
+            Swal.fire({
+                title: "❌ รหัสผ่านไม่ตรงกัน!",
+                text: "กรุณากรอกรหัสผ่านให้ตรงกัน",
+                customClass: {
+                    popup: "custom-swal-error-popup",
+                    title: "custom-swal-error-title",
+                    confirmButton: "custom-swal-error-button",
+                    htmlContainer: "custom-swal-error-text",
+                    icon: "custom-swal-error-icon"
+                }
+            });
             return;
         }
+
 
         // ✅ ส่งข้อมูลไป route: /reset-password (ใช้ form URL เดิม Laravel)
         fetch("/reset-password", {
@@ -490,20 +664,60 @@
                     email,
                     password,
                     confirmPassword,
-                     otp, // 🔒 ปิดไว้ก่อน — ใช้ในอนาคตสำหรับ API ตรวจสอบ OTP
+                     otp, // 🔒 API ตรวจสอบ OTP
                 })
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 if (data.status === false) {
-                    Swal.fire("❌ " + data.message, "", "error");
+                   Swal.fire({
+                        html: `
+                            <div class="custom-swal-error-icon">❌</div>
+                            <div class="custom-swal-error-title">รหัส OTP ไม่ถูกต้อง</div>
+                            <div class="custom-swal-error-text">${data.message}</div>
+                        `,
+                        customClass: {
+                            popup: "custom-swal-error-popup",
+                            confirmButton: "custom-swal-error-button"
+                        }
+                        });
+
                 } else {
-                    Swal.fire("✅ เปลี่ยนรหัสผ่านสำเร็จ!", "คุณสามารถใช้รหัสผ่านใหม่เข้าสู่ระบบได้", "success");
+                    Swal.fire({
+                        title: "✅ เปลี่ยนรหัสผ่านสำเร็จ!",
+                        html: `
+                            <div class="custom-swal-success-text">คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ได้แล้ว</div>
+                        `,
+                        customClass: {
+                            popup: "custom-swal-success-popup",
+                            title: "custom-swal-success-title",
+                            confirmButton: "custom-swal-success-button"
+                        }
+                  }).then(() => {
+                    // ✅ เคลียร์ข้อมูล
                     localStorage.clear();
+
+                    // 🔄 รีเฟรชหน้าเดิม
+                    window.location.reload();
+                });
+
                 }
             })
+
             .catch(error => {
-                Swal.fire("❌ เกิดข้อผิดพลาด!", "", "error");
+                wal.fire({
+                title: "❌ เกิดข้อผิดพลาด",
+                text: "ไม่สามารถตั้งค่ารหัสผ่านใหม่ได้",
+                customClass: {
+                    popup: "custom-swal-error-popup",
+                    title: "custom-swal-error-title",
+                    confirmButton: "custom-swal-error-button",
+                    htmlContainer: "custom-swal-error-text",
+                    icon: "custom-swal-error-icon"
+                }
+            });
+
                 console.error(error);
             });
     }

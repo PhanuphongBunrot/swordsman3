@@ -273,7 +273,7 @@ class LoginedController extends Controller
             // ส่ง API
             $response = $this->sendPostRequest($url, $params);
             $response = json_decode($response,true);
-           
+            // print_r($response);
             if ($response) {
                 
                if(!$response['status']){
@@ -290,25 +290,25 @@ class LoginedController extends Controller
             }
 
             // //  ค้นหา User
-            // $user = DB::table('users')->where('email', $email)->first();
-            // if (!$user) {
-            //     return response()->json([
-            //         'status' => false,
-            //         'message' => '❌ ไม่พบอีเมลนี้ในระบบ!'
-            //     ], 404);
-            // }
+            $user = DB::table('users')->where('email', $email)->first();
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '❌ ไม่พบอีเมลนี้ในระบบ!'
+                ], 404);
+            }
 
-            // //  อัปเดตรหัสผ่าน
-            // DB::table('users')->where('email', $email)->update([
-            //     'password' => $newPassword,
-            //     'updated_at' => now(),
-            // ]);
+            //  อัปเดตรหัสผ่าน
+            DB::table('users')->where('email', $email)->update([
+                'password' => $newPassword,
+                'updated_at' => now(),
+            ]);
 
             // //  ส่ง JSON กลับ
-            // return response()->json([
-            //     'status' => true,
-            //     'message' => '✅ เปลี่ยนรหัสผ่านสำเร็จ!'
-            // ], 200);
+            return response()->json([
+                'status' => true,
+                'message' => '✅ เปลี่ยนรหัสผ่านสำเร็จ!'
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
