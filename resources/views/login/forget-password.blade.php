@@ -27,7 +27,7 @@
                 <label class="resetpassword-form-label text-white">รหัส OTP</label>
                 <div class="d-flex gap-2">
                     <input type="text" id="resetpassword-otp" name="otp" class="resetpassword-form-control flex-grow-1 text-center" required>
-                    <button type="button" class="resetpassword-btn-otp me-2" onclick="resetpasswordVerifyOtp()">ยืนยัน</button>
+                    <!-- <button type="button" class="resetpassword-btn-otp me-2" onclick="resetpasswordVerifyOtp()">ยืนยัน</button> -->
                     <button type="button" class="resetpassword-btn-secondary" id="resetpassword-resend-button" onclick="resetpasswordRequestOtp()" style="display: none;">ขอใหม่</button>
                 </div>
             </div>
@@ -49,8 +49,7 @@
                 <span class="error-message"></span>
             </div>
 
-            <!-- Hidden Input -->
-            <input type="hidden" name="resetpassword_otp_verified" id="resetpassword_otp_verified">
+         
 
             <button type="submit" class="resetpassword-btn-otp w-100 resetpassword-password-group mt-3" id="resetpassword-reset-password-button" style="display: none;">
                 ตั้งค่ารหัสผ่านใหม่
@@ -270,28 +269,46 @@ document.addEventListener("DOMContentLoaded", function () {
         resendBtn.style.display = "none";
         requestBtn.style.display = "inline-block";
     }
+
+    
+});
+
+/*เปิดช่องให้ใส่pass and confirm password เมือ่กรอกotp code ครบ6ตัว */
+document.addEventListener("DOMContentLoaded", function () {
+    const otpInput = document.getElementById("resetpassword-otp");
+
+    otpInput.addEventListener("input", function () {
+        const otpValue = otpInput.value.trim();
+        const passwordGroups = document.querySelectorAll(".resetpassword-password-group");
+
+        if (/^\d{6}$/.test(otpValue)) {
+            // ✅ แสดงช่องรหัสผ่าน
+            passwordGroups.forEach(el => el.style.display = "block");
+        } else {
+            // ❌ ซ่อนถ้า OTP ยังไม่ครบ 6 หลัก
+            passwordGroups.forEach(el => el.style.display = "none");
+        }
+    });
 });
 
 
+// function resetpasswordVerifyOtp() {
+//     const otp = document.getElementById("resetpassword-otp").value.trim();
+//     if (!otp || otp.length !== 6) {
+//         Swal.fire("❌ OTP ไม่ถูกต้อง", "กรุณากรอก OTP 6 หลัก", "error");
+//         return;
+//     }
 
+//     Swal.fire("✅ OTP ถูกต้อง!", "กรุณาตั้งค่ารหัสผ่านใหม่", "success");
+//     resetpasswordOtpVerified = true;
 
-function resetpasswordVerifyOtp() {
-    const otp = document.getElementById("resetpassword-otp").value.trim();
-    if (!otp || otp.length !== 6) {
-        Swal.fire("❌ OTP ไม่ถูกต้อง", "กรุณากรอก OTP 6 หลัก", "error");
-        return;
-    }
+//     localStorage.setItem("resetpassword_otpVerified", "true"); //  เก็บค่าไว้
+//     document.getElementById("resetpassword_otp_verified").value = "true"; //  ส่งให้ backend
 
-    Swal.fire("✅ OTP ถูกต้อง!", "กรุณาตั้งค่ารหัสผ่านใหม่", "success");
-    resetpasswordOtpVerified = true;
-
-    localStorage.setItem("resetpassword_otpVerified", "true"); //  เก็บค่าไว้
-    document.getElementById("resetpassword_otp_verified").value = "true"; //  ส่งให้ backend
-
-    document.querySelectorAll(".resetpassword-password-group").forEach(el => {
-        el.style.display = "block";
-    });
-}
+//     document.querySelectorAll(".resetpassword-password-group").forEach(el => {
+//         el.style.display = "block";
+//     });
+// }
 
 
 </script>
@@ -368,18 +385,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
      //✅  ตรวจสอบเงื่อนไขทั้งหมด ก่อนส่งฟอร์ม เปิด/ปิดปุ่ม submit
-        const isOtpVerified = localStorage.getItem("resetpassword_otpVerified") === "true";
         const requestedEmail = localStorage.getItem("resetpassword_email");
         const currentEmail = emailInput.value.trim();
 
-        const isFormValid = (
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(currentEmail) &&
-            /^\d{6}$/.test(otpInput.value.trim()) &&
-            passwordInput.value.length >= 6 &&
-            confirmPasswordInput.value === passwordInput.value &&
-            isOtpVerified &&
-            currentEmail === requestedEmail //  ตรวจสอบว่ากรอกอีเมลเดียวกับตอนขอ OTP
-        );
+      const isFormValid = (
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(currentEmail) &&
+        /^\d{6}$/.test(otpInput.value.trim()) &&
+        passwordInput.value.length >= 6 &&
+        confirmPasswordInput.value === passwordInput.value &&
+        currentEmail === requestedEmail
+    );
+
 
 
         submitButton.disabled = !isFormValid;
@@ -408,15 +424,15 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- ฟังก์ชันตอนกดsubmit form ตั้งค่ารหัสผ่านใหม่ -->
 <script>
 function handleResetSubmit(event) {
-    event.preventDefault(); // ป้องกันการ reload หน้า
+    event.preventDefault();
 
     const email = document.getElementById("resetpassword-email").value.trim();
+    const otp = document.getElementById("resetpassword-otp").value.trim(); 
     const password = document.getElementById("resetpassword-password").value;
     const confirmPassword = document.getElementById("resetpassword-confirmPassword").value;
-    const otpVerified = localStorage.getItem("resetpassword_otpVerified") === "true";
 
-    if (!otpVerified) {
-        Swal.fire("❌ กรุณายืนยัน OTP ก่อน!", "", "error");
+    if (!otp || otp.length !== 6) {
+        Swal.fire("❌ กรุณากรอก OTP ให้ถูกต้อง", "ต้องเป็นตัวเลข 6 หลัก", "error");
         return;
     }
 
@@ -425,17 +441,18 @@ function handleResetSubmit(event) {
         return;
     }
 
-    // ✅ ส่งข้อมูลไป Backend
+    // ✅ ส่งข้อมูลไป route: /reset-password (ใช้ form URL เดิม Laravel)
     fetch("/reset-password", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
         },
-        body: JSON.stringify({ 
-            email, 
-            password, 
-            resetpassword_otp_verified: "true"
+        body: JSON.stringify({
+            email,
+            password,
+            confirmPassword
+            // otp, // 🔒 ปิดไว้ก่อน — ใช้ในอนาคตสำหรับ API ตรวจสอบ OTP
         })
     })
     .then(response => response.json())
@@ -443,21 +460,8 @@ function handleResetSubmit(event) {
         if (data.status === false) {
             Swal.fire("❌ " + data.message, "", "error");
         } else {
-            // ✅ แจ้งเตือนสำเร็จ
             Swal.fire("✅ เปลี่ยนรหัสผ่านสำเร็จ!", "คุณสามารถใช้รหัสผ่านใหม่เข้าสู่ระบบได้", "success");
-
-            // 🧹 ✅ เคลียร์ LocalStorage หลังจากเปลี่ยนรหัสผ่านสำเร็จ
-            localStorage.removeItem("resetpassword_email");
-            localStorage.removeItem("resetpassword_otpVerified");
-            localStorage.removeItem("email_otp_expire");
-            localStorage.removeItem("email_otp_requested");
-            localStorage.removeItem("email_otp_visible");
-            localStorage.removeItem("otpVerified");
-            localStorage.removeItem("stored_email");
-
-            // ✅ ล้างช่องกรอกรหัสผ่าน
-            document.getElementById("resetpassword-password").value = "";
-            document.getElementById("resetpassword-confirmPassword").value = "";
+            localStorage.clear();
         }
     })
     .catch(error => {
@@ -465,6 +469,7 @@ function handleResetSubmit(event) {
         console.error(error);
     });
 }
+
 
 
 
