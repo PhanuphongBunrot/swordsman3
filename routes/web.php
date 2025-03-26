@@ -11,7 +11,7 @@ use App\Http\Controllers\AppleAuthController;
 
 use App\Http\Controllers\PhoneOtpController;
 use App\Http\Controllers\MailOtpController;
-
+use App\Http\Controllers\ResetPasswordMailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ Route::get('/check-user-phone', [PhoneOtpController::class, 'checkUserPhone']);
 Route::post('/save-user-phone', [PhoneOtpController::class, 'saveUserPhone']);
 
 
-
+Route::post('/api-sendCodeResetPass', [ResetPasswordMailController::class,'sendCodeResetPass']);
 
 
 Route::get('/delete-policy', function () {

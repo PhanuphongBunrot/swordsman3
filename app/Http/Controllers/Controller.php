@@ -89,6 +89,10 @@ class Controller extends BaseController
         $res = json_decode($response, true);
 
 
-        return $res['data']['amount'];
+        if($res['status']){
+            return $res['data']['amount'];
+        }else{
+            return 0;
+        }
     }
 }
