@@ -243,4 +243,54 @@ class ApisdkController extends Controller
         echo $clientSecret;
     }
    
+    public  function startPay ()
+    {
+        $openId = env('openID');
+        $productCode = env('productCode');
+        $userId  = "16588823";
+        $goodsId ="smm3.goldpack.thb59";
+        $orderSubject ="ทอง 50";
+        $roleName ="aaaa";
+        $serverName ="2014 MU69";
+        $callbackUrl ="";
+        $payType ="323";
+        $clientLang="en-US";
+        $amount="1.49";
+        $currency="THB";
+        $openKey = env('openKey');
+
+
+
+
+        $params = [
+            'openId' => $openId,
+            'productCode' => $productCode,
+            'userId' => $userId ,
+            'goodsId' => $goodsId ,
+            'orderSubject' => $orderSubject ,
+            'roleName' => $roleName ,
+            'serverName' => $serverName ,
+            'callbackUrl' => $callbackUrl ,
+            'payType' => $payType ,
+            'clientLang' => $clientLang ,
+            'amount' => $amount ,
+            'currency' => $currency ,
+             
+        ];
+
+        // คำนวณค่า MD5 sign
+        $sign = $this->getMd5Sign($params, $openKey);
+        $params['sign'] = $sign;
+
+      
+        print_r($params);   
+        // API URL
+        $url = env('URL_SDK')."open/startPay";
+
+        // ส่ง API
+        $response = $this->sendPostRequest($url, $params);
+        echo   $response;
+
+       
+    }
 }
