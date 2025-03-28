@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EXP UP เติมเงิน</title>
 
-  
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap&subset=thai" rel="stylesheet">
+
 
 
     <!-- Favicon -->
@@ -29,11 +30,20 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
-
-<body style="background-color:rgb(15, 37, 35);  font-family: 'Roboto', sans-serif;">
+<!-- <body style="background-color:rgb(15, 37, 35);  font-family: 'Roboto', sans-serif;"> -->
+<body>
 
     <style>
-        
+
+           body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #ffffff, #f7f7f7, #eaeaea);
+
+          /* background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+
+        }
+
+
             /* ปรับสไตล์สำหรับปุ่มเข้าสู่ระบบ */
             .btn:hover {
                 background-color: #48C9B0;
@@ -76,11 +86,15 @@
                 border: 1px solid rgb(0, 51, 133);
                 color: #000;
                 background-color: #fff;
+                font-size: 16px;
+                white-space: nowrap;
             }
 
             .facebook-btn {
                 background-color: #0866FF;
                 color: white;
+                font-size: 16px;
+                white-space: nowrap;
             }
 
             .social-btn-content {
@@ -234,6 +248,10 @@
             }
               .modal-body{
                 padding-left:10px;
+            }
+
+            .forgetpassword-login-text{
+                font-size:10px;
             }
 
            @media (max-width: 767px) and (orientation: landscape) {
@@ -490,7 +508,7 @@
                             </div>
 
                              <!-- ช่องลืมรหัสผ่าน -->
-                            <div class="text-end">
+                            <div class="forgetpassword-login-text text-end">
                             <a href="{{ route('password.reset') }}" class="text-decoration-none" style="color: black;">
                                 ลืมรหัสผ่าน?
                             </a>

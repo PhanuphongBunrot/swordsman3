@@ -9,6 +9,8 @@
 
 
 <style>
+
+
 .carousel-container{
     padding:0px;
 }
@@ -63,6 +65,9 @@
         will-change: transform;
         perspective: 1000px;
     }
+    
+ 
+
 
     
     .game-card:hover {
@@ -170,6 +175,10 @@
         justify-content: space-between;
         align-items: center;
     }
+    .section-header h4 {
+    margin: 0;
+    margin-left: 20px;
+    }
 
     /* ปุ่มถัดไปและย้อนกลับ */
     /* ปุ่มถัดไปและย้อนกลับ */
@@ -238,7 +247,9 @@
         color: #41e0cf;
     }
 
+    
 
+  
     
     @media (max-width: 767px) {
         
@@ -316,8 +327,10 @@
             flex-wrap: wrap; 
             justify-content: center; 
             gap: 15px; 
-            padding:0px 5px ;
+            padding:0px 5px;
             height:auto;
+            
+             
         }
 
        .btn-icon p {
@@ -429,7 +442,145 @@
 
 
 
+
+<!-- Server&Character Section -->
+<div id="server-character-section" class="mt-4" style="display: none;">
+    <div class="section-header p-1 py-3" style="background-color:rgb(0, 0, 0);">
+        <h4>เลือกเซิฟเวอร์ & ตัวละคร</h4>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-6 mb-2">
+            <label class="form-label text-white">เลือกเซิฟเวอร์</label>
+            <select class="form-select" id="server-select">
+                <option value="">-- กรุณาเลือกเซิฟเวอร์ --</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-2">
+            <label class="form-label text-white">เลือกตัวละคร</label>
+            <select class="form-select" id="character-select">
+                <option value="">-- กรุณาเลือกตัวละคร --</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+const gameData = {
+    "Swordsman3": {
+        servers: {
+            "เซิร์ฟฟ้า": ["ฟ้าหงส์", "ฟ้าพยัคฆ์"],
+            "เซิร์ฟแดง": ["แดงจ้าวยุทธ", "แดงเทพกระบี่"]
+        }
+    },
+    "เกม B": {
+        servers: {
+            "B-Alpha": ["B-อัศวิน1", "B-อัศวิน2"],
+            "B-Beta": ["B-ราชันย์", "B-แม่ทัพ"]
+        }
+    },
+    "เกม C": {
+        servers: {
+            "C-001": ["C-เงา", "C-เหมันต์"],
+            "C-002": ["C-เพลิง", "C-สายลม"]
+        }
+    }
+};
+
+// ฟังก์ชันอัปเดต select เซิฟเวอร์
+function updateServerSelect(gameName) {
+    const serverSelect = document.getElementById("server-select");
+    const characterSelect = document.getElementById("character-select");
+    serverSelect.innerHTML = `<option value="">-- กรุณาเลือกเซิฟเวอร์ --</option>`;
+    characterSelect.innerHTML = `<option value="">-- กรุณาเลือกตัวละคร --</option>`;
+
+    if (gameData[gameName]) {
+        const servers = Object.keys(gameData[gameName].servers);
+        servers.forEach(server => {
+            const option = document.createElement("option");
+            option.value = server;
+            option.textContent = server;
+            serverSelect.appendChild(option);
+        });
+    }
+}
+
+// ฟังก์ชันอัปเดตตัวละครตามเซิฟเวอร์
+function updateCharacterSelect(gameName, serverName) {
+    const characterSelect = document.getElementById("character-select");
+    characterSelect.innerHTML = `<option value="">-- กรุณาเลือกตัวละคร --</option>`;
+
+    if (gameData[gameName]?.servers[serverName]) {
+        gameData[gameName].servers[serverName].forEach(charName => {
+            const option = document.createElement("option");
+            option.value = charName;
+            option.textContent = charName;
+            characterSelect.appendChild(option);
+        });
+    }
+}
+
+// ✅ ตรวจจับการเลือกการ์ดเกม
+document.addEventListener("click", function (e) {
+    const card = e.target.closest('.game-card');
+    if (card && card.closest('#game-cards')) {
+        document.querySelectorAll('.game-card').forEach(item => {
+            item.classList.remove('border-c', 'selected');
+        });
+        card.classList.add('border-c', 'selected');
+
+        const section = document.getElementById("server-character-section");
+        section.style.display = "block";
+
+        const gameName = card.getAttribute('data-game-name');
+        updateServerSelect(gameName); // อัปเดตเซิฟเวอร์
+        console.log("🎮 เลือกเกม:", gameName);
+
+        setTimeout(() => {
+            if (!isLoggedIn) {
+                showLoginAlert();
+            }
+        }, 100);
+    }
+});
+
+// ✅ ตรวจจับเมื่อเลือกเซิฟเวอร์ → อัปเดตตัวละคร
+document.getElementById("server-select").addEventListener("change", function () {
+    const serverName = this.value;
+    const selectedGame = document.querySelector(".game-card.selected")?.getAttribute("data-game-name");
+    updateCharacterSelect(selectedGame, serverName);
+});
+</script>
+
+<!-- End Server&Character Section -->
+
+
+
+
+
+
+
+
 <!-- Package Section -->
+<style>
+    @media (max-width: 767px) {
+    #server-character-section .section-header h4 {
+        font-size: 14px;
+        margin-left: 10px;
+    }
+
+    #server-character-section label {
+        font-size: 13px;
+    }
+
+    #server-character-section select {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+}
+</style>
+
 <div class="package-container mt-4 mb-4">
     <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
         <button class="btn btn-icon" onclick="displayCards('หยก')">
@@ -458,14 +609,14 @@
     const cardData = {
 
         'หยก': [
-                { title: "หยก 1", img: "{{ asset('images/gold1-60.png') }}" },
-                { title: "หยก 2", img: "{{ asset('images/gold2-120.png') }}" },
-                { title: "หยก 3", img: "{{ asset('images/gold3-300.png') }}" },
-                { title: "หยก 4", img: "{{ asset('images/gold4-680.png') }}" },
-                { title: "หยก 5", img: "{{ asset('images/gold5-1280.png') }}" },
-                { title: "หยก 6", img: "{{ asset('images/gold6-2480.png') }}" },
-                { title: "หยก 7", img: "{{ asset('images/gold7-3280.png') }}" },
-                { title: "หยก 8", img: "{{ asset('images/gold8-6480.png') }}" }
+                { title: "29 บาท", img: "{{ asset('images/gold1-60.png') }}" },
+                { title: "59 บาท", img: "{{ asset('images/gold2-120.png') }}" },
+                { title: "149 บาท", img: "{{ asset('images/gold3-300.png') }}" },
+                { title: "339 บาท", img: "{{ asset('images/gold4-680.png') }}" },
+                { title: "639 บาท", img: "{{ asset('images/gold5-1280.png') }}" },
+                { title: "1210 บาท", img: "{{ asset('images/gold6-2480.png') }}" },
+                { title: "1560 บาท", img: "{{ asset('images/gold7-3280.png') }}" },
+                { title: "2990 บาท", img: "{{ asset('images/gold8-6480.png') }}" }
         ],
         
 
@@ -534,20 +685,33 @@ function displayCards(category) {
     apply3DEffectToPackageCards(); // เพิ่มเอฟเฟกต์ 3D hover
 }
 
-// ปรับให้ apply3DEffectToPackageCards() ใช้งานได้ดีขึ้น
+// ให้ apply3DEffectToPackageCards() 
 function apply3DEffectToPackageCards() {
     document.querySelectorAll('.package-card').forEach((card) => {
         if (!card.dataset.listenerAdded) {
             card.addEventListener('mousemove', (e) => handleMouseMove(e, card));
             card.addEventListener('mouseleave', () => handleMouseLeave(card));
+
             card.addEventListener('click', function () {
+                // ✅ ใส่คลาสให้การ์ดก่อน
                 selectPackageCard(this);
-                console.log('คุณเลือกแพ็กเกจ:', this.getAttribute('data-package-name'));
+
+                // ✅ รอให้ DOM render แล้วค่อย alert
+                setTimeout(() => {
+                    if (!isLoggedIn) {
+                        showLoginAlert();
+                    } else {
+                        console.log('คุณเลือกแพ็กเกจ:', this.getAttribute('data-package-name'));
+                    }
+                }, 100);
             });
-            card.dataset.listenerAdded = "true"; // ป้องกันการเพิ่ม Event Listener ซ้ำซ้อน
+
+            card.dataset.listenerAdded = "true";
         }
     });
 }
+
+
 
 // ใช้ requestAnimationFrame เพื่อให้แอนิเมชันลื่นขึ้น
 function handleMouseMove(e, card) {
@@ -595,7 +759,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cursor: pointer;
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
     transform-style: preserve-3d;
-    border: 2px solid transparent;
+     /* border: 2px solid transparent; */
+    border: 1px solid rgba(0, 0, 0, 0.15); 
     will-change: transform;
     backface-visibility: hidden;
     
@@ -636,7 +801,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     .package-card {
         transform: scale(0.85) !important;  /* ล็อกขนาดการ์ดไว้ที่ 85% */
-        transition: box-shadow 0.3s ease-out; /*  ลบ transition ของ transform ออก */
+        transition: box-shadow 0.3s ease-out; 
     }
 
     /* Hover เปลี่ยนเฉพาะเงา ไม่ขยาย */
@@ -655,7 +820,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- End Package Section -->
 
+<!-- check user ล็อกอินใหม -->
+<script>
+    const isLoggedIn = {{ session()->has('authenticated') ? 'true' : 'false' }};
+    console.log('isLoggedIn', isLoggedIn)
+</script>
+<script>
+    function showLoginAlert() {
+       Swal.fire({
+        title: "⚠️ กรุณาเข้าสู่ระบบ",
+        text: "คุณต้องล็อกอินก่อนเพื่อใช้งานฟีเจอร์นี้",
+        icon: "warning",
+        confirmButtonColor: "#41e0cf",
+        confirmButtonText: "เข้าสู่ระบบ",
+        customClass: {
+            popup: "custom-swal-error-popup",
+            title: "custom-swal-error-title",
+            // confirmButton: "custom-swal-error-button"
+        },
+        didOpen: () => {
+            const confirmBtn = Swal.getConfirmButton();
+            if (confirmBtn) {
+            confirmBtn.style.color = "black";
+            }
 
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'), {
+                    keyboard: false,
+                    backdrop: 'static'
+                });
+                loginModal.show();
+            }
+        });
+    }
+</script>
+
+<!-- END user ล็อกอินใหม --> 
+
+
+<!-- แสดงการ์ดเกม -->
 <script>
     const games = [{
             name: "Swordsman3",
@@ -779,24 +984,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     
-    document.querySelectorAll('.game-card').forEach((card) => {
-        card.addEventListener('mousemove', (e) => handleMouseMove(e, card));
-        card.addEventListener('mouseleave', () => handleMouseLeave(card));
+   document.querySelectorAll('.game-card').forEach((card) => {
+    card.addEventListener('mousemove', (e) => handleMouseMove(e, card));
+    card.addEventListener('mouseleave', () => handleMouseLeave(card));
 
-       
-        card.addEventListener('click', function () {
-            document.querySelectorAll('.game-card').forEach(item => {
-                item.classList.remove('border-c', 'selected');
-            });
-
-            this.classList.add('border-c', 'selected');
-            const gameName = this.getAttribute('data-game-name');
-            console.log('คุณเลือก:', gameName);
+    card.addEventListener('click', function () {
+        // ✅ เคลียร์ class ก่อน
+        document.querySelectorAll('.game-card').forEach(item => {
+            item.classList.remove('border-c', 'selected');
         });
-    });
 
+        // ✅ ใส่ class ให้การ์ดที่ถูกคลิก
+        this.classList.add('border-c', 'selected');
+
+        // ✅ ใช้ setTimeout เพื่อให้ class render ก่อน
+        setTimeout(() => {
+            if (!isLoggedIn) {
+                showLoginAlert();
+            } else {
+                const gameName = this.getAttribute('data-game-name');
+                console.log('คุณเลือก:', gameName);
+            }
+        }, 100);
+    });
+});
     }
 </script>
+
+
+ 
+
+
+
+
 
 <!-- CSS ปรับแต่ง SweetAlert2 -->
 <style>
@@ -997,7 +1217,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-
+ @include('partials.footer')
 
 @endsection
 

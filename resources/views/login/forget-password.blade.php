@@ -17,7 +17,7 @@
             <!-- Email -->
             <div class="resetpassword-mb-3">
                 <label class="resetpassword-form-label text-white">อีเมล</label>
-                <div class="d-flex gap-2">
+                <div class="emailinput-resetpassword d-flex gap-2">
                     <input type="email" id="resetpassword-email" name="email" class="resetpassword-form-control flex-grow-1" required>
                     <button type="button" class="resetpassword-btn-otp" id="resetpassword-email-otp-button" onclick="resetpasswordRequestOtp()">ขอ OTP</button>
                 </div>
@@ -82,7 +82,7 @@
         width: 100%;
         max-width: 500px;
         text-align: center;
-        margin-bottom: 500px;
+        margin-bottom: 200px;
     }
 
     .resetpassword-form-control {
@@ -170,11 +170,26 @@
         border: 1px solid #555;
         box-shadow: none;
     }
+    
+    @media (max-width: 768px) {
+       .emailinput-resetpassword {
+            flex-wrap: nowrap;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .emailinput-resetpassword input,
+        .emailinput-resetpassword button {
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+    }
 
     @media only screen and (max-width: 1400px) and (orientation: landscape) {
-        .resetpassword-container {
-            margin-bottom: 100px;
-        }
+            .resetpassword-container {
+      
+        margin-bottom: 0px;
+    }
 
     }
 </style>

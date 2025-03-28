@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
+
+
 .carousel-container{
     padding:0px;
 }
@@ -17,7 +19,6 @@
     align-items: center;
     background-color: transparent;
 }
-
 
 /* .carousel-item {
     text-align: center;
@@ -169,6 +170,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+   .section-header h4 {
+    margin: 0;
+    margin-left: 20px;
     }
 
     /* ปุ่มถัดไปและย้อนกลับ */
@@ -1022,14 +1027,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const cardData = {
 
         'หยก': [
-                { title: "หยก 1", img: "{{ asset('images/gold1-60.png') }}" },
-                { title: "หยก 2", img: "{{ asset('images/gold2-120.png') }}" },
-                { title: "หยก 3", img: "{{ asset('images/gold3-300.png') }}" },
-                { title: "หยก 4", img: "{{ asset('images/gold4-680.png') }}" },
-                { title: "หยก 5", img: "{{ asset('images/gold5-1280.png') }}" },
-                { title: "หยก 6", img: "{{ asset('images/gold6-2480.png') }}" },
-                { title: "หยก 7", img: "{{ asset('images/gold7-3280.png') }}" },
-                { title: "หยก 8", img: "{{ asset('images/gold8-6480.png') }}" }
+                { title: "29 บาท", img: "{{ asset('images/gold1-60.png') }}" },
+                { title: "59 บาท", img: "{{ asset('images/gold2-120.png') }}" },
+                { title: "149 บาท", img: "{{ asset('images/gold3-300.png') }}" },
+                { title: "339 บาท", img: "{{ asset('images/gold4-680.png') }}" },
+                { title: "639 บาท", img: "{{ asset('images/gold5-1280.png') }}" },
+                { title: "1210 บาท", img: "{{ asset('images/gold6-2480.png') }}" },
+                { title: "1560 บาท", img: "{{ asset('images/gold7-3280.png') }}" },
+                { title: "2990 บาท", img: "{{ asset('images/gold8-6480.png') }}" }
         ],
         
 
@@ -1160,7 +1165,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cursor: pointer;
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
     transform-style: preserve-3d;
-    border: 2px solid transparent;
+    /* border: 2px solid transparent; */
+    border: 1px solid rgba(0, 0, 0, 0.15); 
     will-change: transform;
     backface-visibility: hidden;
     
@@ -1455,6 +1461,8 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 </style>
 
+
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     let userHasPhone = false; // ค่าเริ่มต้น
@@ -1591,6 +1599,7 @@ function selectPayment(paymentMethod) {
 
 
 
+
 <!--Alert-->
 
 <style>
@@ -1691,4 +1700,6 @@ function selectPayment(paymentMethod) {
 
 <!--EndAlert-->
 
+ @include('partials.footer')
+ 
 @endsection
