@@ -60,6 +60,14 @@ Route::post('/save-user-phone', [PhoneOtpController::class, 'saveUserPhone']);
 Route::post('/api-sendCodeResetPass', [ResetPasswordMailController::class,'sendCodeResetPass']);
 
 
+Route::get('/report-issue', function () {
+    return view('user.report-issue');
+})->name('report.issue');
+
+Route::post('/report-issue', [ReportController::class, 'submit'])->name('report.issue.submit');
+
+
+
 Route::get('/delete-policy', function () {
     return view('user.delete-policy'); 
 });

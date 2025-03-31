@@ -66,6 +66,11 @@
 @endsection
 
 <style>
+     body {
+            background: linear-gradient(135deg, #0F2523, #021B1A) !important;
+        }
+
+
     .resetpassword-container-flex {
         display: flex;
         justify-content: center;
@@ -170,7 +175,7 @@
         border: 1px solid #555;
         box-shadow: none;
     }
-    
+
     @media (max-width: 768px) {
        .emailinput-resetpassword {
             flex-wrap: nowrap;

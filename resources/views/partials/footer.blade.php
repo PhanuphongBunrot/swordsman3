@@ -1,5 +1,8 @@
 
 <style>
+    footer {
+        margin-top: 200px;
+    }
     @media (max-width: 767.98px) {
         footer {
             font-size: 0.7rem !important;
@@ -29,6 +32,7 @@
                     <li><i class="bi bi-gift me-2 text-info"></i>แลกรางวัล</li>
                     <li><i class="bi bi-credit-card me-2 text-info"></i>เติมเครดิต</li>
                     <li><i class="bi bi-broadcast me-2 text-info"></i>ข่าวสาร</li>
+                    <li><i class="bi bi-exclamation-triangle me-2 text-warning"></i><a href="#report-issue" class="text-warning text-decoration-none">แจ้งปัญหา</a></li>
                 </ul>
             </div>
 

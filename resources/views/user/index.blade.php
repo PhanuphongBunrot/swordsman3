@@ -997,10 +997,143 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 </script>
 
+<!--End GameCard Section -->
+
+
+<!-- Server&Character Section -->
+ <style>
+    @media (max-width: 767px) {
+    #server-character-section .section-header h4 {
+        font-size: 12px;
+        margin-left: 20px;
+    }
+
+    #server-character-section label {
+        font-size: 13px;
+    }
+
+    #server-character-section select {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+}
+</style>
+<div id="server-character-section" class="mt-4" style="display: none;">
+    <div class="section-header p-1 py-3" style="background-color:rgb(0, 0, 0);">
+        <h4>เลือกเซิฟเวอร์ & ตัวละคร</h4>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-6 mb-2">
+            <label class="form-label text-white">เลือกเซิฟเวอร์</label>
+            <select class="form-select" id="server-select">
+                <option value="">-- กรุณาเลือกเซิฟเวอร์ --</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-2">
+            <label class="form-label text-white">เลือกตัวละคร</label>
+            <select class="form-select" id="character-select">
+                <option value="">-- กรุณาเลือกตัวละคร --</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+const gameData = {
+    "Swordsman3": {
+        servers: {
+            "เซิร์ฟฟ้า": ["ฟ้าหงส์", "ฟ้าพยัคฆ์"],
+            "เซิร์ฟแดง": ["แดงจ้าวยุทธ", "แดงเทพกระบี่"]
+        }
+    },
+    "เกม B": {
+        servers: {
+            "B-Alpha": ["B-อัศวิน1", "B-อัศวิน2"],
+            "B-Beta": ["B-ราชันย์", "B-แม่ทัพ"]
+        }
+    },
+    "เกม C": {
+        servers: {
+            "C-001": ["C-เงา", "C-เหมันต์"],
+            "C-002": ["C-เพลิง", "C-สายลม"]
+        }
+    }
+};
+
+// ฟังก์ชันอัปเดต select เซิฟเวอร์
+function updateServerSelect(gameName) {
+    const serverSelect = document.getElementById("server-select");
+    const characterSelect = document.getElementById("character-select");
+    serverSelect.innerHTML = `<option value="">-- กรุณาเลือกเซิฟเวอร์ --</option>`;
+    characterSelect.innerHTML = `<option value="">-- กรุณาเลือกตัวละคร --</option>`;
+
+    if (gameData[gameName]) {
+        const servers = Object.keys(gameData[gameName].servers);
+        servers.forEach(server => {
+            const option = document.createElement("option");
+            option.value = server;
+            option.textContent = server;
+            serverSelect.appendChild(option);
+        });
+    }
+}
+
+// ฟังก์ชันอัปเดตตัวละครตามเซิฟเวอร์
+function updateCharacterSelect(gameName, serverName) {
+    const characterSelect = document.getElementById("character-select");
+    characterSelect.innerHTML = `<option value="">-- กรุณาเลือกตัวละคร --</option>`;
+
+    if (gameData[gameName]?.servers[serverName]) {
+        gameData[gameName].servers[serverName].forEach(charName => {
+            const option = document.createElement("option");
+            option.value = charName;
+            option.textContent = charName;
+            characterSelect.appendChild(option);
+        });
+    }
+}
+
+//  ตรวจจับการเลือกการ์ดเกม
+document.addEventListener("click", function (e) {
+    const card = e.target.closest('.game-card');
+    if (card && card.closest('#game-cards')) {
+        document.querySelectorAll('.game-card').forEach(item => {
+            item.classList.remove('border-c', 'selected');
+        });
+        card.classList.add('border-c', 'selected');
+
+        const section = document.getElementById("server-character-section");
+        section.style.display = "block";
+
+        const gameName = card.getAttribute('data-game-name');
+        updateServerSelect(gameName); // อัปเดตเซิฟเวอร์
+        console.log("🎮 เลือกเกม:", gameName);
+
+        setTimeout(() => {
+            if (!isLoggedIn) {
+                showLoginAlert();
+            }
+        }, 100);
+    }
+});
+
+//  ตรวจจับเมื่อเลือกเซิฟเวอร์ → อัปเดตตัวละคร
+document.getElementById("server-select").addEventListener("change", function () {
+    const serverName = this.value;
+    const selectedGame = document.querySelector(".game-card.selected")?.getAttribute("data-game-name");
+    updateCharacterSelect(selectedGame, serverName);
+});
+</script>
+
+<!-- End Server&Character Section -->
+
+
 
 <!-- Package Section -->
 <div class="package-container mt-4 mb-4">
-    <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
+    <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;border-radius: 6px;">
         <button class="btn btn-icon" onclick="displayCards('หยก')">
             <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> หยก</p>
         </button>
@@ -1230,7 +1363,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- Section: ช่องทางการชำระเงิน -->
 
 <div class="paymentmethod-container mt-4">
-    <div class="section-header p-1 bg-black ">
+    <div class="section-header p-1 bg-black py-3">
         <h4 class="" style="color:#41e0cf;">ช่องทางการชำระเงิน</h4>
     </div>
 
@@ -1265,6 +1398,12 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 
 <style>
+.paymentmethod-container .section-header h4 {
+        font-size: 12px;
+        margin-left: 20px;
+}
+
+
 /* สไตล์ของการ์ดชำระเงิน */
 .payment-card {
     display: flex;
@@ -1404,7 +1543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 <div class="payment-button-container mt-4">
-    <div class="section-header p-1 bg-black">
+    <div class="section-header p-1 bg-black py-3">
         <h4 class="" style="color:#41e0cf;">ทำการชำระเงิน</h4>
     </div>
 
@@ -1414,6 +1553,10 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 
 <style>
+    .payment-button-container .section-header h4 {
+        font-size: 12px;
+        margin-left: 20px;
+    }
 
 /* Section ปุ่มทำการชำระเงิน */
 .payment-button-container {
@@ -1701,5 +1844,5 @@ function selectPayment(paymentMethod) {
 <!--EndAlert-->
 
  @include('partials.footer')
- 
+
 @endsection

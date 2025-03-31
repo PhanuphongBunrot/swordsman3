@@ -86,14 +86,14 @@
                 border: 1px solid rgb(0, 51, 133);
                 color: #000;
                 background-color: #fff;
-                font-size: 16px;
+                font-size: 17px;
                 white-space: nowrap;
             }
 
             .facebook-btn {
                 background-color: #0866FF;
                 color: white;
-                font-size: 16px;
+                font-size: 17px;
                 white-space: nowrap;
             }
 
@@ -104,7 +104,7 @@
 
             .social-icon {
                 width: 30px;
-                margin-right: 10px;
+                /* margin-right: 10px; */
             }
 
             /* ปรับขนาดของปุ่ม Apple Sign In */

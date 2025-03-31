@@ -338,6 +338,7 @@
             font-size: 12px; 
             text-align: center;
             margin: 0;
+            padding: 0;
         }
 
         .btn-icon {
@@ -346,7 +347,7 @@
         align-items: center;
         justify-content: center;
         width: 80px; 
-        height: 50px;
+        height: auto;
         padding: 0px 5px;
         text-align: center;
         margin: 0;
@@ -440,10 +441,27 @@
     </div>
 </div>
 
-
+<!--End GameCard Section -->
 
 
 <!-- Server&Character Section -->
+ <style>
+    @media (max-width: 767px) {
+    #server-character-section .section-header h4 {
+        font-size: 12px;
+        margin-left: 20px;
+    }
+
+    #server-character-section label {
+        font-size: 13px;
+    }
+
+    #server-character-section select {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+}
+</style>
 <div id="server-character-section" class="mt-4" style="display: none;">
     <div class="section-header p-1 py-3" style="background-color:rgb(0, 0, 0);">
         <h4>เลือกเซิฟเวอร์ & ตัวละคร</h4>
@@ -521,7 +539,7 @@ function updateCharacterSelect(gameName, serverName) {
     }
 }
 
-// ✅ ตรวจจับการเลือกการ์ดเกม
+//  ตรวจจับการเลือกการ์ดเกม
 document.addEventListener("click", function (e) {
     const card = e.target.closest('.game-card');
     if (card && card.closest('#game-cards')) {
@@ -545,7 +563,7 @@ document.addEventListener("click", function (e) {
     }
 });
 
-// ✅ ตรวจจับเมื่อเลือกเซิฟเวอร์ → อัปเดตตัวละคร
+//  ตรวจจับเมื่อเลือกเซิฟเวอร์ → อัปเดตตัวละคร
 document.getElementById("server-select").addEventListener("change", function () {
     const serverName = this.value;
     const selectedGame = document.querySelector(".game-card.selected")?.getAttribute("data-game-name");
@@ -563,26 +581,9 @@ document.getElementById("server-select").addEventListener("change", function () 
 
 
 <!-- Package Section -->
-<style>
-    @media (max-width: 767px) {
-    #server-character-section .section-header h4 {
-        font-size: 14px;
-        margin-left: 10px;
-    }
-
-    #server-character-section label {
-        font-size: 13px;
-    }
-
-    #server-character-section select {
-        font-size: 13px;
-        padding: 6px 10px;
-    }
-}
-</style>
 
 <div class="package-container mt-4 mb-4">
-    <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;">
+    <div class="d-flex p-2" style="background-color:rgb(0, 0, 0); gap: 10px;border-radius: 6px;">
         <button class="btn btn-icon" onclick="displayCards('หยก')">
             <p style="color:#41e0cf; margin: 0;"> <i class="bi bi-gem"></i> หยก</p>
         </button>
