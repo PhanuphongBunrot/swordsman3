@@ -27,12 +27,12 @@
             <div class="col-md-6 col-lg-3 text-center text-lg-start">
                 <h5 class="fw-bold mb-2">บริการของเรา</h5>
                 <ul class="list-unstyled lh-lg mb-0">
-                    <li><i class="bi bi-controller me-2 text-info"></i>เติมเกม UID</li>
-                    <li><i class="bi bi-key me-2 text-info"></i>เติมเกม ID-PASS</li>
-                    <li><i class="bi bi-gift me-2 text-info"></i>แลกรางวัล</li>
+                    <!-- <li><i class="bi bi-controller me-2 text-info"></i>เติมเกม UID</li> -->
+                    <li><i class="bi bi-key me-2 text-info"></i>เติมเกม</li>
+                    <!-- <li><i class="bi bi-gift me-2 text-info"></i>แลกรางวัล</li> -->
                     <li><i class="bi bi-credit-card me-2 text-info"></i>เติมเครดิต</li>
                     <li><i class="bi bi-broadcast me-2 text-info"></i>ข่าวสาร</li>
-                    <li><i class="bi bi-exclamation-triangle me-2 text-warning"></i><a href="#report-issue" class="text-warning text-decoration-none">แจ้งปัญหา</a></li>
+                    <li><i class="bi bi-exclamation-triangle me-2 text-warning"></i><a href="{{ route('report.issue') }}" class="text-warning text-decoration-none">แจ้งปัญหา</a></li>
                 </ul>
             </div>
 
