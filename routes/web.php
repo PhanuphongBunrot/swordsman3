@@ -12,6 +12,7 @@ use App\Http\Controllers\AppleAuthController;
 use App\Http\Controllers\PhoneOtpController;
 use App\Http\Controllers\MailOtpController;
 use App\Http\Controllers\ResetPasswordMailController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,7 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 Route::get('/auth/apple', [AppleAuthController::class, 'redirectToApple']);
 Route::get('/auth/apple/callback', [AppleAuthController::class, 'handleAppleCallback']);
 
+Route::get('/payment/callback', [PaymentController::class, 'callback']);
 Route::controller(ApisdkController::class)->group(function () {
     Route::get('/userregister', 'user_register');
     Route::get('/userlogin', 'user_login');

@@ -245,18 +245,19 @@ class ApisdkController extends Controller
    
     public  function startPay ()
     {
+        echo "<pre>";
         $openId = env('openID');
         $productCode = env('productCode');
         $userId  = "16588823";
         $goodsId ="smm3.goldpack.thb59";
-        $orderSubject ="ทอง 50";
+        $orderSubject ="120 Gold";
         $roleName ="aaaa";
         $serverName ="2014 MU69";
         $callbackUrl ="";
-        $payType ="323";
-        $clientLang="en-US";
+        $payType ="14";
+        $clientLang="THA";
         $amount="1.49";
-        $currency="THB";
+        $currency="U";
         $openKey = env('openKey');
 
 
